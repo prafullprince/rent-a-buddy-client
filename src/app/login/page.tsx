@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import logo from "../../assets/Screenshot 2025-02-03 at 23.53.50.png";
 import Image from "next/image";
 import '@/styles/globals.css';
+import { motion } from 'framer-motion';
 
 
 // LoginPage
@@ -17,7 +18,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       await signIn("google", {
-        callbackUrl: "/dashboard",
+        callbackUrl: "/dashboard/my-profile",
       });
     } catch (error) {
       console.log(error);
@@ -27,7 +28,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="bg-zinc-200 min-h-screen text-black flex items-center justify-center">
+    <motion.div
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3, x: 200 }}
+      exit={{ opacity: 0 }}
+    className="min-h-screen text-black flex items-center justify-center">
       {/* Login Form */}
       <div className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-xl p-8 mx-auto flex flex-col gap-8 m-4 bg-white">
         <div className="flex flex-col gap-2 items-center">
@@ -60,7 +66,7 @@ const LoginPage = () => {
           </button>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
