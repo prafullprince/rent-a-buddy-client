@@ -12,10 +12,10 @@ const UserDetails = () => {
   if (!session) return null;
 
   return (
-    <div className="shadow-md px-6 py-4 rounded-lg bg-black/5 lg:min-w-[800px]">
-      <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between">
+    <div className="shadow-md px-4 py-4 rounded-lg bg-black/5 lg:min-w-[600px]">
+      <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between gap-4">
         {/* left */}
-        <div className="flex items-center gap-2">
+        <div className="flex sm:flex-row flex-col sm:items-center gap-2">
           {/* pp */}
           <Image
             src={session?.user?.image}
@@ -38,7 +38,7 @@ const UserDetails = () => {
         </div>
 
         {/* right */}
-        <Link href={'/dashboard/settings'} className="flex items-center px-3 py-2 rounded-lg gap-2 bg-yellow-400 text-black cursor-pointer">
+        <Link href={'/dashboard/settings'} className="flex items-center px-3 py-2 rounded-lg gap-2 bg-yellow-400 text-black cursor-pointer w-fit">
           <FaEdit className="text-2xl" />
           <div className="text-lg font-semibold">Edit</div>
         </Link>

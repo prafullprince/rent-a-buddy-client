@@ -8,6 +8,8 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { AiOutlineMessage } from "react-icons/ai";
+import { LuMessageCircleMore } from "react-icons/lu";
 
 const Navbar = () => {
   // session
@@ -43,7 +45,7 @@ const Navbar = () => {
       className="bg-[#ffffff] text-black h-16 flex items-center justify-center shadow-md"
     >
       {/* content div */}
-      <div className="flex items-center justify-between w-full max-w-[90%] lg:max-w-[80%] px-4 py-2 mx-auto">
+      <div className="flex items-center justify-between w-full sm:max-w-[90%] lg:max-w-[80%] px-1 py-2 mx-auto">
         {/* logo */}
         <Link href="/">
           <Image
@@ -59,19 +61,26 @@ const Navbar = () => {
         {/* links */}
 
         {/* buttons */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 sm:gap-6">
           {/* Be Buddy Button */}
           <div className="border-0 rounded-lg cursor-pointer bg-black text-white px-3 py-[6px] flex items-center gap-2 hover:shadow-md hover:shadow-black duration-300 transition-all">
             <div className="w-6 h-6 rounded-full flex items-center justify-center border-white border-2">
               <FaStar className="text-xs" />
             </div>
-            <p className="text-lg font-medium">Be a Buddy</p>
+            <p className="text-lg font-medium hidden md:block">Be a Buddy</p>
           </div>
 
-          {/* Category Icon */}
+          {/* Category Icon
           <div>
             <TbCategoryPlus className="text-3xl cursor-pointer" />
-          </div>
+          </div> */}
+
+          {/* chat */}
+          {session && status === "authenticated" && (
+            <Link href={'/chat/34/user/234'}>
+              <LuMessageCircleMore className="text-3xl font-bold cursor-pointer" />
+            </Link>
+          )}
 
           {/* notification */}
           {session && status === "authenticated" && (
@@ -80,7 +89,6 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* chat */}
 
           {/* Auth Link */}
           {session && status === "authenticated" ? (
@@ -96,7 +104,7 @@ const Navbar = () => {
                 width={40}
                 height={40}
                 priority
-                className="rounded-full"
+                className="rounded-full min-w-10 min-h-10"
               />
 
               <AnimatePresence>

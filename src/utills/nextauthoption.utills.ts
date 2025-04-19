@@ -45,6 +45,7 @@ export const NextAuthOption: NextAuthOptions = {
     // Store serverToken inside JWT
     async jwt({ token, user }) {
       console.log("JWT Callback - Before:", token);
+      console.log("JWT Callback - User:", user);
 
       if (user?.serverToken) {
         token.serverToken = user.serverToken;

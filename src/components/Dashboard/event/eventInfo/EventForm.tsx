@@ -1,30 +1,31 @@
 "use client";
 import GradientInput from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
-import { createEvent } from "@/service/apiCall/event.api";
+import { createEvent, editEventApi } from "@/service/apiCall/event.api";
 import { useSession } from "next-auth/react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import '@/styles/globals.css';
-import { useDispatch } from "react-redux";
+import "@/styles/globals.css";
+import { useDispatch, useSelector } from "react-redux";
 import { setEvent, setStep } from "@/redux/slice/event.slice";
-
 
 // EventForm
 const EventForm = () => {
-  
   // hook
   const {
     register,
     handleSubmit,
     setValue,
     reset,
+    getValues,
     formState: { errors },
   } = useForm();
+
   const imageRef = useRef<any>(null);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const dispatch = useDispatch();
+  const { editEvent, event } = useSelector((state: any) => state.event);
 
   // state
   const [preview, setPreview] = useState<string>("");
@@ -38,9 +39,61 @@ const EventForm = () => {
     }
   }
 
+  // isFormUpdated
+  const isFormUpdated = () => {
+    if (editEvent) {
+      const currentValues = getValues();
+      if (
+        currentValues.availability !== event.availability ||
+        currentValues.location !== event.location ||
+        currentValues.imageUrl !== event.imageUrl
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
   // submitHandler
   async function onsubmit(data: any) {
-    console.log(data);
+    if (editEvent) {
+      try {
+        if (isFormUpdated()) {
+          const currentValues = getValues();
+          const formData = new FormData();
+          formData.append("eventId", event?._id);
+          if (
+            currentValues.availability &&
+            currentValues.availability !== event.availability
+          ) {
+            formData.append("availability", data.availability);
+          }
+          if (
+            currentValues.location &&
+            currentValues.location !== event.location
+          ) {
+            formData.append("location", data.location);
+          }
+          if (currentValues.imageUrl && currentValues.imageUrl.length > 0) {
+            formData.append("imageUrl", data.imageUrl[0]); // Ensure correct file appending
+          }
+
+          // apiCall
+          try {
+            const result = await editEventApi(formData, session?.serverToken);
+            if (result) {
+              dispatch(setStep(2));
+            }
+          } catch (error) {
+            console.log("error in editEventHandler", error);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      return;
+    }
 
     // make formdata
     const formdata = new FormData();
@@ -49,10 +102,9 @@ const EventForm = () => {
     formdata.append("imageUrl", data.imageUrl[0]);
 
     setLoading(true);
-    // make api call
+    // make api call -> createEvent
     try {
       const result = await createEvent(formdata, session?.serverToken);
-      console.log("createEvent result is:", result);
       dispatch(setStep(2));
       dispatch(setEvent(result));
     } catch (error) {
@@ -70,14 +122,22 @@ const EventForm = () => {
     });
   }
 
-  // validation
+  // sideEffect
+  useEffect(() => {
+    if (editEvent) {
+      setValue("availability", event?.availability);
+      setValue("location", event?.location);
+      setValue("imageUrl", event?.imageUrl);
+      setPreview(event?.imageUrl);
+    }
+  }, []);
 
   return (
-    <div className="w-full mt-6">
+    <div className="sm:w-full mt-6 max-w-fit">
       {/* form */}
       <form
         onSubmit={handleSubmit(onsubmit)}
-        className="flex flex-col gap-4 max-w-lg min-w-lg"
+        className="flex flex-col gap-4 sm:max-w-lg sm:min-w-lg max-w-56"
       >
         <div className="flex flex-col gap-4">
           {/* availability */}
@@ -89,7 +149,7 @@ const EventForm = () => {
               register={register}
               name="availability"
               errors={errors}
-              className="w-full"
+              className="sm:w-full max-w-fit"
             />
             {errors.availability && (
               <p className="text-sm text-green-700 mt-2">
@@ -133,16 +193,16 @@ const EventForm = () => {
               type="file"
               {...register("imageUrl", {
                 required: "Upload a thumbnail",
-                validate: {
-                  lessThan1MB: (files) =>
-                    files[0]?.size < 1 * 1024 * 1024 ||
-                    "File size must be less than 1MB",
-                  acceptedFormats: (files) =>
-                    ["image/jpeg", "image/png", "application/pdf"].includes(
-                      files[0]?.type
-                    ) || "Only JPEG, PNG, or PDF files are allowed",
-                  required: (files) => files.length >= 1 || "Upload thumbnail",
-                },
+                // validate: {
+                //   lessThan1MB: (files) =>
+                //     files[0]?.size < 100 * 1024 * 1024 ||
+                //     "File size must be less than 100MB",
+                //   acceptedFormats: (files) =>
+                //     ["image/jpeg", "image/png", "application/pdf"].includes(
+                //       files[0]?.type
+                //     ) || "Only JPEG, PNG, or PDF files are allowed",
+                //   required: (files) => files.length >= 1 || "Upload thumbnail",
+                // },
               })}
               ref={imageRef}
               onChange={changeHandler}
@@ -186,24 +246,49 @@ const EventForm = () => {
         </div>
 
         {/* button */}
-        {loading ? (
+        {editEvent ? (
           <>
             <div className="w-full flex justify-end">
-              <div className="flex items-center px-6 py-3 rounded-lg justify-center w-fit h-12 text-zinc-800 bg-black/50">
-                <div className="loader1"></div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-lg bg-black text-white text-lg cursor-pointer font-semibold"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => {
+                    dispatch(setStep(2));
+                  }}
+                  className="px-4 py-2 rounded-lg bg-yellow-400 text-black text-lg cursor-pointer font-semibold"
+                >
+                  Next
+                </button>
               </div>
             </div>
           </>
         ) : (
           <>
-            <div className="w-full flex justify-end">
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-lg bg-yellow-300 text-black text-lg cursor-pointer font-semibold"
-              >
-                Submit
-              </button>
-            </div>
+            {loading ? (
+              <>
+                <div className="w-full flex justify-end">
+                  <div className="flex items-center px-6 py-3 rounded-lg justify-center w-fit h-12 text-zinc-800 bg-black/50">
+                    <div className="loader1"></div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="w-full flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 rounded-lg bg-yellow-300 text-black text-lg cursor-pointer font-semibold"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </>
+            )}
           </>
         )}
       </form>

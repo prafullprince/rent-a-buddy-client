@@ -1,135 +1,309 @@
 "use client";
-import GradientInput from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { FaEdit } from "react-icons/fa";
+import React, { useEffect, useRef, useState } from "react";
+import { useForm, set } from 'react-hook-form';
+import {
+  fetchUserDetailsById,
+  updateProfileApiCall,
+  updateProfilePictureApiCall,
+} from "../../../service/apiCall/user.api";
+import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
+import toast from "react-hot-toast";
+import PlanetSpinner from "@/loading/PageLoadingSpinner";
+import { motion } from "framer-motion";
+import FullScreen from "@/loading/FullScreen";
+import IntergalacticSpinner from "@/loading/Loading1";
+
 
 const page = () => {
   // hook
-  const { data: session } = useSession();
+  const imageRef = useRef<HTMLInputElement>(null);
+  const { data: session, status } = useSession();
+  console.log("session", session);
+  console.log("status", status);
 
-  // form-hook
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    setValue,
+    reset,
   } = useForm();
 
-  // submitHandler
-  const onsubmit = (data: any) => {
-    console.log(data);
+  // state
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [preview, setPreview] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userLoading, setUserLoading] = useState<boolean>(false);
+  const [dpLoading, setDpLoading] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  // imageChangeHandler
+  const imageChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setPreview(URL.createObjectURL(e.target.files[0]));
+      setValue("thumbnail", e.target.files);
+    }
   };
+
+  // uploadProfilePicture
+  const uploadProfilePicture = async () => {
+    const formData = new FormData();
+    const currentValues = getValues();
+    formData.append("thumbnail", currentValues.thumbnail[0]);
+    setDpLoading(true);
+    try {
+      await updateProfilePictureApiCall(
+        session?.serverToken,
+        formData
+      );
+      toast.success("Profile picture updated successfully");
+      setPreview("");
+      setRefresh(prev=>!prev)
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDpLoading(false);
+    }
+  };
+
+  // formDataUpdated
+  const isFormUpdated = () => {
+    if (userDetails) {
+      const currentValues = getValues();
+      if (
+        currentValues.username !== userDetails.username ||
+        currentValues.phoneNumber !== userDetails.phoneNumber
+      ) {
+        return true;
+      } else {
+        toast.error("No changes made");
+        return false;
+      }
+    }
+  };
+
+  // submitHandler
+  const onsubmit = async (data: any) => {
+    console.log(data);
+    const formData = new FormData();
+    formData.append("username", data.username);
+    formData.append("phoneNumber", data.phoneNumber);
+
+    if (isFormUpdated()) {
+      setLoading(true);
+      try {
+        await updateProfileApiCall(session?.serverToken, formData);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  // fetchUserDetailsById
+  const fetchUserDetailsByIds = async () => {
+    setUserLoading(true);
+    try {
+      const result = await fetchUserDetailsById(session?.serverToken);
+      console.log("result", result);
+      setUserDetails(result);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setUserLoading(false);
+    }
+  };
+
+  // sideEffect
+  useEffect(() => {
+    if (status === "authenticated" && session?.serverToken) {
+      fetchUserDetailsByIds();
+      setValue("username", userDetails?.username);
+      setValue("phoneNumber", userDetails?.phoneNumber);
+    }
+  }, [session, status, refresh]);
+
+  // reset form because useForm run initially
+  useEffect(() => {
+    if (userDetails) {
+      reset({
+        username: userDetails.username,
+        phoneNumber: userDetails.phoneNumber,
+      });
+    }
+  }, [userDetails, reset]);
 
   // session
   if (!session) return null;
+  if (!userDetails) return <FullScreen />;
 
   return (
-    <div className="p-6">
-      {/* Box */}
-      <div className="flex flex-col gap-4">
-        {/* heading */}
-        <h2 className="text-2xl mt-6 font-semibold text-black">Edit Profile</h2>
+    <>
+      {userLoading ? (
+        <div className="min-h-screen flex items-center justify-center">
+          <FullScreen />
+        </div>
+      ) : (
+        <div className="p-6">
+          {/* Box */}
+          <div className="flex flex-col gap-4">
+            {/* heading */}
+            <h2 className="text-2xl mt-6 font-semibold text-black">
+              Edit Profile
+            </h2>
 
-        {/* change profilePictire */}
-        <div className="shadow-[0px_10px_1px_rgba(221,_221,_221,_1),_0_10px_20px_rgba(204,_204,_204,_1)] px-6 py-4 rounded-lg bg-black/5 min-w-lg max-w-xl">
-          <form
-            onSubmit={handleSubmit(onsubmit)}
-            className="flex flex-col gap-10"
-          >
-            {/* profile image */}
-            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between">
-              {/* left */}
-              <div className="flex items-center gap-4">
+            {/* change profilePictire */}
+            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between bg-black/5 px-4 py-4 rounded-lg sm:min-w-lg sm:max-w-xl max-w-fit shadow-md">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 {/* pp */}
-                <Image
-                  src={session?.user?.image}
-                  alt="profile"
-                  width={100}
-                  height={100}
-                  className="rounded-full"
-                />
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    imageRef?.current?.click();
+                  }}
+                >
+                  {preview ? (
+                    <Image
+                      src={preview || fallbackImage}
+                      alt="profile"
+                      width={100}
+                      height={100}
+                      priority
+                      className="rounded-full min-h-24 max-h-24"
+                    />
+                  ) : (
+                    <Image
+                      src={userDetails?.image || fallbackImage}
+                      alt="profile"
+                      width={96}
+                      height={96}
+                      priority
+                      className="rounded-full min-h-24 max-h-24"
+                    />
+                  )}
+                  <input
+                    type="file"
+                    {...register("thumbnail")}
+                    onChange={imageChangeHandler}
+                    className="hidden"
+                    ref={imageRef}
+                  />
+                  {errors.thumbnail && (
+                    <p className="text-sm text-green-700 mt-2">
+                      {errors.thumbnail.message as string}
+                      <br />
+                    </p>
+                  )}
+                </div>
 
                 {/* buttons */}
                 <div className="flex flex-col items-start gap-2">
-                  <h3 className="text-lg font-medium">
+                  <h3 className="text-lg font-semibold">
                     Change Profile Picture
                   </h3>
                   <div className="flex items-center gap-2">
-                    <button className="cursor-pointer bg-yellow-400 px-4 py-2 rounded-lg text-base font-semibold">
-                      Change
-                    </button>
-                    <button className="cursor-pointer bg-black px-4 py-2 rounded-lg text-base font-semibold text-white">
-                      Remove
-                    </button>
+                    {!preview && (
+                      <button
+                        onClick={() => {
+                          imageRef.current?.click();
+                        }}
+                        className="cursor-pointer bg-yellow-400 px-4 py-2 rounded-lg text-base font-semibold"
+                      >
+                        Change
+                      </button>
+                    )}
+                    {preview && (
+                      <motion.button
+                        layoutId="submitbuttonofupdatedp"
+                        onClick={() => {
+                          uploadProfilePicture();
+                        }}
+                        className="cursor-pointer bg-black text-white px-4 py-2 rounded-lg text-base font-semibold flex items-center gap-2"
+                      >
+                        Submit
+                        {dpLoading && <IntergalacticSpinner />}
+                      </motion.button>
+                    )}
+                    {preview && (
+                      <button
+                        onClick={() => {
+                          setPreview("");
+                        }}
+                        className="cursor-pointer bg-yellow-300 px-4 py-2 rounded-lg text-base font-semibold text-black"
+                      >
+                        Remove
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
-              {/* username */}
-              <div className="flex flex-col gap-1">
-                <Label labelname="Username" />
-                <GradientInput
-                  name="username"
-                  register={register}
-                  placeholder="change username"
-                  type="text"
-                />
-                {errors.username && (
-                  <p className="text-red-500 text-xs italic">
-                    Username is required
-                  </p>
-                )}
-              </div>
-
-              {/* phoneNumber */}
-              <div className="flex flex-col gap-1">
-                <Label labelname="Phone Number" />
-                <GradientInput
-                  name="phoneNumber"
-                  register={register}
-                  placeholder="change phone number"
-                  type="text"
-                />
-                {errors.phoneNumber && (
-                  <p className="text-red-500 text-xs italic">
-                    Phone Number is required
-                  </p>
-                )}
-              </div>
-
-              {/* Bio */}
-              <div className="flex flex-col gap-1">
-                <Label labelname="Bio" />
-                <GradientInput
-                  name="about"
-                  register={register}
-                  placeholder="change bio"
-                  type="text"
-                />
-                {errors.about && (
-                  <p className="text-red-500 text-xs italic">Bio is required</p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex justify-end w-full">
-              <button
-                type="submit"
-                className="w-full px-4 py-2 rounded-lg bg-yellow-400 text-black text-xl cursor-pointer"
+            {/* change details */}
+            <div className="shadow-md px-6 py-4 rounded-lg bg-black/5 sm:min-w-lg sm:max-w-xl max-w-fit">
+              <form
+                onSubmit={handleSubmit(onsubmit)}
+                className="flex flex-col gap-10"
               >
-                Submit
-              </button>
+                <div className="flex flex-col gap-4">
+                  {/* username */}
+                  <div className="flex flex-col gap-1 w-full">
+                    <Label labelname="Username" />
+                    <input
+                      className="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-sm"
+                      {...register("username")}
+                      placeholder="change username"
+                      type="text"
+                    />
+                  </div>
+
+                  {/* phoneNumber */}
+                  <div className="flex flex-col gap-1 w-full">
+                    <Label labelname="Phone Number" />
+                    <input
+                      className="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-sm"
+                      {...register("phoneNumber")}
+                      placeholder="change phone number"
+                      type="text"
+                    />
+                  </div>
+
+                  {/* Bio */}
+                  <div className="flex flex-col gap-1 w-full">
+                    <Label labelname="Bio" />
+                    <textarea
+                      className="w-full p-2 border shadow-sm border-gray-300 rounded-lg outline-none"
+                      {...register("about")}
+                      placeholder="change bio"
+                      rows={5}
+                      cols={30}
+                      name="about"
+                      id="Bio"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end w-full">
+                  <motion.button
+                    layoutId="submitbuttonofsettings"
+                    type="submit"
+                    className="w-fit px-4 py-2 rounded-lg bg-black text-white text-xl cursor-pointer flex items-center gap-2"
+                  >
+                    Submit
+                    {loading && <PlanetSpinner />}
+                  </motion.button>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

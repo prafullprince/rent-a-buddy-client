@@ -1,3 +1,4 @@
+
 // baseUrl
 const BASE_URL = "http://localhost:4000/api";
 
@@ -13,7 +14,8 @@ export const authEndPoints = {
     SEND_OTP: BASE_URL + "/auth/sendotp",
     CHANGE_PASSWORD: BASE_URL + "/auth/changePassword",
     RESET_PASSWORD_TOKEN: BASE_URL + "/auth/resetPasswordToken",
-    RESET_PASSWORD: BASE_URL + "/auth/resetPassword"
+    RESET_PASSWORD: BASE_URL + "/auth/resetPassword",
+    GET_USER_DETAILS: BASE_URL + "/auth/getUser",
 }
 
 // Event
@@ -21,6 +23,12 @@ export const eventEndPoints = {
     GET_INFINTE_EVENTS_FILTERS: BASE_URL + "/event/infinteEventsWithFilter",
     CREATE_EVENT: BASE_URL + "/event/createEvent",
     CREATE_SERVICE: BASE_URL + "/event/createService",
+    EVENT_SUMMARY: BASE_URL + "/event/getEventSummary",
+    PUBLISH_EVENT: BASE_URL + "/event/published",
+    EVENT_SUMMARY_OF_USER: BASE_URL + "/event/getEventSummaryOfUser",
+    EDIT_EVENT: BASE_URL + "/event/editEvent",
+    EVENT_BY_ID: BASE_URL + "/event/getEventById",
+    ALL_EVENTS: BASE_URL + "/event/availableEvents",
 }
 
 // category
@@ -54,17 +62,16 @@ export const ratingEndPoints = {
 
 // profile
 export const profileEndpoints = {
-    GET_USER_DETAILS: BASE_URL + "/auth/getUserDetails",
-    PROFILE_PIC: BASE_URL + "/auth/uploadPic",
-    GET_USER_BY_ID: BASE_URL + "/auth/getUserDetailsByUserId",
-    CONNECTION: BASE_URL + "/auth/follow",
-    GET_OTHER_COURSES: BASE_URL + "/auth/getUserCourses",
-    GET_LOGGED_USER_COURSES: BASE_URL + "/auth/getLoggedUserCourses"
+    GET_USER_DETAILS_BY_ID: BASE_URL + "/user/userDetailsById",
+    UPLOAD_PROFILE_PICTURE: BASE_URL + "/user/updateProfilePicture",
+    UPDATE_PROFILE: BASE_URL + "/user/updateProfile",
 }
 
 
 // chat
 export const chatEndPoints = {
     CREATE_CHAT: BASE_URL + "/course/createChat",
-    FETCH_CHAT: BASE_URL + "/course/fetchChat"
+    FETCH_CHAT: BASE_URL + "/chat/fetchChat",
+    FETCH_MESSAGE: BASE_URL + "/chat/fetchAllMessages",
+    FETCH_OTHER_USER: BASE_URL + "/chat/fetchOtherUser"
 }

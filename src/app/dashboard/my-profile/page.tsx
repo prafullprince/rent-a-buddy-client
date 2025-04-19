@@ -1,3 +1,4 @@
+import MyEvents from '@/components/Dashboard/my-profile/MyEvents'
 import ProfileDetails from '@/components/Dashboard/my-profile/ProfileDetails'
 import UserDetails from '@/components/Dashboard/my-profile/UserDetails'
 import Link from 'next/link'
@@ -19,9 +20,12 @@ const page = () => {
         <h2 className='text-2xl mt-6 font-semibold text-black'>My Profile</h2>
 
         {/* profile */}
-        <div className='flex flex-col gap-4 max-w-md'>
+        <div className='flex flex-col gap-4 max-w-lg'>
             {/* profile image */}
             <UserDetails />
+
+            {/* my-Events */}
+            <MyEvents />
 
             {/* profileDetails */}
             <ProfileDetails />

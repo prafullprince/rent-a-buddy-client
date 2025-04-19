@@ -1,37 +1,39 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { fetchCategorySubCategory } from "@/service/apiCall/category.api";
 import Box from "./Box";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createServiceApi } from "@/service/apiCall/event.api";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { setStep } from "@/redux/slice/event.slice";
+import FullScreen from "@/loading/FullScreen";
+import PlanetSpinner from "@/loading/PageLoadingSpinner";
 
 // BuilderForm
 const BuilderForm = () => {
 
   // event
-  const { event } = useSelector((state:any) => state.event);
-  const { data: session} = useSession();
+  const { event } = useSelector((state: any) => state.event);
+  const { data: session } = useSession();
+  const dispatch = useDispatch();
 
   // state
   const [categorys, setCategorys] = useState<any>([]);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [loading1,setLoading1] = useState<boolean>(false);
+  const [loading1, setLoading1] = useState<boolean>(false);
   const [selectedData, setSelectedData] = useState<{
-      eventId: string;
-      serviceData: {
-        id: string;
-        subCategories: { id: string; about: string; price: number }[];
-      }[];
-    }>({
-      eventId: event?._id,
-      serviceData: [],
-    });
-    console.log("selectedData", selectedData)
-    console.log("sels", selectedData.serviceData);
+    eventId: string;
+    serviceData: {
+      id: string;
+      subCategories: { id: string; about: string; price: number }[];
+    }[];
+  }>({
+    eventId: event?._id,
+    serviceData: [],
+  });
 
   // fetch categories -> apiCall
   const fetchCategoriesData = async () => {
@@ -52,9 +54,8 @@ const BuilderForm = () => {
     setLoading1(true);
     try {
       // apiCall
-      const result = await createServiceApi(selectedData, session?.serverToken);
-      console.log("resultiiii", result);
-      
+      await createServiceApi(selectedData, session?.serverToken);
+      dispatch(setStep(3));
     } catch (error) {
       console.log(error);
     } finally {
@@ -73,7 +74,7 @@ const BuilderForm = () => {
       {!loading ? (
         <div className="flex flex-col w-full items-start">
           {/* categories */}
-          <div className="w-full flex justify-start gap-2 border-b border-gray-300">
+          <div className="w-fit flex justify-start gap-2 border-b border-gray-300">
             {categorys?.map((category: any) => (
               <div
                 key={category?._id}
@@ -105,24 +106,34 @@ const BuilderForm = () => {
           {/* box */}
           <div className="border p-4 rounded-lg border-gray-200 w-full mt-12 min-w-2xl max-w-2xl">
             {/* card */}
-            <Box selectedCategory={selectedCategory} selectedData={selectedData} setSelectedData={setSelectedData} />
+            <Box
+              selectedCategory={selectedCategory}
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+            />
           </div>
 
           {/* createService -> button */}
           <div className="flex w-full justify-end mt-8">
             {/*  */}
             <div className="flex items-center gap-4">
-              <button className="px-3 py-2 bg-black text-white rounded-lg cursor-pointer">
-                Cancel
-              </button>
-              <button onClick={createService} className="px-4 py-2 bg-yellow-400 text-black rounded-lg cursor-pointer">
+              <motion.button
+                onClick={createService}
+                className="px-6 py-2 bg-black text-white rounded-md cursor-pointer flex items-center gap-1"
+                layoutId="createService"
+              >
                 Done
-              </button>
+                {loading1 && <PlanetSpinner />}
+              </motion.button>
             </div>
           </div>
+
         </div>
       ) : (
-        <div>Loading...</div>
+        // <div>Loading...</div>
+        <div className="w-full h-full">
+          <FullScreen />
+        </div>
       )}
     </div>
   );

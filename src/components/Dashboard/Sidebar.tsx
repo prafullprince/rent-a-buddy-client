@@ -11,7 +11,7 @@ import {
 import { motion } from "framer-motion";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <motion.div

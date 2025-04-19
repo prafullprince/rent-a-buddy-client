@@ -1,5 +1,6 @@
 "use client";
 import EventBuilder from "@/components/Dashboard/event/eventBuilder/EventBuilder";
+import EventFinish from "@/components/Dashboard/event/eventFinish/EventFinish";
 import EventInfo from "@/components/Dashboard/event/eventInfo/EventInfo";
 import { useSession } from "next-auth/react";
 import React from "react";
@@ -13,7 +14,7 @@ const page = () => {
   return (
     <div className="w-full mx-auto flex p-6">
       {/* eventCard */}
-      <div className="p-6 mt-4 bg-black/5 shadow-md min-w-xl rounded-lg flex">
+      <div className="p-6 mt-4 bg-black/5 shadow-md max-w-fit sm:min-w-xl rounded-lg flex">
         <div className="flex flex-col gap-4">
           {/* step */}
 
@@ -21,6 +22,7 @@ const page = () => {
           <div className="">
             {step === 1 && <EventInfo />}
             {step === 2 && <EventBuilder />}
+            {step === 3 && <EventFinish />}
           </div>
         </div>
       </div>

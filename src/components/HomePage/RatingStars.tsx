@@ -1,7 +1,7 @@
 import React from 'react'
 import { FaStar } from 'react-icons/fa';
 
-const RatingStars = ({ rating, totalRating }: { rating: number, totalRating: number }) => {
+const RatingStars = ({ rating, totalRating, className }: { rating: number, totalRating: number, className: any }) => {
   return (
     <div className='flex items-start gap-2'>
         <FaStar className='text-yellow-500 text-xl' />

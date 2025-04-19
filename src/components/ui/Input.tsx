@@ -21,7 +21,7 @@ const GradientInput: React.FC<GradientInputProps> = ({
   errors
 }) => {
   return (
-    <div className={`relative w-full min-w-lg max-w-lg ${className}`}>
+    <div className={`relative sm:w-full sm:min-w-lg sm:max-w-lg ${className}`}>
       {/* Input Field */}
       <input
         type={type}
@@ -31,8 +31,8 @@ const GradientInput: React.FC<GradientInputProps> = ({
         })}
         className="shadow-[0_3px_10px_rgb(0,0,0,0.2)] w-full p-3 h-12 rounded-md border border-gray-300 focus:outline-none bg-white relative z-10"
       />
-      {errors.name && (
-        <p className="text-sm text-green-700 mt-2">{errors.name.message as string}</p>
+      {errors?.name && (
+        <p className="text-sm text-green-700 mt-2">{errors?.name?.message as string}</p>
       )}
 
       {/* Bottom Gradient Overlay */}
