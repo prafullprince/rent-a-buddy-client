@@ -7,16 +7,23 @@ import { AnimatePresence, motion } from "framer-motion";
 import { fetchUserDetailsById } from "@/service/apiCall/chat.api";
 import { useSession } from "next-auth/react";
 import OrderModal from "@/components/Modal/OrderModal";
+import { getUserWallet } from "@/service/apiCall/wallet.api";
+import { useRouter } from "next/navigation";
+
 
 const EventDetails = ({ eventDetails }: any) => {
+
+  // hooks
+  const { data: session } = useSession();
+  const router = useRouter();
+
   // state
   const [categoryIds, setCategoryIds] = useState<any>(null);
   const [subSectionDetails, setSubSectionDetails] = useState<any>(null);
   const [currentSubSection, setCurrentSubSection] = useState<any>(null);
   const [modalData, setModalData] = useState<any>(null);
-  const { data: session } = useSession();
   const [userDetails, setUserDetails] = useState<any>(null);
-  console.log("modalData", modalData);
+  const [wallet, setWallet] = useState<any>(null);
 
   // fetchUserDetailsByIds
   const fetchUserDetailsByIds = async () => {
@@ -45,9 +52,20 @@ const EventDetails = ({ eventDetails }: any) => {
     setCurrentSubSection(section?.subSections[0]);
   }, [categoryIds, eventDetails?._id]);
 
-  // sideEffect
   useEffect(() => {
     fetchUserDetailsByIds();
+  }, [session]);
+
+  useEffect(() => {
+    async function getWallet() {
+      try {
+        const result = await getUserWallet(session?.serverToken);
+        setWallet(result);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getWallet();
   }, [session]);
 
 
@@ -215,7 +233,7 @@ const EventDetails = ({ eventDetails }: any) => {
       {/* modal */}
       <AnimatePresence mode="wait">
         {modalData && (
-          <OrderModal modalData={modalData} setModalData={setModalData} key="order-modal" />
+          <OrderModal modalData={modalData} setModalData={setModalData} key="order-modal" wallet={wallet} router={router} />
         )}
       </AnimatePresence>
     </motion.div>

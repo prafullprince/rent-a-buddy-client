@@ -63,7 +63,7 @@ const Navbar = () => {
         {/* buttons */}
         <div className="flex items-center gap-4 sm:gap-6">
           {/* Be Buddy Button */}
-          <div className="border-0 rounded-lg cursor-pointer bg-black text-white px-3 py-[6px] flex items-center gap-2 hover:shadow-md hover:shadow-black duration-300 transition-all">
+          <div className="border-0 rounded-lg cursor-pointer bg-black text-white px-4 py-[8px] flex items-center gap-2 hover:shadow-md hover:shadow-black duration-300 transition-all">
             <div className="w-6 h-6 rounded-full flex items-center justify-center border-white border-2">
               <FaStar className="text-xs" />
             </div>
@@ -138,7 +138,7 @@ const Navbar = () => {
           ) : (
             <Link
               href="/login"
-              className="px-3 py-[4px] hover:shadow-md hover:shadow-black font-semibold text-lg cursor-pointer hover:border-amber-50 transition-all duration-300 bg-black text-white rounded-md"
+              className="px-4 py-[8px] hover:shadow-md hover:shadow-black font-semibold text-lg cursor-pointer hover:border-amber-50 transition-all duration-300 bg-black text-white rounded-md"
             >
               Login
             </Link>

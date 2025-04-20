@@ -37,10 +37,13 @@ export const categoryEndPoints = {
     FETCH_CATEGORY_SUBCATEGORY: BASE_URL + "/category/fetchCategorySubCategory",
 }
 
-
-
-
-
+// payment
+export const paymentEndPoints = {
+    CREATE_ORDER: BASE_URL + "/payment/createOrder",
+    VERIFY_PAYMENT: BASE_URL + "/payment/verifyPayments",
+    SEND_MONEY: BASE_URL + "/payment/sendMoney",
+    GET_USER_WALLET: BASE_URL + "/payment/getUserWallet"
+}
 
 
 

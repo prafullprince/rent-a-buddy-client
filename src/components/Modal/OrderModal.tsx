@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { PiCurrencyInrBold } from "react-icons/pi";
 import Image from "next/image";
@@ -24,11 +24,10 @@ export interface IFormData {
   eventId: any;
 }
 
-const OrderModal = ({ modalData, setModalData }: any) => {
+const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
   // hook
   const btnRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
-
+  console.log("wallet", wallet);
   // state
   const [formData, setFormData] = useState<IFormData>({
     location: "",
@@ -143,7 +142,7 @@ const OrderModal = ({ modalData, setModalData }: any) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-[1000] backdrop-blur-sm"
+      className="fixed inset-0 z-[1000] bg-black/50 backdrop-blur-sm"
     >
       <div className="flex items-center justify-center h-screen mx-auto">
         <motion.div
@@ -362,6 +361,15 @@ const OrderModal = ({ modalData, setModalData }: any) => {
             ) : (
               <button
                 onClick={() => {
+                  if(!wallet){
+                    toast.error("Wallet not found");
+                    return;
+                  }
+                  if(wallet?.balance < formData.totalPrice){
+                    toast.error(`Insufficient balance, please recharge ${formData.totalPrice-wallet?.balance}`);
+                    router.push(`/dashboard/wallet`);
+                    return;
+                  }
                   socket.send(
                     JSON.stringify({
                       type: "requestOrder",
@@ -392,4 +400,4 @@ const OrderModal = ({ modalData, setModalData }: any) => {
   );
 };
 
-export default OrderModal;
+export default memo(OrderModal);
