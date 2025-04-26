@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -6,7 +8,6 @@ import Box from "./Box";
 import { useDispatch, useSelector } from "react-redux";
 import { createServiceApi } from "@/service/apiCall/event.api";
 import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
 import { setStep } from "@/redux/slice/event.slice";
 import FullScreen from "@/loading/FullScreen";
 import PlanetSpinner from "@/loading/PageLoadingSpinner";

@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
+
 "use client";
 import EventDetails from "@/components/Dashboard/eventDetails/EventDetails";
 import { eventDetailsById } from "@/service/apiCall/event.api";

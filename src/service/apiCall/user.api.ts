@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import toast from "react-hot-toast";
 import { profileEndpoints } from "../api";
 import { apiConnector } from "../apiConnector";

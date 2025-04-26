@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+
+
 "use client";
 import EventOverlayCard from "@/components/HomePage/EventOverlayCard";
 import {
@@ -7,15 +12,12 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import IntergalacticSpinner from "@/loading/Loading1";
-import FullScreen from "@/loading/FullScreen";
-import AvailableEvents from "@/components/HomePage/AvailableEvents";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { BsFilterSquare } from "react-icons/bs";
 import { IoFilterSharp } from "react-icons/io5";
+import Toggle from "@/components/Common/Toggle";
 
 // data
-const Location = ["Delhi", "Mumbai", "Banglore", "Pune", "Hyderabad"];
+const Location = ["delhi", "mumbai", "banglore", "pune", "patna"];
 const filterRating = ["Highest", "Average", "Lowest"];
 
 // Home
@@ -29,11 +31,13 @@ export default function Home() {
   const [hasmore, setHasmore] = useState(true);
   const [cursor, setCursor] = useState(null);
   const hasFetched = useRef(false); // ✅ Prevent multiple fetch calls
+  const [isToggleOpen, setIsToggleOpen] = useState(false);
   const [formData, setFormData] = useState<any>({
     location: "",
     username: "",
     rating: "",
     gender: "",
+    isActive: false,
   });
   const [applyLoading, setApplyLoading] = useState(false);
   const [availableEvent, setAvailableEvent] = useState<any>([]);
@@ -47,7 +51,7 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const data: any = await getInfiniteEvents(10, null, cursor);
+      const data: any = await getInfiniteEvents(15, formData, cursor);
 
       setEvents((prev: any) => [...prev, ...data.data]);
       setHasmore(data.pagination.hasMore);
@@ -60,7 +64,7 @@ export default function Home() {
         hasFetched.current = false; // ✅ Reset flag after fetch
       }, 1000); // ✅ Small delay to prevent immediate duplicate calls
     }
-  }, [hasmore, cursor, loading]);
+  }, [hasmore, cursor, loading, formData]);
 
   // fetchAvailableEvents
   const fetchAvailableEvents = async () => {
@@ -87,10 +91,22 @@ export default function Home() {
   };
 
   // submitHandler
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setApplyLoading((prev) => !prev);
+    setApplyLoading(true);
+    try {
+      setEvents([]);
+      setCursor(null);
+      setHasmore(true);
+      hasFetched.current = false; // ✅ Reset flag before new fetch
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setApplyLoading(false);
+    }
   };
+  console.log("formData", formData);
 
   // observerCallback
   const observerCallback = useCallback(
@@ -107,7 +123,7 @@ export default function Home() {
   useEffect(() => {
     const observer = new IntersectionObserver(observerCallback, {
       root: null,
-      rootMargin: "1px", // ✅ Adjusted to prevent multiple triggers
+      rootMargin: "0px 0px 1px 0px", // ✅ Adjusted to prevent multiple triggers
       threshold: 1.0,
     });
 
@@ -155,9 +171,8 @@ export default function Home() {
 
           {/* filters */}
           <div className="hidden lg:block w-full">
-            <form
-              onSubmit={submitHandler}
-              className="flex items-center justify-between w-full mt-8"
+            <div
+              className="flex items-center justify-between w-full mt-8 gap-4"
             >
               <div className="flex items-center gap-4">
                 {/* location */}
@@ -223,30 +238,24 @@ export default function Home() {
                   </select>
                 </div>
 
+                {/* available -> toggle */}
+                <Toggle isToggleOpen={isToggleOpen} setIsToggleOpen={setIsToggleOpen} setFormData={setFormData} />
+
                 {/*  */}
               </div>
 
               <motion.div layoutId="button">
                 <button
-                  type="submit"
+                  onClick={submitHandler}
                   className="px-6 py-2 bg-black font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
                 >
                   Apply
-                  {applyLoading && (
-                    // <div className="flex items-center justify-center">
-                    //   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/80 border-t-transparent"></div>
-                    // </div>
-                    // <PlanetSpinner />
+                  {loading && (
                     <IntergalacticSpinner />
-                    // <div className="flex items-center justify-center space-x-2">
-                    //   <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-                    //   <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-                    //   <div className="w-2 h-2 bg-green-600 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-                    // </div>
                   )}
                 </button>
               </motion.div>
-            </form>
+            </div>
           </div>
 
           {/* filters in small screen */}
@@ -256,13 +265,23 @@ export default function Home() {
           </div>
 
           {/* Infinite Scroll Grid */}
-          {loading ? (
-            <FullScreen />
-          ) : (
-            <div className="flex flex-wrap justify-between max-w-[80vw]">
+          {/* {loading ? (
+            <div className="flex items-center justify-center w-full h-1/3 text-zinc-200 bg-white">
+              <div className="loader1"></div>
+            </div>
+          ) : ( */}
+            <div className="flex flex-wrap justify-between max-w-[80vw] items-start">
               {events?.map((event: any, idx: any) => (
                 <EventOverlayCard event={event} key={idx} />
               ))}
+
+              {events?.length === 0 && (
+                <div className="h-10 flex items-center justify-center">
+                  <div className="text-black bg-white">
+                    <p className="text-center text-xl font-bold">No events found</p>
+                  </div>
+                </div>
+              )}
 
               {/* Observer Target */}
               {hasmore && (
@@ -270,11 +289,17 @@ export default function Home() {
                   ref={observerRef}
                   className="h-10 flex items-center justify-center"
                 >
-                  {loading ? "Loading..." : ""}
+                  {loading ? (
+                    <div className="flex items-center justify-center w-full h-8 text-zinc-200 bg-white">
+                      <div className="loader"></div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               )}
             </div>
-          )}
+          {/* )} */}
         </div>
       </div>
     </motion.div>

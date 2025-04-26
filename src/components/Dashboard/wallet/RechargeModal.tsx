@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+
+
 "use client";
 import { handleRecharge } from "@/service/apiCall/payment.api";
 import { useSession } from "next-auth/react";

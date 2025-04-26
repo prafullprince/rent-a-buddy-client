@@ -1,0 +1,279 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import Image from "next/image";
+import React, { memo } from "react";
+import { MdOutlineCancel } from "react-icons/md";
+import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
+import { FaHandsHelping } from "react-icons/fa";
+import PlanetSpinner from "@/loading/PageLoadingSpinner";
+
+const Receiver = ({
+  msg,
+  userDetails,
+  socketRef,
+  setAcceptLoading,
+  acceptLoading,
+  orders,
+}: any) => {
+  return (
+    <>
+      {msg?.receiver === userDetails?._id && (
+        <div className="flex justify-start">
+          <div
+            className={`max-w-[75%] relative text-black rounded-lg rounded-tl-none ${
+              msg.type === "text"
+                ? "bg-white px-3 pt-1"
+                : "bg-white min-w-xs max-w-sm"
+            }`}
+          >
+            <div
+              className={`absolute left-0 top-0 border-t-[10px] border-t-transparent border-l-[10px] ${
+                msg.type === "text" ? "border-white" : "border-l-gray-400"
+              } w-0 h-0 rotate-180 -translate-x-2 translate-y-0`}
+            ></div>
+            {msg.type === "text" ? (
+              <div className="pr-14 pb-2">{msg.text}</div>
+            ) : (
+              <div
+                className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6`}
+              >
+                <div className="flex flex-col gap-2">
+                  {/* topbar */}
+                  <div className="flex items-center justify-between bg-gray-400 h-14 px-2 rounded-tr-lg">
+                    {/* left */}
+                    <div className="flex items-start gap-2">
+                      <Image
+                        src={
+                          msg?.text?.subId?.subCategoryId?.imageUrl ||
+                          fallbackImage
+                        }
+                        alt="subSectionImage"
+                        width={40}
+                        height={30}
+                        className="rounded-lg aspect-square"
+                      />
+                      <div className="flex flex-col gap-1">
+                        {/* name */}
+                        <div className="text-black text-xs font-semibold">
+                          {msg?.text?.subId?.subCategoryId?.name}
+                        </div>
+
+                        {/* price */}
+                        <div className="flex items-center gap-1">
+                          <p className="text-xs font-medium text-gray-600">
+                            {msg?.text?.subId?.price}
+                            /hr
+                          </p>
+                        </div>
+                        {/* about */}
+                      </div>
+                    </div>
+
+                    {/* right */}
+                    {/* active */}
+                    <div className="px-2 py-1 text-[12px] rounded-full font-semibold">
+                      {orders?.find((order: any) => order?._id === msg?.order)
+                        ?.status === "rejected" && (
+                        <div className="px-2 py-1 text-[8px] bg-red-800 text-white rounded-full font-semibold">
+                          Rejected
+                        </div>
+                      )}
+
+                      {orders?.find((order: any) => order?._id === msg?.order)
+                        ?.status === "pending" && (
+                        <div className="px-2 py-1 text-[8px] bg-yellow-100 text-yellow-700 rounded-full font-semibold">
+                          Pending
+                        </div>
+                      )}
+
+                      {orders?.find((order: any) => order?._id === msg?.order)
+                        ?.status === "accepted" &&
+                        orders?.find((order: any) => order?._id === msg?.order)
+                          ?.isActive === false &&
+                        orders?.find((order: any) => order?._id === msg?.order)
+                          ?.isCompleted === true && (
+                          <div className="px-2 py-1 text-[8px] bg-green-800 text-white rounded-full font-semibold">
+                            Accepted
+                          </div>
+                        )}
+
+                      {/* active */}
+                      {orders?.length > 0 &&
+                        orders?.find((order: any) => order?._id === msg?.order)
+                          ?.isActive === true && (
+                          <div className="flex justify-end">
+                            <div className="px-4 py-1 text-[12px] bg-blue-300 text-black rounded-full font-semibold">
+                              Live...
+                            </div>
+                          </div>
+                        )}
+
+                      {/* completed */}
+                      {orders?.length > 0 &&
+                        orders?.find((order: any) => order?._id === msg?.order)
+                          ?.isCompleted === true && (
+                          <div className="flex justify-end">
+                            <div className="px-2 py-1 text-[8px] bg-green-800 text-white rounded-full font-semibold">
+                              Completed
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex flex-col gap-1 px-2">
+                    {/* date */}
+                    <div className="flex items-center gap-1">
+                      <div className="text-sm text-black font-semibold">
+                        Date:{" "}
+                      </div>
+                      <p className="text-xs font-semibold text-gray-400">
+                        {msg?.text?.date}
+                      </p>
+                    </div>
+
+                    {/* time */}
+                    <div className="flex items-center gap-1">
+                      <div className="text-sm text-black font-semibold">
+                        Time:{" "}
+                      </div>
+                      <p className="text-xs font-semibold text-gray-400">
+                        {msg?.text?.time}
+                      </p>
+                    </div>
+
+                    {/* venue */}
+                    <div className="flex items-center gap-1">
+                      <div className="text-sm text-black font-semibold">
+                        Location:{" "}
+                      </div>
+                      <p className="text-xs font-semibold text-gray-400">
+                        {msg?.text?.location}
+                      </p>
+                    </div>
+
+                    {/* additionalInfo */}
+                    <div className="flex items-center gap-1">
+                      <div className="text-sm text-black font-semibold">
+                        Info:{" "}
+                      </div>
+                      <p className="text-xs font-semibold text-gray-400">
+                        {msg?.text?.additionalInfo}
+                      </p>
+                    </div>
+
+                    {/* cabFare */}
+                    <div className="flex items-center gap-1">
+                      <div className="text-sm text-black font-semibold">
+                        CabFare:{" "}
+                      </div>
+                      <p className="text-xs font-semibold text-gray-400">
+                        {msg?.text?.cabFare}
+                      </p>
+                    </div>
+
+                    {/* FinalPrice */}
+                    <div className="flex items-center gap-1">
+                      <div className="text-sm text-black font-semibold">
+                        FinalPrice:{" "}
+                      </div>
+                      <p className="text-xs font-semibold text-gray-400">
+                        {msg?.text?.totalPrice}.00 Rs
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* buttons */}
+                  {orders?.length > 0 &&
+                    orders?.find((order: any) => order?._id === msg?.order)
+                      ?.status === "accepted" && orders?.find((order: any) => order?._id === msg?.order)?.isActive === false && (
+                      <div className="flex items-center justify-end gap-1">
+                        <div className="px-4 py-2 bg-amber-200 text-black w-fit mr-3 rounded-lg">
+                          Accepted waiting for payments
+                        </div>
+                      </div>
+                    )}
+
+                  {orders?.length > 0 &&
+                    orders?.find((order: any) => order?._id === msg?.order)
+                      ?.status === "rejected" && (
+                      <div className="flex items-center justify-end gap-1">
+                        <div className="px-4 py-2 bg-red-200 text-black w-fit mr-3 rounded-lg">
+                          Rejected
+                        </div>
+                      </div>
+                    )}
+
+                  {orders?.length > 0 &&
+                    orders?.find((order: any) => order?._id === msg?.order)
+                      ?.status === "pending" && (
+                      <div className="px-2 py-1 flex items-center justify-end gap-1 mt-4">
+                        <button
+                          onClick={() => {
+                            setAcceptLoading(true);
+                            socketRef.current?.send(
+                              JSON.stringify({
+                                type: "acceptOrder",
+                                payload: {
+                                  msgId: msg?._id,
+                                  mark: "accepted",
+                                },
+                              })
+                            );
+                          }}
+                          className="bg-yellow-300 text-black px-4 py-2 rounded-md text-base  font-semibold cursor-pointer flex items-center gap-2"
+                        >
+                          <FaHandsHelping className="text-black text-2xl" />
+                          Accept
+                          {acceptLoading && <PlanetSpinner />}
+                        </button>
+                        <button
+                          onClick={() => {
+                            socketRef.current?.send(
+                              JSON.stringify({
+                                type: "acceptOrder",
+                                payload: {
+                                  msgId: msg?._id,
+                                  mark: "rejected",
+                                },
+                              })
+                            );
+                          }}
+                          className="bg-red-500 text-white rounded-md text-base font-semibold ml-2 cursor-pointer flex items-center gap-2 px-4 py-2"
+                        >
+                          <MdOutlineCancel className="text-white text-2xl" />
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                </div>
+              </div>
+            )}
+
+            {/* dateTime */}
+            <span className="text-right text-xs text-gray-500 text-richblack-25 font-bold absolute bottom-1 right-2">
+              {new Date(msg?.createdAt).toLocaleString("en-us", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }) === "Invalid Date" ? (
+                <>23:59</>
+              ) : (
+                <>
+                  {new Date(msg?.createdAt).toLocaleString("en-us", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })}
+                </>
+              )}
+            </span>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default memo(Receiver);

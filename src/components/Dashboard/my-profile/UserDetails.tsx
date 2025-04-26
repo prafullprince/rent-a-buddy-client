@@ -1,28 +1,30 @@
-"use client";
 import React from "react";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { FaEdit } from "react-icons/fa";
 import Link from "next/link";
+import { NextAuthOption } from "@/utills/nextauthoption.utills";
+import { getServerSession } from "next-auth";
+import { fetchUserDetailsById } from "@/service/apiCall/user.api";
 
-const UserDetails = () => {
+const UserDetails = async () => {
   // hook
-  const { data: session } = useSession();
+  const session = await getServerSession(NextAuthOption);
 
+  const userDetails = await fetchUserDetailsById(session?.serverToken);
   if (!session) return null;
 
   return (
-    <div className="shadow-md px-4 py-4 rounded-lg bg-black/5 lg:min-w-[600px]">
-      <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between gap-4">
+    <div className="shadow-md px-3 py-4 rounded-lg bg-black/5 lg:min-w-[600px]">
+      <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between gap-2">
         {/* left */}
-        <div className="flex sm:flex-row flex-col sm:items-center gap-2">
+        <div className="flex sm:flex-row flex-col sm:items-start gap-4">
           {/* pp */}
           <Image
-            src={session?.user?.image}
+            src={userDetails?.image}
             alt="profile"
             width={100}
             height={100}
-            className="rounded-full"
+            className="rounded-full min-w-32 min-h-32 max-w-32 max-h-32"
           />
 
           <div className="flex flex-col items-start gap-1">
@@ -31,7 +33,18 @@ const UserDetails = () => {
 
             {/* username */}
             <p className="text-base text-[#838894]">
-              {session?.user?.email?.split("@")[0]}
+              {/* {session?.user?.email?.split("@")[0]} */}
+              {userDetails?.username || session?.user?.email?.split("@")[0]}
+            </p>
+
+            <p className="text-base text-[#838894]">
+              {/* {session?.user?.email?.split("@")[0]} */}
+              {session?.user?.email}
+            </p>
+
+            <p className="text-base text-[#838894]">
+              {/* {session?.user?.email?.split("@")[0]} */}
+              +91 {userDetails?.phoneNumber || ""}
             </p>
           </div>
 

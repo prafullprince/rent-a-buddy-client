@@ -1,4 +1,4 @@
-import { FaUser, FaWallet, FaHistory, FaCalendarAlt, FaCog, FaDollarSign } from "react-icons/fa";
+import { FaUser, FaWallet, FaHistory, FaCalendarAlt, FaCog } from "react-icons/fa";
 
 export const dashboardLinks = [
   {
@@ -6,12 +6,6 @@ export const dashboardLinks = [
     name: "My Profile",
     path: "/dashboard/my-profile",
     icon: <FaUser />,
-  },
-  {
-    id: 2,
-    name: "Earning",
-    path: "/dashboard/earning",
-    icon: <FaDollarSign />,
   },
   {
     id: 3,
@@ -30,6 +24,7 @@ export const dashboardLinks = [
     name: "Event",
     path: "/dashboard/event",
     icon: <FaCalendarAlt />,
+    type: "Buddy",
   },
   {
     id: 6,

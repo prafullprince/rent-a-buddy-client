@@ -1,7 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 import Sidebar from "@/components/Dashboard/Sidebar";
+import { NextAuthOption } from "@/utills/nextauthoption.utills";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const layout = ({ children }: { children: any }) => {
+const layout = async ({ children }: { children: any }) => {
+
+  const session = await getServerSession(NextAuthOption);
+
+  if(!session) {
+    return redirect('/login');
+  }
+
   return (
     <div className="flex gap-2 items-stretch min-h-screen">
       <Sidebar />

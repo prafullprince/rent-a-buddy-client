@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import toast from "react-hot-toast";
 import { eventEndPoints } from "../api";
 import { apiConnector } from "../apiConnector";
@@ -6,11 +8,14 @@ import { apiConnector } from "../apiConnector";
 // getInfiniteEvents
 export const getInfiniteEvents = async (limit:number,filters?:any,cursor?:any) => {
   try {
+    console.log("filters are:",filters);
     // apiCall
     const response = await apiConnector("POST", eventEndPoints.GET_INFINTE_EVENTS_FILTERS, {
         limit,
         cursor,
         filters
+    },{
+      "Content-Type": "application/json",
     });
     // console.log("response is:", response.data.data);
     return response.data.data;
@@ -19,7 +24,6 @@ export const getInfiniteEvents = async (limit:number,filters?:any,cursor?:any) =
     return error;
   }
 };
-
 
 // createEvent
 export const createEvent = async (formData:any,token:any) => {
@@ -40,7 +44,6 @@ export const createEvent = async (formData:any,token:any) => {
     toast.dismiss(tid);
   }
 };
-
 
 // createService
 export const createServiceApi = async (selectedData:any,token:any) => {
@@ -73,7 +76,6 @@ export const eventSummary = async (eventId:any,token:any) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     });
-    console.log("response isasdasdasd:", response.data.data);
     toast.success("Success");
     return response.data.data.data;
   } catch (error) {
@@ -169,5 +171,26 @@ export const allAvailableEvents = async () => {
   } catch (error) {
     console.log(error);
     return error;
+  }
+};
+
+// markAsActiveInactive
+export const markAsActiveInactive = async (mark:any,token:any, eventId:any) => {
+  const  tid = toast.loading("Marking event as active/inactive...");
+  try {
+    // apiCall
+    const response = await apiConnector("POST", eventEndPoints.MARK_AS_ACTIVE_INACTIVE,{eventId,mark}, {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    });
+    console.log("response is:", response.data.data);
+    toast.success("Success");
+    return response.data.data;
+  } catch (error:any) {
+    console.log(error);
+    toast.error(error.response.data.message);
+    return error;
+  } finally {
+    toast.dismiss(tid);
   }
 };

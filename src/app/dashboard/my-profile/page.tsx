@@ -1,14 +1,19 @@
 import MyEvents from '@/components/Dashboard/my-profile/MyEvents'
-import ProfileDetails from '@/components/Dashboard/my-profile/ProfileDetails'
 import UserDetails from '@/components/Dashboard/my-profile/UserDetails'
+import { NextAuthOption } from '@/utills/nextauthoption.utills'
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import React from 'react'
 
-const page = () => {
+const page = async() => {
+
+  const session = await getServerSession(NextAuthOption);
+
+
   return (
     <div className='p-4'>
       {/* topbar */}
-      <div className='flex flex-col gap-4 mt-2'>
+      <div className='flex flex-col gap-4 mt-4'>
         {/* route */}
         <div className='flex items-center gap-2'>
             <Link href={'/'} className='text-sm text-[#838894]'>Home  <span>/</span></Link>
@@ -17,7 +22,7 @@ const page = () => {
         </div>
 
         {/* title */}
-        <h2 className='text-2xl mt-6 font-semibold text-black'>My Profile</h2>
+        <h2 className='text-2xl mt-3 font-semibold text-black'>My Profile</h2>
 
         {/* profile */}
         <div className='flex flex-col gap-4 max-w-lg'>
@@ -25,10 +30,7 @@ const page = () => {
             <UserDetails />
 
             {/* my-Events */}
-            <MyEvents />
-
-            {/* profileDetails */}
-            <ProfileDetails />
+            {session?.accountType === "Buddy" && <MyEvents />}
         </div>
 
 

@@ -29,6 +29,7 @@ export const eventEndPoints = {
     EDIT_EVENT: BASE_URL + "/event/editEvent",
     EVENT_BY_ID: BASE_URL + "/event/getEventById",
     ALL_EVENTS: BASE_URL + "/event/availableEvents",
+    MARK_AS_ACTIVE_INACTIVE: BASE_URL + "/event/markAsActiveInactive",
 }
 
 // category
@@ -44,8 +45,6 @@ export const paymentEndPoints = {
     SEND_MONEY: BASE_URL + "/payment/sendMoney",
     GET_USER_WALLET: BASE_URL + "/payment/getUserWallet"
 }
-
-
 
 // extra
 export const extraEndPoints = {
@@ -76,5 +75,7 @@ export const chatEndPoints = {
     CREATE_CHAT: BASE_URL + "/course/createChat",
     FETCH_CHAT: BASE_URL + "/chat/fetchChat",
     FETCH_MESSAGE: BASE_URL + "/chat/fetchAllMessages",
-    FETCH_OTHER_USER: BASE_URL + "/chat/fetchOtherUser"
+    FETCH_OTHER_USER: BASE_URL + "/chat/fetchOtherUser",
+    FETCH_ORDERS_CHAT: BASE_URL + "/chat/fetchOrdersOfChat",
+    VERIFY_OTP: BASE_URL + "/chat/verifyOtp",
 }

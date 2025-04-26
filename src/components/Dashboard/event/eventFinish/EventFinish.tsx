@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+
+
 "use client";
 import EventOverlayCard from "@/components/HomePage/EventOverlayCard";
 import { eventSummary, published } from "@/service/apiCall/event.api";
@@ -13,7 +17,6 @@ const EventFinish = () => {
   const router = useRouter();
 
   // state
-  const [isLoading, setIsLoading] = useState(false);
   const [eventDetails, setEventDetails] = useState<any>(null);
 
   // fetchEventSumamry

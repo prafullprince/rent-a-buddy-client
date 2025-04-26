@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 "use client";
 import GradientInput from "@/components/ui/Input";
 import Label from "@/components/ui/Label";
@@ -9,6 +12,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import "@/styles/globals.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setEvent, setStep } from "@/redux/slice/event.slice";
+import Image from "next/image";
 
 // EventForm
 const EventForm = () => {
@@ -208,9 +212,12 @@ const EventForm = () => {
               onChange={changeHandler}
             />
             {preview ? (
-              <img
+              <Image
                 src={preview}
                 alt="Preview"
+                priority
+                width={500}
+                height={500}
                 className="w-full h-[300px] object-cover bg-center bg-cover rounded-md shadow-xl transition-all duration-300"
               />
             ) : (

@@ -16,7 +16,6 @@ export const NextAuthOption: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       try {
-        console.log("Signing in user:", user);
 
         // Call your backend API
         const response = await fetch("http://localhost:4000/api/auth/login", {
@@ -30,10 +29,10 @@ export const NextAuthOption: NextAuthOptions = {
         }
 
         const data = await response.json();
-        console.log("Received token from API:", data?.data);
 
         // Attach token to the user object
-        user.serverToken = data?.data || null;
+        user.serverToken = data?.data?.token || null;
+        user.accountType = data?.data?.role || "user";
 
         return true;
       } catch (error) {
@@ -44,23 +43,24 @@ export const NextAuthOption: NextAuthOptions = {
 
     // Store serverToken inside JWT
     async jwt({ token, user }) {
-      console.log("JWT Callback - Before:", token);
-      console.log("JWT Callback - User:", user);
 
       if (user?.serverToken) {
         token.serverToken = user.serverToken;
       }
 
-      console.log("JWT Callback - After:", token);
+      if(user?.accountType){
+        token.accountType = user.accountType;
+      }
+
       return token;
     },
 
     // Pass token to session
     async session({ session, token }) {
-      console.log("Session Callback - Token:", token);
-
       session.serverToken =
         typeof token.serverToken === "string" ? token.serverToken : undefined;
+      session.accountType =
+        typeof token.accountType === "string" ? token.accountType : undefined;
       console.log("Session Callback - Session:", session);
       return session;
     },

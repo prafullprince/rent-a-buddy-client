@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define a type for the slice state
@@ -19,7 +21,7 @@ const eventSlice = createSlice({
   name: "event",
   initialState,
   reducers: {
-    setStep(state: any, action: PayloadAction<Number>) {
+    setStep(state: any, action: PayloadAction<number>) {
       state.step = action.payload;
     },
     setEvent(state: any, action: PayloadAction<any>) {

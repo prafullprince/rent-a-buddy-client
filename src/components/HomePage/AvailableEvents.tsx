@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { memo, useEffect, useState } from "react";
-import { MdOutlineCurrencyRupee, MdVerified } from "react-icons/md";
+import { MdOutlineCurrencyRupee } from "react-icons/md";
 import RatingStars from "./RatingStars";
 import { GrLocation } from "react-icons/gr";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";

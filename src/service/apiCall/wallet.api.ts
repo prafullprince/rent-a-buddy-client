@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { paymentEndPoints } from "../api";
 import { apiConnector } from "../apiConnector";
 

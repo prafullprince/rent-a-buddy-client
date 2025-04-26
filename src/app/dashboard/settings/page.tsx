@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+
+
 "use client";
 import Label from "@/components/ui/Label";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import { useForm, set } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import {
   fetchUserDetailsById,
   updateProfileApiCall,
@@ -15,14 +19,13 @@ import PlanetSpinner from "@/loading/PageLoadingSpinner";
 import { motion } from "framer-motion";
 import FullScreen from "@/loading/FullScreen";
 import IntergalacticSpinner from "@/loading/Loading1";
+import { useRouter } from "next/navigation";
 
-
-const page = () => {
+const Page = () => {
   // hook
   const imageRef = useRef<HTMLInputElement>(null);
   const { data: session, status } = useSession();
-  console.log("session", session);
-  console.log("status", status);
+  const router = useRouter();
 
   const {
     register,
@@ -56,13 +59,10 @@ const page = () => {
     formData.append("thumbnail", currentValues.thumbnail[0]);
     setDpLoading(true);
     try {
-      await updateProfilePictureApiCall(
-        session?.serverToken,
-        formData
-      );
+      await updateProfilePictureApiCall(session?.serverToken, formData);
       toast.success("Profile picture updated successfully");
       setPreview("");
-      setRefresh(prev=>!prev)
+      setRefresh((prev) => !prev);
     } catch (error) {
       console.log(error);
     } finally {
@@ -143,17 +143,39 @@ const page = () => {
   if (!userDetails) return <FullScreen />;
 
   return (
-    <>
+    <div className="">
+      {/* route */}
+      <div className="p-4 mt-4">
+        <div className="flex items-center gap-2">
+          <div
+            onClick={() => router.push("/")}
+            className="text-sm text-[#838894] cursor-pointer"
+          >
+            Home <span>/</span>
+          </div>
+          <div
+            onClick={() => router.push("/dashboard/my-profile")}
+            className="text-sm text-[#838894] cursor-pointer"
+          >
+            Dashboard <span>/</span>
+          </div>
+          <span className="text-base font-semibold text-yellow-600">
+            settings
+          </span>
+        </div>
+      </div>
+
+      {/*  */}
       {userLoading ? (
         <div className="min-h-screen flex items-center justify-center">
           <FullScreen />
         </div>
       ) : (
-        <div className="p-6">
+        <div className="px-6">
           {/* Box */}
           <div className="flex flex-col gap-4">
             {/* heading */}
-            <h2 className="text-2xl mt-6 font-semibold text-black">
+            <h2 className="text-2xl mt-4 font-semibold text-black">
               Edit Profile
             </h2>
 
@@ -303,8 +325,8 @@ const page = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
-export default page;
+export default Page;

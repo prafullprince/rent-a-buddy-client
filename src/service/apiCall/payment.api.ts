@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 import toast from "react-hot-toast";
 import { apiConnector } from "../apiConnector";
@@ -134,4 +136,30 @@ async function verifyPayment(
     toast.error("Could Not Verify Payment.");
   }
   toast.dismiss(toastId);
+}
+
+// sendMoney
+export async function sendMoneyApiCall(amount: any, receiverId: any, token: any, orderId: any) {
+  const tid = toast.loading("Sending money...");
+  try {
+    // apiCall
+    const response = await apiConnector(
+      "POST",
+      paymentEndPoints.SEND_MONEY,
+      { amount, receiverId, orderId },
+      {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    );
+    console.log("response is:", response.data.data);
+    toast.success("Success");
+    return response.data.data;
+  } catch (error: any) {
+    console.log(error);
+    toast.error(error.response.data.message);
+    return error;
+  } finally {
+    toast.dismiss(tid);
+  }
 }

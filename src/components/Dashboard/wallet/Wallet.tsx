@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, { memo } from 'react'
 import Balance from './Balance'
-import { TbRecharging } from 'react-icons/tb'
-import { PiHandWithdraw } from 'react-icons/pi'
 import Buttons from './Buttons'
 
 const Wallet = ({wallet}:any) => {
@@ -9,7 +9,7 @@ const Wallet = ({wallet}:any) => {
     <div className='p-6'>
         {/* heading */}
         <div>
-            <h1 className='text-5xl font-medium'>Wallet</h1>
+            <h1 className='text-4xl font-medium'>Wallet</h1>
         </div>
 
         {/* balance */}

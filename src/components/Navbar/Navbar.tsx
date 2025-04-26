@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 "use client";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import logo from "../../assets/—Pngtree—cabin rental logo design vector_5901911.png";
+import Logo from "@/assets/logoHomeIcon.png"
 import { FaStar } from "react-icons/fa";
-import { TbCategoryPlus } from "react-icons/tb";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { AiOutlineMessage } from "react-icons/ai";
 import { LuMessageCircleMore } from "react-icons/lu";
+import { fetchUserDetailsById } from "@/service/apiCall/user.api";
 
 const Navbar = () => {
   // session
@@ -18,6 +20,25 @@ const Navbar = () => {
 
   // state
   const [isOpen, setIsOpen] = useState(false);
+  const [socket, setSocket] = useState<any>(null);
+  console.log("socket", socket);
+
+  const [userDetails, setUserDetails] = useState<any>({});
+  const [loading, setLoading] = useState(false);
+  const [totalUnseenMessages, setTotalUnseenMessages] = useState<number>(0);
+
+  // fetchUserDetails
+    const fetchUserDetails = async () => {
+      setLoading(true);
+      try {
+        const result = await fetchUserDetailsById(session?.serverToken);
+        setUserDetails(result);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
   // click outside
   useEffect(() => {
@@ -37,6 +58,60 @@ const Navbar = () => {
     };
   }, []);
 
+  // fetchUserDetails
+  useEffect(() => {
+    fetchUserDetails();
+  }, [session]);
+
+  // handle websocket connection
+  useEffect(() => {
+    if(!session) return;
+
+    const socket = new WebSocket("ws://localhost:4000");
+
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+      
+      // no of unseen messages
+      socket.send(
+        JSON.stringify({
+          type: "unseenMessages",
+          payload: {
+            userId: userDetails?._id,
+          }
+        })
+      );
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("data", data);
+
+      // handle unseen messages
+      if (data.type === "numOfUnseenMessages") {
+        console.log("unseenMessages", data.payload);
+        setTotalUnseenMessages(data.payload.totalMessages);
+      }
+    };
+
+    socket.onclose = () => console.log("WebSocket closed");
+    socket.onerror = (error) => console.error("WebSocket Error", error);
+
+    setSocket(socket);
+    return () => {
+      socket.close();
+    };
+  }, [session, userDetails?._id]);
+
+  if(loading) {
+    // spinner
+    return (
+      <div className="w-full h-20 flex items-center justify-center">
+        <div className="loader1"></div>
+      </div>
+    ) 
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -49,7 +124,7 @@ const Navbar = () => {
         {/* logo */}
         <Link href="/">
           <Image
-            src={logo}
+            src={Logo}
             alt="Logo"
             width={60}
             height={60}
@@ -63,12 +138,14 @@ const Navbar = () => {
         {/* buttons */}
         <div className="flex items-center gap-4 sm:gap-6">
           {/* Be Buddy Button */}
-          <div className="border-0 rounded-lg cursor-pointer bg-black text-white px-4 py-[8px] flex items-center gap-2 hover:shadow-md hover:shadow-black duration-300 transition-all">
+          {session?.accountType !== "Buddy" && (
+            <div className="border-0 rounded-lg cursor-pointer bg-black text-white px-4 py-[8px] flex items-center gap-2 hover:shadow-md hover:shadow-black duration-300 transition-all">
             <div className="w-6 h-6 rounded-full flex items-center justify-center border-white border-2">
               <FaStar className="text-xs" />
             </div>
             <p className="text-lg font-medium hidden md:block">Be a Buddy</p>
           </div>
+          )}
 
           {/* Category Icon
           <div>
@@ -77,8 +154,9 @@ const Navbar = () => {
 
           {/* chat */}
           {session && status === "authenticated" && (
-            <Link href={'/chat/34/user/234'}>
+            <Link href={'/chat/null/user/null'} className="relative">
               <LuMessageCircleMore className="text-3xl font-bold cursor-pointer" />
+              {totalUnseenMessages > 0 && <div className="absolute top-0 right-0 translate-x-1.5 text-white -translate-y-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-sm">{totalUnseenMessages}</div>}
             </Link>
           )}
 

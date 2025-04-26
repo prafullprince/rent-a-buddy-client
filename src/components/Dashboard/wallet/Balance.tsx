@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, { memo } from 'react'
 import { FcAbout } from 'react-icons/fc'
 import { PiCurrencyInrBold } from 'react-icons/pi'
