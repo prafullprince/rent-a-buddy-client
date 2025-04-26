@@ -103,7 +103,7 @@ const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
 
   // socket
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:4000");
+    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
 
     // on open
     socket.onopen = () => {
