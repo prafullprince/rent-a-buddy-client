@@ -7,7 +7,7 @@ export const fetchCategorySubCategory = async () => {
         // apiCall
         const response = await apiConnector("GET", categoryEndPoints.FETCH_CATEGORY_SUBCATEGORY);
 
-        console.log(response)
+        console.log("response", response);
         return response.data;
     } catch (error) {
         console.log(error);
