@@ -21,7 +21,6 @@ const Navbar = () => {
   // state
   const [isOpen, setIsOpen] = useState(false);
   const [socket, setSocket] = useState<any>(null);
-  console.log("socket", socket);
 
   const [userDetails, setUserDetails] = useState<any>({});
   const [loading, setLoading] = useState(false);
@@ -67,7 +66,7 @@ const Navbar = () => {
   useEffect(() => {
     if(!session) return;
 
-    const socket = new WebSocket("ws://localhost:4000");
+    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
 
     socket.onopen = () => {
       console.log("WebSocket connected");

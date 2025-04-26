@@ -10,7 +10,6 @@ import React from 'react'
 const layout = async ({children}:{children:any}) => {
 
   const session = await getServerSession(NextAuthOption);
-  console.log("sessionasda'ls;d,:::::::", session);
 
   if(!session) {
     return redirect('/login')
