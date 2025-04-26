@@ -18,7 +18,7 @@ export const NextAuthOption: NextAuthOptions = {
       try {
 
         // Call your backend API
-        const response = await fetch("http://localhost:4000/api/auth/login", {
+        const response = await fetch("https://rent-a-buddy-server-1.onrender.com/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user }),
