@@ -5,6 +5,8 @@ const BASE_URL = "https://rent-a-buddy-server-1.onrender.com/api";
 // service
 // chatpage
 // chatSidebar
+// orderModal
+// navbar
 
 // https://rent-a-buddy-server-1.onrender.com/api
 

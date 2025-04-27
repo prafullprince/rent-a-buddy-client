@@ -31,7 +31,6 @@ export interface IFormData {
 const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
   // hook
   const btnRef = useRef<HTMLDivElement | null>(null);
-  console.log("wallet", wallet);
   // state
   const [formData, setFormData] = useState<IFormData>({
     location: "",
@@ -374,7 +373,7 @@ const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
                     router.push(`/dashboard/wallet`);
                     return;
                   }
-                  socket.send(
+                  socket?.send(
                     JSON.stringify({
                       type: "requestOrder",
                       payload: {
