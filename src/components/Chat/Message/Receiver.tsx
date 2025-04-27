@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Image from "next/image";
-import React, { memo } from "react";
+import React from "react";
 import { MdOutlineCancel } from "react-icons/md";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import { FaHandsHelping } from "react-icons/fa";
