@@ -125,7 +125,7 @@ const Page = () => {
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
 
-    const socket = new WebSocket("ws://localhost:4000");
+    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
     socketRef.current = socket;
 
     socket.onopen = () => {
