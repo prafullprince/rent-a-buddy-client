@@ -152,6 +152,11 @@ const Page = () => {
         setMessages((prev) => [...prev, data.payload]);
       }
 
+      // reload chat
+      if (data.type === "reloadChat") {
+        fetchMessages();
+      }
+
       if (data.type === "orderAccepted") {
         toast.success(data.payload.message);
         setRefreshButton((prev) => !prev);
