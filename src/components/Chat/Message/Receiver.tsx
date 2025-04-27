@@ -277,4 +277,4 @@ const Receiver = ({
   );
 };
 
-export default memo(Receiver);
+export default Receiver;
