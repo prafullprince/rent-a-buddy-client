@@ -146,7 +146,7 @@ const Page = () => {
     socket.onclose = () => console.log("WebSocket closed");
     socket.onerror = (error) => console.error("WebSocket Error", error);
 
-    socket.onmessage = (event) => {
+    socket.onmessage = async (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "receiveMessage") {
         setMessages((prev) => [...prev, data.payload]);
@@ -154,7 +154,15 @@ const Page = () => {
 
       // reload chat
       if (data.type === "reloadChat") {
-        fetchMessages();
+        setLoading(true);
+        try {
+          const response = await fetchMessage(chatId, session?.serverToken);
+          setMessages(Array.isArray(response) ? response : []);
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        } finally {
+          setLoading(false);
+        }
       }
 
       if (data.type === "orderAccepted") {
@@ -222,13 +230,23 @@ const Page = () => {
               <div className="flex flex-col gap-4">
                 {messages.map((msg) => (
                   <div key={msg._id} className="flex flex-col gap-1">
-
                     {/* Receiver */}
-                    <Receiver msg={msg} userDetails={userDetails} socketRef={socketRef} setAcceptLoading={setAcceptLoading} acceptLoading={acceptLoading} />
+                    <Receiver
+                      msg={msg}
+                      userDetails={userDetails}
+                      socketRef={socketRef}
+                      setAcceptLoading={setAcceptLoading}
+                      acceptLoading={acceptLoading}
+                    />
 
                     {/* Sender */}
-                    <Sender msg={msg} userDetails={userDetails} socketRef={socketRef} setModalData={setModalData} session={session} />
-
+                    <Sender
+                      msg={msg}
+                      userDetails={userDetails}
+                      socketRef={socketRef}
+                      setModalData={setModalData}
+                      session={session}
+                    />
                   </div>
                 ))}
               </div>
@@ -257,7 +275,12 @@ const Page = () => {
       </div>
 
       {modalData && (
-        <SendMoneyModal modalData={modalData} setModalData={setModalData} setTransaction={setTransaction} setRefreshButton={setRefreshButton} />
+        <SendMoneyModal
+          modalData={modalData}
+          setModalData={setModalData}
+          setTransaction={setTransaction}
+          setRefreshButton={setRefreshButton}
+        />
       )}
     </div>
   );
