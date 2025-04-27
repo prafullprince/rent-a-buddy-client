@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Image from "next/image";
-import React from "react";
+import React, { memo } from "react";
 import { IoMdDoneAll } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
@@ -10,7 +10,6 @@ const Sender = ({
   msg,
   userDetails,
   socketRef,
-  orders,
   setModalData,
   session
 }: any) => {
@@ -70,35 +69,29 @@ const Sender = ({
 
                     {/* right */}
                     <div className="px-2 py-1 text-[12px] rounded-full font-semibold">
-                      {orders?.find((order: any) => order?._id === msg?.order)
-                        ?.status === "rejected" && (
+                      {msg?.order?.status === "rejected" && (
                         <div className="px-2 py-1 text-[8px] bg-red-800 text-white rounded-full font-semibold">
                           Rejected
                         </div>
                       )}
 
-                      {orders?.find((order: any) => order?._id === msg?.order)
-                        ?.status === "pending" && (
+                      {msg?.order?.status === "pending" && (
                         <div className="px-2 py-1 text-[8px] bg-yellow-100 text-yellow-700 rounded-full font-semibold">
                           Waiting for response
                         </div>
                       )}
 
-                      {orders?.find((order: any) => order?._id === msg?.order)
-                        ?.status === "accepted" &&
-                        orders?.find((order: any) => order?._id === msg?.order)
-                          ?.isActive === false &&
-                        orders?.find((order: any) => order?._id === msg?.order)
-                          ?.isCompleted === true && (
+                      {msg?.order?.status === "accepted" &&
+                        msg?.order?.isActive === false &&
+                        msg?.order?.isCompleted === false && (
                           <div className="px-2 py-1 text-[8px] bg-green-800 text-white rounded-full font-semibold">
                             Accepted
                           </div>
                         )}
 
                       {/* active */}
-                      {orders?.length > 0 &&
-                        orders?.find((order: any) => order?._id === msg?.order)
-                          ?.isActive === true && (
+                      {msg?.order?.status === "accepted" &&
+                          msg?.order?.isActive === true && msg?.order?.isCompleted === false && (
                           <div className="flex justify-end">
                             <div className="px-4 py-1 text-[12px] bg-blue-300 text-black rounded-full font-semibold">
                               Live...
@@ -107,9 +100,9 @@ const Sender = ({
                         )}
 
                       {/* completed */}
-                      {orders?.length > 0 &&
-                        orders?.find((order: any) => order?._id === msg?.order)
-                          ?.isCompleted === true && (
+                      {msg?.order?.status === "accepted" &&
+                        msg?.order?.isActive === false &&
+                        msg?.order?.isCompleted === true && (
                           <div className="flex justify-end">
                             <div className="px-2 py-1 text-[8px] bg-green-800 text-white rounded-full font-semibold">
                               Completed
@@ -183,13 +176,9 @@ const Sender = ({
                   </div>
 
                   {/* buttons */}
-                  {orders.length > 0 &&
-                    orders.find((order: any) => order._id === msg?.order)
-                      ?.status === "accepted" &&
-                    orders.find((order: any) => order._id === msg?.order)
-                      ?.isActive === false &&
-                    orders.find((order: any) => order._id === msg?.order)
-                      ?.isCompleted === false && (
+                  {msg?.order?.status === "accepted" &&
+                      msg?.order?.isActive === false &&
+                      msg?.order?.isCompleted === false && (
                       <div className="flex justify-end">
                         <button
                           className="bg-yellow-300 cursor-pointer text-black py-2 px-4 rounded-lg mr-3"
@@ -197,9 +186,7 @@ const Sender = ({
                             setModalData({
                               heading: `Send Money `,
                               subHeading: `(${
-                                orders?.find(
-                                  (order: any) => order?._id === msg?.order
-                                )?.totalPrice
+                                msg?.order?.totalPrice
                               }rs)`,
                               text1: "Are you sure to make payment?",
                               text2: "This action cannot be undone.",
@@ -209,13 +196,9 @@ const Sender = ({
                                 setModalData(null);
                               },
                               receiverId: msg?.receiver,
-                              amount: orders?.find(
-                                (order: any) => order?._id === msg?.order
-                              )?.totalPrice,
+                              amount: msg?.order?.totalPrice,
                               token: session?.serverToken,
-                              orderId: orders?.find(
-                                (order: any) => order?._id === msg?.order
-                              )?._id,
+                              orderId: msg?.order?._id,
                             });
                           }}
                         >
@@ -225,9 +208,7 @@ const Sender = ({
                     )}
 
                   {/* rejected */}
-                  {orders.length > 0 &&
-                    orders.find((order: any) => order._id === msg?.order)
-                      ?.status === "rejected" && (
+                  {msg?.order?.status === "rejected" && (
                       <div className="flex justify-end">
                         <button className="bg-red-200 hover:bg-blue-700 text-black py-2 px-4 rounded-lg mr-3">
                           Order rejected
@@ -236,9 +217,7 @@ const Sender = ({
                     )}
 
                   {/* pending */}
-                  {orders.length > 0 &&
-                    orders.find((order: any) => order._id === msg?.order)
-                      ?.status === "pending" && (
+                  {msg?.order?.status === "pending" && (
                       <div className="flex items-center gap-1 mt-2 justify-end">
                         <button
                           onClick={() => {
@@ -295,4 +274,4 @@ const Sender = ({
   );
 };
 
-export default Sender;
+export default memo(Sender);

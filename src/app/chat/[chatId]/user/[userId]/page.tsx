@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unescaped-entities */
@@ -6,7 +5,6 @@
 "use client";
 import {
   fetchMessage,
-  fetchOrdersOfParticularChat,
   fetchOtherUser,
   fetchUserDetailsById,
 } from "@/service/apiCall/chat.api";
@@ -16,15 +14,9 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import wspLogo from "../../../../../../public/assets/wssupLogo.png";
-import { IoMdDoneAll } from "react-icons/io";
 import { IoSendSharp } from "react-icons/io5";
-import { GrEmoji } from "react-icons/gr";
-import { FaHandsHelping } from "react-icons/fa";
-import { MdOutlineCancel } from "react-icons/md";
 import toast from "react-hot-toast";
-import PlanetSpinner from "@/loading/PageLoadingSpinner";
 import SendMoneyModal from "@/components/Chat/SendMoneyModal";
-import Timer from "@/components/Chat/Timer";
 import Receiver from "@/components/Chat/Message/Receiver";
 import Sender from "@/components/Chat/Message/Sender";
 
@@ -61,12 +53,11 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [chat, setChat] = useState<string>("");
   const [acceptLoading, setAcceptLoading] = useState(false);
-  const [orders, setOrders] = useState<any>([]);
   const [refreshButton, setRefreshButton] = useState(false);
   const [modalData, setModalData] = useState<any>(null);
-  const [startTime, setStartTime] = useState<any>(null);
   const [transaction, setTransaction] = useState<any>(null);
-
+  console.log("messages", messages);
+  console.log("transaction", transaction);
 
   // Fetch Messages
   const fetchMessages = async () => {
@@ -120,30 +111,11 @@ const Page = () => {
     }
   };
 
-  // fetchOrdersOfParticularChat
-  const fetchOrdersOfParticularChatId = async () => {
-    try {
-      const result = await fetchOrdersOfParticularChat(
-        chatId,
-        session?.serverToken
-      );
-      setOrders(result);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
-  };
-
   // Fetch Data
   useEffect(() => {
     fetchMessages();
     fetchOtherUsers();
-  }, [chatId, session]);
-
-  useEffect(() => {
-    if(socketRef.current) {
-      fetchOrdersOfParticularChatId();
-    }
-  }, [refreshButton, chatId, session]);
+  }, [chatId, session, refreshButton]);
 
   useEffect(() => {
     fetchUserDetails();
@@ -153,7 +125,7 @@ const Page = () => {
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
 
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    const socket = new WebSocket("ws://localhost:4000");
     socketRef.current = socket;
 
     socket.onopen = () => {
@@ -196,13 +168,6 @@ const Page = () => {
   useEffect(() => {
     divRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  useEffect(() => {
-      const startTimeIso = localStorage.getItem("startTime");
-      if (startTimeIso) {
-        setStartTime(JSON.parse(startTimeIso));
-      }
-  }, [modalData]);
 
   // Handle Enter Key for Sending Message
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -254,18 +219,16 @@ const Page = () => {
                   <div key={msg._id} className="flex flex-col gap-1">
 
                     {/* Receiver */}
-                    <Receiver msg={msg} userDetails={userDetails} socketRef={socketRef} setAcceptLoading={setAcceptLoading} acceptLoading={acceptLoading} orders={orders} />
+                    <Receiver msg={msg} userDetails={userDetails} socketRef={socketRef} setAcceptLoading={setAcceptLoading} acceptLoading={acceptLoading} />
 
                     {/* Sender */}
-                    <Sender msg={msg} userDetails={userDetails} socketRef={socketRef} orders={orders} setModalData={setModalData} session={session} />
+                    <Sender msg={msg} userDetails={userDetails} socketRef={socketRef} setModalData={setModalData} session={session} />
+
                   </div>
                 ))}
               </div>
             )}
             <div ref={divRef}></div>
-            <div className="absolute top-2 left-[45%] bg-gray-400 px-3 py-2 rounded-xl">
-              <Timer startTimeISO={startTime} />
-            </div>
           </div>
         )}
       </div>
@@ -280,12 +243,6 @@ const Page = () => {
           onKeyDown={handleKeyDown}
           className="bg-white w-full h-10 px-4 rounded-lg outline-none"
         />
-        {/* <button
-          onClick={sendMessage}
-          className="text-gray-500 hover:text-yellow-400"
-        >
-          <GrEmoji className="text-2xl" />
-        </button> */}
         <button
           onClick={sendMessage}
           className="bg-black text-white px-4 py-2 rounded-lg text-xl cursor-pointer"
@@ -295,7 +252,7 @@ const Page = () => {
       </div>
 
       {modalData && (
-        <SendMoneyModal modalData={modalData} setModalData={setModalData} setStartTime={setStartTime} setTransaction={setTransaction} />
+        <SendMoneyModal modalData={modalData} setModalData={setModalData} setTransaction={setTransaction} setRefreshButton={setRefreshButton} />
       )}
     </div>
   );

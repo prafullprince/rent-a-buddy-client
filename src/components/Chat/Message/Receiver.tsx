@@ -13,7 +13,6 @@ const Receiver = ({
   socketRef,
   setAcceptLoading,
   acceptLoading,
-  orders,
 }: any) => {
   return (
     <>
@@ -32,7 +31,7 @@ const Receiver = ({
               } w-0 h-0 rotate-180 -translate-x-2 translate-y-0`}
             ></div>
             {msg.type === "text" ? (
-              <div className="pr-14 pb-2">{msg.text}</div>
+              <div className="pr-10 pb-2">{msg.text}</div>
             ) : (
               <div
                 className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6`}
@@ -70,37 +69,30 @@ const Receiver = ({
                     </div>
 
                     {/* right */}
-                    {/* active */}
                     <div className="px-2 py-1 text-[12px] rounded-full font-semibold">
-                      {orders?.find((order: any) => order?._id === msg?.order)
-                        ?.status === "rejected" && (
+                      {msg?.order?.status === "rejected" && (
                         <div className="px-2 py-1 text-[8px] bg-red-800 text-white rounded-full font-semibold">
                           Rejected
                         </div>
                       )}
 
-                      {orders?.find((order: any) => order?._id === msg?.order)
-                        ?.status === "pending" && (
+                      {msg?.order?.status === "pending" && (
                         <div className="px-2 py-1 text-[8px] bg-yellow-100 text-yellow-700 rounded-full font-semibold">
                           Pending
                         </div>
                       )}
 
-                      {orders?.find((order: any) => order?._id === msg?.order)
-                        ?.status === "accepted" &&
-                        orders?.find((order: any) => order?._id === msg?.order)
-                          ?.isActive === false &&
-                        orders?.find((order: any) => order?._id === msg?.order)
-                          ?.isCompleted === true && (
+                      {msg?.order?.status === "accepted" &&
+                        msg?.order?.isActive === false && 
+                        msg?.order?.isCompleted === false
+                       && (
                           <div className="px-2 py-1 text-[8px] bg-green-800 text-white rounded-full font-semibold">
                             Accepted
                           </div>
                         )}
 
                       {/* active */}
-                      {orders?.length > 0 &&
-                        orders?.find((order: any) => order?._id === msg?.order)
-                          ?.isActive === true && (
+                      {msg?.order?.status === "accepted" && msg?.order?.isActive === true && (
                           <div className="flex justify-end">
                             <div className="px-4 py-1 text-[12px] bg-blue-300 text-black rounded-full font-semibold">
                               Live...
@@ -109,9 +101,9 @@ const Receiver = ({
                         )}
 
                       {/* completed */}
-                      {orders?.length > 0 &&
-                        orders?.find((order: any) => order?._id === msg?.order)
-                          ?.isCompleted === true && (
+                      {msg?.order?.status === "accepted" &&
+                        msg?.order?.isActive === false &&
+                        msg?.order?.isCompleted === true && (
                           <div className="flex justify-end">
                             <div className="px-2 py-1 text-[8px] bg-green-800 text-white rounded-full font-semibold">
                               Completed
@@ -185,9 +177,8 @@ const Receiver = ({
                   </div>
 
                   {/* buttons */}
-                  {orders?.length > 0 &&
-                    orders?.find((order: any) => order?._id === msg?.order)
-                      ?.status === "accepted" && orders?.find((order: any) => order?._id === msg?.order)?.isActive === false && (
+                  {msg?.order?.status === "accepted" &&
+                    msg?.order?.isActive === false && (
                       <div className="flex items-center justify-end gap-1">
                         <div className="px-4 py-2 bg-amber-200 text-black w-fit mr-3 rounded-lg">
                           Accepted waiting for payments
@@ -195,9 +186,7 @@ const Receiver = ({
                       </div>
                     )}
 
-                  {orders?.length > 0 &&
-                    orders?.find((order: any) => order?._id === msg?.order)
-                      ?.status === "rejected" && (
+                  {msg?.order?.status === "rejected" && (
                       <div className="flex items-center justify-end gap-1">
                         <div className="px-4 py-2 bg-red-200 text-black w-fit mr-3 rounded-lg">
                           Rejected
@@ -205,10 +194,20 @@ const Receiver = ({
                       </div>
                     )}
 
-                  {orders?.length > 0 &&
-                    orders?.find((order: any) => order?._id === msg?.order)
-                      ?.status === "pending" && (
+                  {/* completed */}
+                  {msg?.order?.status === "accepted" &&
+                    msg?.order?.isActive === false &&
+                    msg?.order?.isCompleted === true && (
+                      <div className="flex justify-end">
+                        <div className="px-2 py-1 text-[8px] bg-green-800 text-white rounded-full font-semibold">
+                          Completed
+                        </div>
+                      </div>
+                    )}
+
+                  {msg?.order?.status === "pending" && (
                       <div className="px-2 py-1 flex items-center justify-end gap-1 mt-4">
+                        {/* accept */}
                         <button
                           onClick={() => {
                             setAcceptLoading(true);
@@ -228,6 +227,8 @@ const Receiver = ({
                           Accept
                           {acceptLoading && <PlanetSpinner />}
                         </button>
+
+                        {/* reject */}
                         <button
                           onClick={() => {
                             socketRef.current?.send(

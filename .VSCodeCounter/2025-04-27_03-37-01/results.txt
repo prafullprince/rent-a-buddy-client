@@ -1,0 +1,178 @@
+Date : 2025-04-27 03:37:01
+Directory : /Users/vector/Desktop/rent-a-buddy-client
+Total : 90 files,  11749 codes, 604 comments, 794 blanks, all 13147 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |          3 |      6,232 |          0 |          2 |      6,234 |
+| TypeScript JSX     |         57 |      4,597 |        471 |        627 |      5,695 |
+| TypeScript         |         19 |        667 |        103 |        124 |        894 |
+| CSS                |          2 |        182 |         30 |         19 |        231 |
+| JSON with Comments |          1 |         27 |          0 |          1 |         28 |
+| Markdown           |          1 |         23 |          0 |         14 |         37 |
+| JavaScript         |          2 |         16 |          0 |          7 |         23 |
+| XML                |          5 |          5 |          0 |          0 |          5 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                   | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                      |         90 |     11,749 |        604 |        794 |     13,147 |
+| . (Files)                                                                                              |          9 |      6,311 |          1 |         32 |      6,344 |
+| public                                                                                                 |          5 |          5 |          0 |          0 |          5 |
+| src                                                                                                    |         76 |      5,433 |        603 |        762 |      6,798 |
+| src/app                                                                                                |         20 |      1,221 |        149 |        185 |      1,555 |
+| src/app (Files)                                                                                        |          4 |        398 |         46 |         45 |        489 |
+| src/app/api                                                                                            |          1 |          4 |          2 |          5 |         11 |
+| src/app/api/auth                                                                                       |          1 |          4 |          2 |          5 |         11 |
+| src/app/api/auth/[...nextauth]                                                                         |          1 |          4 |          2 |          5 |         11 |
+| src/app/chat                                                                                           |          3 |        265 |         41 |         46 |        352 |
+| src/app/chat (Files)                                                                                   |          2 |         30 |          4 |         12 |         46 |
+| src/app/chat/[chatId]                                                                                  |          1 |        235 |         37 |         34 |        306 |
+| src/app/chat/[chatId]/user                                                                             |          1 |        235 |         37 |         34 |        306 |
+| src/app/chat/[chatId]/user/[userId]                                                                    |          1 |        235 |         37 |         34 |        306 |
+| src/app/dashboard                                                                                      |          8 |        441 |         43 |         67 |        551 |
+| src/app/dashboard (Files)                                                                              |          2 |         25 |          1 |         11 |         37 |
+| src/app/dashboard/earning                                                                              |          1 |          7 |          0 |          3 |         10 |
+| src/app/dashboard/event                                                                                |          1 |         44 |          6 |          7 |         57 |
+| src/app/dashboard/history                                                                              |          1 |          7 |          0 |          3 |         10 |
+| src/app/dashboard/my-profile                                                                           |          1 |         26 |          6 |         11 |         43 |
+| src/app/dashboard/settings                                                                             |          1 |        286 |         23 |         24 |        333 |
+| src/app/dashboard/wallet                                                                               |          1 |         46 |          7 |          8 |         61 |
+| src/app/event                                                                                          |          1 |         31 |          9 |          8 |         48 |
+| src/app/event/[eventId]                                                                                |          1 |         31 |          9 |          8 |         48 |
+| src/app/login                                                                                          |          2 |         67 |          8 |         11 |         86 |
+| src/app/types                                                                                          |          1 |         15 |          0 |          3 |         18 |
+| src/app/types/global                                                                                   |          1 |         15 |          0 |          3 |         18 |
+| src/components                                                                                         |         35 |      3,287 |        311 |        433 |      4,031 |
+| src/components (Files)                                                                                 |          1 |         11 |          0 |          3 |         14 |
+| src/components/Chat                                                                                    |          5 |        800 |         66 |         81 |        947 |
+| src/components/Chat (Files)                                                                            |          3 |        291 |         26 |         39 |        356 |
+| src/components/Chat/Message                                                                            |          2 |        509 |         40 |         42 |        591 |
+| src/components/Common                                                                                  |          1 |         26 |          1 |          4 |         31 |
+| src/components/Dashboard                                                                               |         18 |      1,283 |        150 |        193 |      1,626 |
+| src/components/Dashboard (Files)                                                                       |          2 |         64 |          3 |         13 |         80 |
+| src/components/Dashboard/event                                                                         |          6 |        629 |         75 |         79 |        783 |
+| src/components/Dashboard/event/eventBuilder                                                            |          3 |        291 |         31 |         41 |        363 |
+| src/components/Dashboard/event/eventFinish                                                             |          1 |         65 |         10 |         12 |         87 |
+| src/components/Dashboard/event/eventInfo                                                               |          2 |        273 |         34 |         26 |        333 |
+| src/components/Dashboard/eventDetails                                                                  |          1 |        195 |         24 |         28 |        247 |
+| src/components/Dashboard/my-profile                                                                    |          3 |        121 |         19 |         27 |        167 |
+| src/components/Dashboard/wallet                                                                        |          6 |        274 |         29 |         46 |        349 |
+| src/components/HomePage                                                                                |          3 |        224 |         37 |         39 |        300 |
+| src/components/Modal                                                                                   |          1 |        349 |         30 |         29 |        408 |
+| src/components/Navbar                                                                                  |          1 |        178 |         24 |         29 |        231 |
+| src/components/ui                                                                                      |          5 |        416 |          3 |         55 |        474 |
+| src/data                                                                                               |          2 |         37 |          0 |          4 |         41 |
+| src/lib                                                                                                |          1 |          5 |          0 |          2 |          7 |
+| src/loading                                                                                            |          3 |        180 |         14 |         17 |        211 |
+| src/redux                                                                                              |          4 |         44 |         18 |         22 |         84 |
+| src/redux (Files)                                                                                      |          2 |         16 |          1 |          7 |         24 |
+| src/redux/slice                                                                                        |          2 |         28 |         17 |         15 |         60 |
+| src/service                                                                                            |          8 |        523 |         77 |         67 |        667 |
+| src/service (Files)                                                                                    |          2 |         69 |         24 |         17 |        110 |
+| src/service/apiCall                                                                                    |          6 |        454 |         53 |         50 |        557 |
+| src/styles                                                                                             |          1 |         66 |         29 |         13 |        108 |
+| src/types                                                                                              |          1 |         18 |          1 |          5 |         24 |
+| src/utills                                                                                             |          1 |         52 |          4 |         14 |         70 |
++--------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                               | language           | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| /Users/vector/Desktop/rent-a-buddy-client/README.md                                                    | Markdown           |         23 |          0 |         14 |         37 |
+| /Users/vector/Desktop/rent-a-buddy-client/components.json                                              | JSON               |         21 |          0 |          0 |         21 |
+| /Users/vector/Desktop/rent-a-buddy-client/eslint.config.mjs                                            | JavaScript         |         12 |          0 |          5 |         17 |
+| /Users/vector/Desktop/rent-a-buddy-client/middleware.ts                                                | TypeScript         |          6 |          0 |          5 |         11 |
+| /Users/vector/Desktop/rent-a-buddy-client/next.config.ts                                               | TypeScript         |          7 |          1 |          3 |         11 |
+| /Users/vector/Desktop/rent-a-buddy-client/package-lock.json                                            | JSON               |      6,162 |          0 |          1 |      6,163 |
+| /Users/vector/Desktop/rent-a-buddy-client/package.json                                                 | JSON               |         49 |          0 |          1 |         50 |
+| /Users/vector/Desktop/rent-a-buddy-client/postcss.config.mjs                                           | JavaScript         |          4 |          0 |          2 |          6 |
+| /Users/vector/Desktop/rent-a-buddy-client/public/file.svg                                              | XML                |          1 |          0 |          0 |          1 |
+| /Users/vector/Desktop/rent-a-buddy-client/public/globe.svg                                             | XML                |          1 |          0 |          0 |          1 |
+| /Users/vector/Desktop/rent-a-buddy-client/public/next.svg                                              | XML                |          1 |          0 |          0 |          1 |
+| /Users/vector/Desktop/rent-a-buddy-client/public/vercel.svg                                            | XML                |          1 |          0 |          0 |          1 |
+| /Users/vector/Desktop/rent-a-buddy-client/public/window.svg                                            | XML                |          1 |          0 |          0 |          1 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/api/auth/[...nextauth]/route.ts                      | TypeScript         |          4 |          2 |          5 |         11 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/chat/[chatId]/user/[userId]/page.tsx                 | TypeScript JSX     |        235 |         37 |         34 |        306 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/chat/layout.tsx                                      | TypeScript JSX     |         20 |          1 |          8 |         29 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/chat/page.tsx                                        | TypeScript JSX     |         10 |          3 |          4 |         17 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/earning/page.tsx                           | TypeScript JSX     |          7 |          0 |          3 |         10 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/event/page.tsx                             | TypeScript JSX     |         44 |          6 |          7 |         57 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/history/page.tsx                           | TypeScript JSX     |          7 |          0 |          3 |         10 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/layout.tsx                                 | TypeScript JSX     |         18 |          1 |          8 |         27 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/my-profile/page.tsx                        | TypeScript JSX     |         26 |          6 |         11 |         43 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/page.tsx                                   | TypeScript JSX     |          7 |          0 |          3 |         10 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/settings/page.tsx                          | TypeScript JSX     |        286 |         23 |         24 |        333 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/wallet/page.tsx                            | TypeScript JSX     |         46 |          7 |          8 |         61 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/event/[eventId]/page.tsx                             | TypeScript JSX     |         31 |          9 |          8 |         48 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/globals.css                                          | CSS                |        116 |          1 |          6 |        123 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/layout.tsx                                           | TypeScript JSX     |         40 |          0 |          5 |         45 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/loading.tsx                                          | TypeScript JSX     |          9 |          0 |          4 |         13 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/login/loading.tsx                                    | TypeScript JSX     |          7 |          0 |          3 |         10 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/login/page.tsx                                       | TypeScript JSX     |         60 |          8 |          8 |         76 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/page.tsx                                             | TypeScript JSX     |        233 |         45 |         30 |        308 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/types/global/nextauth.types.ts                       | TypeScript         |         15 |          0 |          3 |         18 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/ChatSidebar.tsx                          | TypeScript JSX     |        197 |         16 |         21 |        234 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/Message/Receiver.tsx                     | TypeScript JSX     |        252 |         19 |         21 |        292 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/Message/Sender.tsx                       | TypeScript JSX     |        257 |         21 |         21 |        299 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/SendMoneyModal.tsx                       | TypeScript JSX     |         66 |          9 |          9 |         84 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/Timer.tsx                                | TypeScript JSX     |         28 |          1 |          9 |         38 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Common/Toggle.tsx                             | TypeScript JSX     |         26 |          1 |          4 |         31 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/Sidebar.tsx                         | TypeScript JSX     |         42 |          2 |          6 |         50 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/SidebarLink.tsx                     | TypeScript JSX     |         22 |          1 |          7 |         30 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/event/eventBuilder/Box.tsx          | TypeScript JSX     |        163 |         14 |         22 |        199 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/event/eventBuilder/BuilderForm.tsx  | TypeScript JSX     |        115 |         15 |         14 |        144 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/event/eventBuilder/EventBuilder.tsx | TypeScript JSX     |         13 |          2 |          5 |         20 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/event/eventFinish/EventFinish.tsx   | TypeScript JSX     |         65 |         10 |         12 |         87 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/event/eventInfo/EventForm.tsx       | TypeScript JSX     |        258 |         31 |         18 |        307 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/event/eventInfo/EventInfo.tsx       | TypeScript JSX     |         15 |          3 |          8 |         26 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/eventDetails/EventDetails.tsx       | TypeScript JSX     |        195 |         24 |         28 |        247 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/my-profile/MyEvents.tsx             | TypeScript JSX     |         70 |         10 |         12 |         92 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/my-profile/ProfileDetails.tsx       | TypeScript JSX     |          7 |          0 |          3 |         10 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/my-profile/UserDetails.tsx          | TypeScript JSX     |         44 |          9 |         12 |         65 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/wallet/Balance.tsx                  | TypeScript JSX     |         60 |          6 |          8 |         74 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/wallet/Buttons.tsx                  | TypeScript JSX     |         30 |          3 |          8 |         41 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/wallet/RechargeModal.tsx            | TypeScript JSX     |        113 |         13 |         14 |        140 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/wallet/Transaction.tsx              | TypeScript JSX     |         13 |          2 |          4 |         19 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/wallet/TransationTabs.tsx           | TypeScript JSX     |         43 |          1 |          6 |         50 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/wallet/Wallet.tsx                   | TypeScript JSX     |         15 |          4 |          6 |         25 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/HomePage/AvailableEvents.tsx                  | TypeScript JSX     |         92 |         17 |         16 |        125 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/HomePage/EventOverlayCard.tsx                 | TypeScript JSX     |        118 |         18 |         19 |        155 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/HomePage/RatingStars.tsx                      | TypeScript JSX     |         14 |          2 |          4 |         20 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Modal/OrderModal.tsx                          | TypeScript JSX     |        349 |         30 |         29 |        408 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Navbar/Navbar.tsx                             | TypeScript JSX     |        178 |         24 |         29 |        231 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Providers.tsx                                 | TypeScript JSX     |         11 |          0 |          3 |         14 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/ui/Input.tsx                                  | TypeScript JSX     |         38 |          3 |          6 |         47 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/ui/Label.tsx                                  | TypeScript JSX     |          9 |          0 |          3 |         12 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/ui/button.tsx                                 | TypeScript JSX     |         54 |          0 |          6 |         60 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/ui/card.tsx                                   | TypeScript JSX     |         83 |          0 |         10 |         93 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/ui/carousel.tsx                               | TypeScript JSX     |        232 |          0 |         30 |        262 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/data/dashboard.tsx                                       | TypeScript JSX     |         37 |          0 |          3 |         40 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/data/filter.ts                                           | TypeScript         |          0 |          0 |          1 |          1 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/lib/utils.ts                                             | TypeScript         |          5 |          0 |          2 |          7 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/loading/FullScreen.tsx                                   | TypeScript JSX     |         62 |          5 |          6 |         73 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/loading/Loading1.tsx                                     | TypeScript JSX     |         62 |          5 |          6 |         73 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/loading/PageLoadingSpinner.tsx                           | TypeScript JSX     |         56 |          4 |          5 |         65 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/redux/provider.tsx                                       | TypeScript JSX     |          7 |          0 |          3 |         10 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/redux/slice/auth.slice.ts                                | TypeScript         |          0 |         13 |          9 |         22 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/redux/slice/event.slice.ts                               | TypeScript         |         28 |          4 |          6 |         38 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/redux/store.ts                                           | TypeScript         |          9 |          1 |          4 |         14 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/api.ts                                           | TypeScript         |         57 |         13 |         12 |         82 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/category.api.ts                          | TypeScript         |         11 |          2 |          2 |         15 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/chat.api.ts                              | TypeScript         |         94 |          9 |          6 |        109 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/event.api.ts                             | TypeScript         |        159 |         23 |         15 |        197 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/payment.api.ts                           | TypeScript         |        136 |         13 |         17 |        166 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/user.api.ts                              | TypeScript         |         40 |          4 |          7 |         51 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/wallet.api.ts                            | TypeScript         |         14 |          2 |          3 |         19 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/apiConnector.ts                                  | TypeScript         |         12 |         11 |          5 |         28 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/styles/globals.css                                       | CSS                |         66 |         29 |         13 |        108 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/types/next-auth.d.ts                                     | TypeScript         |         18 |          1 |          5 |         24 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/utills/nextauthoption.utills.ts                          | TypeScript         |         52 |          4 |         14 |         70 |
+| /Users/vector/Desktop/rent-a-buddy-client/tsconfig.json                                                | JSON with Comments |         27 |          0 |          1 |         28 |
+| Total                                                                                                  |                    |     11,749 |        604 |        794 |     13,147 |
++--------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

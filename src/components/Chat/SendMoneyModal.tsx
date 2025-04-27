@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { sendMoneyApiCall } from "@/service/apiCall/payment.api";
 import { memo, useEffect, useRef } from "react";
 
-const SendMoneyModal = ({ modalData,setModalData, setStartTime, setTransaction }: any) => {
+const SendMoneyModal = ({ modalData,setModalData, setTransaction, setRefreshButton }: any) => {
 
     // hook
     const btnRef = useRef<HTMLDivElement | null>(null);
@@ -15,9 +14,8 @@ const SendMoneyModal = ({ modalData,setModalData, setStartTime, setTransaction }
         try {
             const result = await sendMoneyApiCall(modalData.amount, modalData.receiverId, modalData.token, modalData.orderId);
             setTransaction(result);
-            localStorage.setItem(`startTime:${result?._id}`, JSON.stringify(result?.createdAt));
             setModalData(null);
-            console.log("xxx:::", result);
+            setRefreshButton((prev: any) => !prev);
         } catch (error) {
             console.log(error);
         }

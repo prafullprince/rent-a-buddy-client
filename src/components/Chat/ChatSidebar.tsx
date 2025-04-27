@@ -12,31 +12,20 @@ import React, { useEffect, useState } from "react";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { motion } from "framer-motion";
 
-const ChatSidebar = () => {
+const ChatSidebar = ({ allChat, setAllChat, chatLoading }: any) => {
+
   // session
   const { data: session, status } = useSession();
   const router = useRouter();
 
   // state
-  const [allChat, setAllChat] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState<any>({});
   const [currentChatId, setCurrentChatId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(true);
   const [socket, setSocket] = useState<any>(null);
 
-  // fetchAllChat
-  const fetchAllChats = async () => {
-    setLoading(true);
-    try {
-      const result = await fetchAllChat(session?.serverToken);
-      setAllChat(result);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
   console.log("all chat", allChat);
 
   // fetchUserDetails
@@ -54,7 +43,7 @@ const ChatSidebar = () => {
   // handle websocket connection
   useEffect(() => {
     if (!session) return;
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    const socket = new WebSocket("ws://localhost:4000");
 
     socket.onopen = () => {
       console.log("WebSocket connected");
@@ -77,7 +66,6 @@ const ChatSidebar = () => {
 
   useEffect(() => {
     if (status === "authenticated") {
-      fetchAllChats();
       fetchUserDetails();
     }
   }, [status]);
@@ -131,13 +119,13 @@ const ChatSidebar = () => {
 
         {/* allChat */}
         <div className="mt-2">
-          {loading && (
+          {chatLoading && (
             <div className="flex flex-col gap-4 border-r-1 border-l-1 border-black max-h-[820px] min-h-[820px] bg-white max-w-[300px] min-w-[300px]">
               Loading....
             </div>
           )}
-          {!loading && allChat?.length === 0 && <div>No chats</div>}
-          {!loading && allChat?.length > 0 && (
+          {!chatLoading && allChat?.length === 0 && <div>No chats</div>}
+          {!chatLoading && allChat?.length > 0 && (
             <div className="flex flex-col">
               {allChat?.map((chit: any) => (
                 <div
