@@ -43,7 +43,7 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading }: any) => {
   // handle websocket connection
   useEffect(() => {
     if (!session) return;
-    const socket = new WebSocket("ws://localhost:4000");
+    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
 
     socket.onopen = () => {
       console.log("WebSocket connected");
