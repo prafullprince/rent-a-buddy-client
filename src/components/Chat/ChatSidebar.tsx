@@ -85,7 +85,7 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading, openChatMobile, setOpen
     );
 
   return (
-    <div className={`rounded-xl sm:block ${openChatMobile ? "hidden" : "block"} min-w-full max-w-full`}>
+    <div className={`rounded-xl sm:block ${openChatMobile ? "hidden" : "block"} min-w-full max-w-full sm:max-w-[300px] sm:min-w-[300px]`}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
