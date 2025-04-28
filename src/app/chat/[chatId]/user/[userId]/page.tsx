@@ -128,7 +128,7 @@ const Page = () => {
     const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
 
     socket.onopen = () => {
-      console.log("WebSocket connected");
+      console.log("WebSocket connected!");
 
       // Register user
       socket.send(
