@@ -236,7 +236,7 @@ const EventDetails = ({ eventDetails }: any) => {
       {/* modal */}
       <AnimatePresence mode="wait">
         {modalData && (
-          <OrderModal modalData={modalData} setModalData={setModalData} key="order-modal" wallet={wallet} router={router} />
+          <OrderModal modalData={modalData} setModalData={setModalData} key="order-modal" wallet={wallet} router={router} session={session} />
         )}
       </AnimatePresence>
     </motion.div>

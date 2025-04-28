@@ -10,7 +10,6 @@ import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-
 const location = ["Delhi", "Mumbai", "Banglore", "Pune", "Hyderabad"];
 const prices = [50, 100, 150, 200, 250];
 
@@ -28,7 +27,13 @@ export interface IFormData {
   eventId: any;
 }
 
-const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
+const OrderModal = ({
+  modalData,
+  setModalData,
+  wallet,
+  router,
+  session,
+}: any) => {
   // hook
   const btnRef = useRef<HTMLDivElement | null>(null);
   // state
@@ -107,6 +112,16 @@ const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
     // on open
     socket.onopen = () => {
       console.log("socket open");
+      // // register
+      // socket.send(
+      //   JSON.stringify({
+      //     type: "register",
+      //     payload: {
+      //       userId: modalData?.sender,
+      //       chatId: modalData?.eventId,
+      //     },
+      //   })
+      // );
     };
 
     // on error
@@ -118,9 +133,12 @@ const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "orderStatus") {
-        if (data.payload.success) {
-          toast.success(data.payload.message);
-          router.push(`/chat/${data.payload.data?.chatId}/user/${data.payload.data?.receiver}`);
+        console.log("orderStatus", data.payload);
+        if (data?.payload?.success) {
+          toast.success(data?.payload?.message);
+          router.push(
+            `/chat/${data?.payload?.data?.chatId}/user/${data?.payload?.data?.receiver}`
+          );
           setModalData(null);
           setLoading(false);
         } else {
@@ -137,7 +155,7 @@ const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
     return () => {
       socket.close();
     };
-  }, []);
+  }, [session]);
 
   return (
     <motion.div
@@ -356,20 +374,22 @@ const OrderModal = ({ modalData, setModalData, wallet, router }: any) => {
           {/* buttons */}
           <div className="flex w-full justify-start gap-4 mt-4">
             {loading ? (
-              <button
-                className="px-4 py-1 bg-black text-white rounded-lg cursor-pointer"
-              >
+              <button className="px-4 py-1 bg-black text-white rounded-lg cursor-pointer">
                 Loading....
               </button>
             ) : (
               <button
                 onClick={() => {
-                  if(!wallet){
+                  if (!wallet) {
                     toast.error("Wallet not found");
                     return;
                   }
-                  if(wallet?.balance < formData.totalPrice){
-                    toast.error(`Insufficient balance, please recharge ${formData.totalPrice-wallet?.balance}`);
+                  if (wallet?.balance < formData.totalPrice) {
+                    toast.error(
+                      `Insufficient balance, please recharge ${
+                        formData.totalPrice - wallet?.balance
+                      }`
+                    );
                     router.push(`/dashboard/wallet`);
                     return;
                   }

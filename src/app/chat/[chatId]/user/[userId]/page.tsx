@@ -44,7 +44,6 @@ const Page = () => {
   const { chatId, userId } = useParams();
   const { data: session } = useSession();
   const divRef = useRef<HTMLDivElement>(null);
-  const socketRef = useRef<WebSocket | null>(null); // Persist socket instance
 
   // state
   const [userDetails, setUserDetails] = useState<User | null>(null);
@@ -56,6 +55,7 @@ const Page = () => {
   const [refreshButton, setRefreshButton] = useState(false);
   const [modalData, setModalData] = useState<any>(null);
   const [transaction, setTransaction] = useState<any>(null);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
   console.log("messages", messages);
   console.log("transaction", transaction);
 
@@ -74,7 +74,7 @@ const Page = () => {
 
   // Send Message
   const sendMessage = () => {
-    if (!socketRef.current || !chat.trim()) return;
+    if (!socket || !chat.trim()) return;
 
     const messagePayload = {
       type: "sendMessage",
@@ -87,7 +87,7 @@ const Page = () => {
       },
     };
 
-    socketRef.current.send(JSON.stringify(messagePayload));
+    socket.send(JSON.stringify(messagePayload));
     setChat("");
   };
 
@@ -126,7 +126,6 @@ const Page = () => {
     if (!chatId || !userDetails?._id) return;
 
     const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
-    socketRef.current = socket;
 
     socket.onopen = () => {
       console.log("WebSocket connected");
@@ -171,6 +170,8 @@ const Page = () => {
         setAcceptLoading(false);
       }
     };
+
+    setSocket(socket);
 
     return () => {
       socket.close();
@@ -234,7 +235,7 @@ const Page = () => {
                     <Receiver
                       msg={msg}
                       userDetails={userDetails}
-                      socketRef={socketRef}
+                      socketRef={socket}
                       setAcceptLoading={setAcceptLoading}
                       acceptLoading={acceptLoading}
                     />
@@ -243,7 +244,7 @@ const Page = () => {
                     <Sender
                       msg={msg}
                       userDetails={userDetails}
-                      socketRef={socketRef}
+                      socketRef={socket}
                       setModalData={setModalData}
                       session={session}
                     />
