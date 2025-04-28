@@ -125,7 +125,7 @@ const Page = () => {
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
 
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    const socket = new WebSocket("ws://localhost:4000");
 
     socket.onopen = () => {
       console.log("WebSocket connected");
@@ -193,7 +193,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col items-start rounded-xl">
+    <div className="flex flex-col items-start rounded-xl max-w-full">
       {/* Top Bar */}
       <div className="h-16 px-2 py-2 flex items-center justify-between bg-gray-200 w-full sm:rounded-tr-xl">
         <div className="">
@@ -219,7 +219,7 @@ const Page = () => {
       </div>
 
       {/* Message Box */}
-      <div className="w-full flex-1">
+      <div className="w-full">
         {loading ? (
           <div
             className="max-h-[600px] min-h-[600px] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
@@ -229,7 +229,7 @@ const Page = () => {
           </div>
         ) : (
           <div
-            className="sm:max-h-[600px] sm:min-h-[600px] h-[80dvh] p-4 overflow-auto bg-gray-800 relative"
+            className="sm:max-h-[600px] sm:min-h-[600px] h-[80dvh] p-4 overflow-y-auto overflow-hidden bg-gray-800 relative"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             {messages.length === 0 ? (

@@ -35,7 +35,7 @@ const Layout = ({ children }: { children: any }) => {
   useEffect(() => {
     if (status !== "authenticated" || !userDetails?._id) return;
 
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    const socket = new WebSocket("ws://localhost:4000");
 
     socket.onopen = () => {
       console.log("WebSocket connected");
@@ -82,7 +82,7 @@ const Layout = ({ children }: { children: any }) => {
   }
 
   return (
-    <div className="bg-gray-100 backdrop-blur-sm flex justify-center items-center">
+    <div className="bg-gray-100 backdrop-blur-sm flex justify-center items-center w-full max-w-full">
       <div className="w-full sm:w-[90%] lg:w-[80%] mx-auto sm:pt-4 flex rounded-xl">
         <ChatSidebar
           allChat={allChat}
@@ -91,7 +91,7 @@ const Layout = ({ children }: { children: any }) => {
           openChatMobile={openChatMobile}
           setOpenChatMobile={setOpenChatMobile}
         />
-        <div className={`sm:h-screen max-h-[100dvh] min-h-[100dvh] flex-1 rounded-xl sm:block ${openChatMobile ? "block" : "hidden"}`}>
+        <div className={`sm:h-screen max-h-[100dvh] min-h-[100dvh] flex-1 max-w-full rounded-xl sm:block ${openChatMobile ? "block" : "hidden"} sm:max-w-[calc(100%-300px)]`}>
           {children}
         </div>
       </div>

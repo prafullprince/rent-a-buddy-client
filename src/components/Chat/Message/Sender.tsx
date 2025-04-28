@@ -18,7 +18,7 @@ const Sender = ({
       {msg?.sender === userDetails?._id && (
         <div className="flex justify-end">
           <div
-            className={`max-w-[75%] relative text-black rounded-lg rounded-tr-none ${
+            className={`max-w-[65%] relative text-black rounded-lg rounded-tr-none ${
               msg?.type === "text"
                 ? "bg-green-200 px-3 pt-1"
                 : "bg-white min-w-xs max-w-sm"
@@ -30,7 +30,7 @@ const Sender = ({
               } w-0 h-0 rotate-90 translate-x-2 translate-y-0`}
             ></div>
             {msg?.type === "text" ? (
-              <div className="pr-14 pb-2">{msg.text}</div>
+              <div className="pr-14 pb-2 break-words text-wrap">{msg.text}</div>
             ) : (
               <div
                 className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6`}
