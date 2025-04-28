@@ -14,7 +14,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import wspLogo from "../../../../../../public/assets/wssupLogo.png";
-import { IoSendSharp } from "react-icons/io5";
+import { IoArrowBackSharp, IoSendSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
 import SendMoneyModal from "@/components/Chat/SendMoneyModal";
 import Receiver from "@/components/Chat/Message/Receiver";
@@ -125,7 +125,7 @@ const Page = () => {
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
 
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    const socket = new WebSocket("ws://localhost:4000");
 
     socket.onopen = () => {
       console.log("WebSocket connected");
@@ -195,17 +195,26 @@ const Page = () => {
   return (
     <div className="flex flex-col items-start rounded-xl">
       {/* Top Bar */}
-      <div className="h-16 px-4 py-2 flex items-center justify-between bg-gray-200 w-full rounded-tr-xl">
-        <div className="flex items-center gap-2">
-          <Image
-            className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10"
-            alt="dp"
-            src={otherUser?.image || fallbackImage}
-            width={40}
-            height={40}
-            priority
-          />
-          <div>{otherUser?.username}</div>
+      <div className="h-16 px-2 py-2 flex items-center justify-between bg-gray-200 w-full sm:rounded-tr-xl">
+        <div className="">
+          <div className="flex items-center gap-2">
+            <button onClick={()=>{
+              
+            }} className="px-2 py-2">
+              <IoArrowBackSharp className="text-2xl" />
+            </button>
+            <div className="flex items-center gap-2">
+              <Image
+                className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10"
+                alt="dp"
+                src={otherUser?.image || fallbackImage}
+                width={40}
+                height={40}
+                priority
+              />
+              <div>{otherUser?.username}</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -213,14 +222,14 @@ const Page = () => {
       <div className="w-full flex-1">
         {loading ? (
           <div
-            className="max-h-[700px] min-h-[700px] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
+            className="max-h-[600px] min-h-[600px] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             Loading....
           </div>
         ) : (
           <div
-            className="max-h-[700px] min-h-[700px] p-4 overflow-auto bg-gray-800 relative"
+            className="sm:max-h-[600px] sm:min-h-[600px] h-[80dvh] p-4 overflow-auto bg-gray-800 relative"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             {messages.length === 0 ? (

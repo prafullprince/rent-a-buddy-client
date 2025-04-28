@@ -16,6 +16,7 @@ const Layout = ({ children }: { children: any }) => {
   const [userDetails, setUserDetails] = useState<any>({});
   const [chatLoading, setChatLoading] = useState(false);
   const [socket, setSocket] = useState<any>(null);
+  const [openChatMobile, setOpenChatMobile] = useState(false);
 
   const fetchUserDetails = async () => {
     try {
@@ -81,10 +82,18 @@ const Layout = ({ children }: { children: any }) => {
   }
 
   return (
-    <div className="bg-green-900 flex justify-center items-center">
-      <div className="w-[90%] lg:w-[80%] mx-auto pt-4 flex rounded-xl">
-        <ChatSidebar allChat={allChat} setAllChat={setAllChat} chatLoading={chatLoading} />
-        <div className="h-screen flex-1 rounded-xl">{children}</div>
+    <div className="bg-gray-100 backdrop-blur-sm flex justify-center items-center">
+      <div className="w-full sm:w-[90%] md:lg:w-[80%] mx-auto sm:pt-4 flex rounded-xl">
+        <ChatSidebar
+          allChat={allChat}
+          setAllChat={setAllChat}
+          chatLoading={chatLoading}
+          openChatMobile={openChatMobile}
+          setOpenChatMobile={setOpenChatMobile}
+        />
+        <div className={`sm:h-screen max-h-[100dvh] min-h-[100dvh] flex-1 rounded-xl sm:block ${openChatMobile ? "block" : "hidden"}`}>
+          {children}
+        </div>
       </div>
     </div>
   );

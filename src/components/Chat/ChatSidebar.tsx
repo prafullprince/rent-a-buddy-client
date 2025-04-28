@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { motion } from "framer-motion";
 
-const ChatSidebar = ({ allChat, setAllChat, chatLoading }: any) => {
+const ChatSidebar = ({ allChat, setAllChat, chatLoading, openChatMobile, setOpenChatMobile }: any) => {
 
   // session
   const { data: session, status } = useSession();
@@ -24,7 +24,6 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading }: any) => {
   const [currentChatId, setCurrentChatId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(true);
   const [socket, setSocket] = useState<any>(null);
-
 
   console.log("all chat", allChat);
 
@@ -43,7 +42,7 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading }: any) => {
   // handle websocket connection
   useEffect(() => {
     if (!session) return;
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    const socket = new WebSocket("ws://localhost:4000");
 
     socket.onopen = () => {
       console.log("WebSocket connected");
@@ -86,13 +85,13 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading }: any) => {
     );
 
   return (
-    <div className="rounded-xl">
+    <div className={`rounded-xl sm:block ${openChatMobile ? "hidden" : "block"} min-w-full max-w-full`}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ ease: "easeInOut", duration: 0.8 }}
-        className={`flex flex-col gap-4 border-r-1 border-l-1 border-black max-h-[820px] min-h-[820px] bg-white ${
-          isOpen ? "max-w-[300px] min-w-[300px]" : "max-w-[80px] min-w-[80px]"
+        className={`flex flex-col gap-4 sm:border-r-1 sm:border-l-1 sm:border-t sm:border-b border-gray-400 max-h-[720px] min-h-[720px] bg-white ${
+          isOpen ? "sm:max-w-[300px] sm:min-w-[300px]" : "sm:max-w-[80px] sm:min-w-[80px] min-w-full max-w-full"
         } rounded-tl-xl rounded-bl-xl`}
       >
         <div
@@ -151,6 +150,10 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading }: any) => {
                         )?._id
                       }`
                     );
+
+                    if (window.innerWidth < 640) {  // Tailwind 'sm' is 640px
+                      setOpenChatMobile(true);
+                    }
                   }}
                   key={chit?._id}
                   className={`flex justify-between relative cursor-pointer hover:bg-gray-200 transition-all duration-200 ${
