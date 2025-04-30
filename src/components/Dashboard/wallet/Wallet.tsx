@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 import Balance from './Balance'
 import Buttons from './Buttons'
 
-const Wallet = ({wallet}:any) => {
+const Wallet = ({ wallet }:any) => {
   return (
     <div className='p-6'>
         {/* heading */}

@@ -211,7 +211,7 @@ const Receiver = ({
                         <button
                           onClick={() => {
                             setAcceptLoading(true);
-                            socketRef?.send(
+                            socketRef?.current?.send(
                               JSON.stringify({
                                 type: "acceptOrder",
                                 payload: {
@@ -231,7 +231,7 @@ const Receiver = ({
                         {/* reject */}
                         <button
                           onClick={() => {
-                            socketRef?.send(
+                            socketRef?.current?.send(
                               JSON.stringify({
                                 type: "acceptOrder",
                                 payload: {

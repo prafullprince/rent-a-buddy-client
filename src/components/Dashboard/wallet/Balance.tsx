@@ -6,7 +6,7 @@ import { PiCurrencyInrBold } from 'react-icons/pi'
 
 const Balance = ({wallet}:any) => {
   return (
-    <div className='flex items-center gap-4 mt-8'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8'>
         {/* balance */}
         <div className='p-4 bg-white rounded-xl shadow-lg flex flex-col gap-4'>
             <div className='flex items-center gap-3'>

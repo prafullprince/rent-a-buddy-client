@@ -12,12 +12,13 @@ import { useSession } from "next-auth/react";
 import OrderModal from "@/components/Modal/OrderModal";
 import { getUserWallet } from "@/service/apiCall/wallet.api";
 import { useRouter } from "next/navigation";
+import { GoGitPullRequest } from "react-icons/go";
 
 
 const EventDetails = ({ eventDetails }: any) => {
 
   // hooks
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   // state
@@ -56,10 +57,12 @@ const EventDetails = ({ eventDetails }: any) => {
   }, [categoryIds, eventDetails?._id]);
 
   useEffect(() => {
+    if(status !== "authenticated") return;
     fetchUserDetailsByIds();
   }, [session]);
 
   useEffect(() => {
+    if (status !== "authenticated") return;
     async function getWallet() {
       try {
         const result = await getUserWallet(session?.serverToken);
@@ -73,7 +76,7 @@ const EventDetails = ({ eventDetails }: any) => {
 
 
   return (
-    <motion.div className="flex flex-col gap-2 max-w-xl mx-auto break-words text-wrap shadow-sm p-4 rounded-sm bg-gray-100">
+    <motion.div className="flex flex-col gap-3 max-w-xl mx-auto break-words text-wrap shadow-sm p-4 rounded-sm bg-gray-100 w-full">
       {/* topbar */}
 
       {/* profileDetails */}
@@ -83,11 +86,11 @@ const EventDetails = ({ eventDetails }: any) => {
           alt="event"
           width={40}
           height={40}
-          className="rounded-full w-28 h-28"
+          className="rounded-full w-28 min-w-28 h-28 min-h-28"
         />
         <div className="flex flex-col gap-1">
           {/* username age */}
-          <div className="text-2xl font-bold text-black">
+          <div className="sm:text-2xl text-xl font-semibold sm:font-bold text-black break-words">
             {eventDetails?.user?.username} (22)
           </div>
 
@@ -183,7 +186,7 @@ const EventDetails = ({ eventDetails }: any) => {
 
           {/* subSectionDetails */}
           <div className="flex flex-col gap-2 mt-4">
-            <div className="flex items-start gap-4">
+            <div className="flex sm:flex-row sm:items-start gap-4 flex-col">
               <Image
                 src={currentSubSection?.subCategoryId?.imageUrl || fallbackImage}
                 alt="subSectionImage"
@@ -227,8 +230,9 @@ const EventDetails = ({ eventDetails }: any) => {
               btn2Text: "Cancel",
             });
           }}
-          className="px-4 py-2 text-sm cursor-pointer bg-black rounded-full text-white"
+          className="px-5 py-2 text-sm cursor-pointer bg-black rounded-full text-white flex items-center gap-2"
         >
+          <GoGitPullRequest className="text-lg" />
           Request Order
         </button>
       </div>

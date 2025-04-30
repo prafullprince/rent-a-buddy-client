@@ -8,7 +8,6 @@ import { apiConnector } from "../apiConnector";
 // getInfiniteEvents
 export const getInfiniteEvents = async (limit:number,filters?:any,cursor?:any) => {
   try {
-    console.log("filters are:",filters);
     // apiCall
     const response = await apiConnector("POST", eventEndPoints.GET_INFINTE_EVENTS_FILTERS, {
         limit,
@@ -49,14 +48,11 @@ export const createEvent = async (formData:any,token:any) => {
 export const createServiceApi = async (selectedData:any,token:any) => {
   const tid = toast.loading("Creating service...");
   try {
-    console.log("first",selectedData,token);
-
     // apiCall
     const response = await apiConnector("POST", eventEndPoints.CREATE_SERVICE,selectedData, {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     });
-    console.log("response is:", response);
     toast.success("Success");
     return response;
   } catch (error) {
@@ -148,17 +144,14 @@ export const editEventApi = async (updates:any, token:any) => {
 
 // eventDetailsById
 export const eventDetailsById = async (eventId:any) => {
-  const  tid = toast.loading("Fetching event details...");
   try {
     // apiCall
     const response = await apiConnector("POST", eventEndPoints.EVENT_BY_ID,{eventId});
-    toast.success("Success");
     return response.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    toast.error(error.response.data.message);
     return error;
-  } finally {
-    toast.dismiss(tid);
   }
 };
 

@@ -52,7 +52,7 @@ const RechargeModal = ({ modalData, setModalData }: any) => {
 
   return (
     <div className="fixed inset-0 bg-black/20 z-[1000] backdrop-blur-sm">
-      <div className="flex items-center justify-center h-screen mx-auto">
+      <div className="flex items-center justify-center h-screen mx-auto w-[90%]">
         <div
           ref={btnRef}
           className="flex flex-col gap-4 bg-gray-800 p-6 relative border-gray-400 rounded-lg min-w-[350px] max-w-lg"
@@ -80,6 +80,7 @@ const RechargeModal = ({ modalData, setModalData }: any) => {
                 name="amount"
                 value={amount}
                 min={200}
+                required
               />
               <PiCurrencyInrBold className="absolute top-3 left-3 text-2xl text-white" />
             </div>

@@ -14,8 +14,8 @@ const UserDetails = async () => {
   if (!session) return null;
 
   return (
-    <div className="shadow-md px-3 py-4 rounded-lg bg-black/5 lg:min-w-[600px]">
-      <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between gap-2">
+    <div className="shadow-md px-3 py-4 rounded-lg bg-black/5 lg:min-w-[600px] w-full">
+      <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between gap-3">
         {/* left */}
         <div className="flex sm:flex-row flex-col sm:items-start gap-4">
           {/* pp */}
@@ -42,10 +42,7 @@ const UserDetails = async () => {
               {session?.user?.email}
             </p>
 
-            <p className="text-base text-[#838894]">
-              {/* {session?.user?.email?.split("@")[0]} */}
-              +91 {userDetails?.phoneNumber || ""}
-            </p>
+            
           </div>
 
         </div>

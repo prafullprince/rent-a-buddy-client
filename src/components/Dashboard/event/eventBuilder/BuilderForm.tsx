@@ -105,7 +105,7 @@ const BuilderForm = () => {
           </div>
 
           {/* box */}
-          <div className="border p-4 rounded-lg border-gray-200 w-full mt-12 min-w-2xl max-w-2xl">
+          <div className="border md:p-4 rounded-lg border-gray-200 w-full mt-12 max-w-2xl">
             {/* card */}
             <Box
               selectedCategory={selectedCategory}

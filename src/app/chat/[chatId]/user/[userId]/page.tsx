@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 
 "use client";
 import {
@@ -44,6 +46,11 @@ const Page = () => {
   const { chatId, userId } = useParams();
   const { data: session } = useSession();
   const divRef = useRef<HTMLDivElement>(null);
+  const socketRef = useRef<WebSocket | null>(null);
+  const RECONNECT_INTERVAL = 3000;
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const PING_INTERVAL = 25000; // 25 seconds
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // state
   const [userDetails, setUserDetails] = useState<User | null>(null);
@@ -55,9 +62,7 @@ const Page = () => {
   const [refreshButton, setRefreshButton] = useState(false);
   const [modalData, setModalData] = useState<any>(null);
   const [transaction, setTransaction] = useState<any>(null);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  console.log("messages", messages);
-  console.log("transaction", transaction);
+
 
   // Fetch Messages
   const fetchMessages = async () => {
@@ -74,7 +79,7 @@ const Page = () => {
 
   // Send Message
   const sendMessage = () => {
-    if (!socket || !chat.trim()) return;
+    if (!socketRef.current || !chat.trim()) return;
 
     const messagePayload = {
       type: "sendMessage",
@@ -87,7 +92,7 @@ const Page = () => {
       },
     };
 
-    socket.send(JSON.stringify(messagePayload));
+    socketRef.current.send(JSON.stringify(messagePayload));
     setChat("");
   };
 
@@ -125,58 +130,125 @@ const Page = () => {
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
 
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    let socket: WebSocket;
 
-    socket.onopen = () => {
-      console.log("WebSocket connected");
+    const connectWebSocket = () => {
+      socket = new WebSocket("ws://localhost:4000");
+      socketRef.current = socket;
 
-      // Register user
-      socket.send(
-        JSON.stringify({
-          type: "register",
-          payload: {
-            userId: userDetails?._id,
-            chatId: chatId,
-          },
-        })
-      );
-    };
+      socket.onopen = () => {
+        console.log("WebSocket connected");
 
-    socket.onclose = () => console.log("WebSocket closed");
-    socket.onerror = (error) => console.error("WebSocket Error", error);
+        // Register user
+        socket.send(
+          JSON.stringify({
+            type: "register",
+            payload: {
+              userId: userDetails?._id,
+              chatId: chatId,
+            },
+          })
+        );
 
-    socket.onmessage = async (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "receiveMessage") {
-        setMessages((prev) => [...prev, data.payload]);
-      }
+        // Start pinging
+        pingIntervalRef.current = setInterval(() => {
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: "ping" }));
+          }
+        }, PING_INTERVAL);
 
-      // reload chat
-      if (data.type === "reloadChat") {
-        setLoading(true);
-        try {
-          const response = await fetchMessage(chatId, session?.serverToken);
-          setMessages(Array.isArray(response) ? response : []);
-        } catch (error) {
-          console.error("Error fetching messages:", error);
-        } finally {
-          setLoading(false);
+        // reconnect
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+          reconnectTimeoutRef.current = null;
         }
-      }
+      };
 
-      if (data.type === "orderAccepted") {
-        toast.success(data.payload.message);
-        setRefreshButton((prev) => !prev);
-        setAcceptLoading(false);
-      }
+      socket.onclose = (event) => {
+        console.log("❌ WebSocket closed", event.reason || event.code);
+
+        // Stop pinging
+        if (pingIntervalRef.current) {
+          clearInterval(pingIntervalRef.current);
+          pingIntervalRef.current = null;
+        }
+
+        // Schedule reconnection
+        if (!reconnectTimeoutRef.current) {
+          reconnectTimeoutRef.current = setTimeout(() => {
+            console.log("🔁 Attempting to reconnect...");
+            connectWebSocket();
+          }, RECONNECT_INTERVAL);
+        }
+      };
+      socket.onerror = (error) => console.error("WebSocket Error", error);
+
+      socket.onmessage = async (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === "receiveMessage") {
+          setMessages((prev) => [...prev, data.payload]);
+        }
+
+        // reload chat
+        if (data.type === "reloadChat") {
+          setLoading(true);
+          try {
+            const response = await fetchMessage(chatId, session?.serverToken);
+            setMessages(Array.isArray(response) ? response : []);
+          } catch (error) {
+            console.error("Error fetching messages:", error);
+          } finally {
+            setLoading(false);
+          }
+        }
+
+        if (data.type === "orderAccepted") {
+          toast.success(data.payload.message);
+          setRefreshButton((prev) => !prev);
+          setAcceptLoading(false);
+        }
+
+        if (data?.type === "pong") {
+          console.log("🏓 Pong received from server");
+        }
+      };
     };
-
-    setSocket(socket);
+    connectWebSocket();
 
     return () => {
-      socket.close();
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
     };
   }, [chatId, userDetails?._id]);
+
+  useEffect(() => {
+    if (!chatId || !userDetails?._id) return;
+  
+    const interval = setInterval(() => {
+      if (socketRef.current?.readyState === WebSocket.OPEN) {
+        socketRef.current.send(JSON.stringify({
+          type: "openChat",
+          payload: { chatId: chatId, userId: userDetails._id },
+        }));
+        clearInterval(interval); // only run once after open
+      }
+    }, 300);
+  
+    return () => {
+      if (socketRef.current?.readyState === WebSocket.OPEN) {
+        socketRef.current.send(JSON.stringify({
+          type: "closeChat",
+          payload: { chatId: chatId, userId: userDetails._id },
+        }));
+      }
+      clearInterval(interval);
+    };
+  }, [chatId, userDetails?._id]);
+  
 
   // Auto-scroll to the latest message
   useEffect(() => {
@@ -198,9 +270,7 @@ const Page = () => {
       <div className="h-16 px-2 py-2 flex items-center justify-between bg-gray-200 w-full sm:rounded-tr-xl">
         <div className="">
           <div className="flex items-center gap-2">
-            <button onClick={()=>{
-              
-            }} className="px-2 py-2">
+            <button onClick={() => {}} className="px-2 py-2">
               <IoArrowBackSharp className="text-2xl" />
             </button>
             <div className="flex items-center gap-2">
@@ -244,7 +314,7 @@ const Page = () => {
                     <Receiver
                       msg={msg}
                       userDetails={userDetails}
-                      socketRef={socket}
+                      socketRef={socketRef}
                       setAcceptLoading={setAcceptLoading}
                       acceptLoading={acceptLoading}
                     />
@@ -253,7 +323,7 @@ const Page = () => {
                     <Sender
                       msg={msg}
                       userDetails={userDetails}
-                      socketRef={socket}
+                      socketRef={socketRef}
                       setModalData={setModalData}
                       session={session}
                     />

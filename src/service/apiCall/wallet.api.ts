@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import toast from "react-hot-toast";
 import { paymentEndPoints } from "../api";
 import { apiConnector } from "../apiConnector";
 
@@ -12,7 +13,9 @@ export const getUserWallet = async (token:any) => {
         });
         console.log("response",response)
         return response.data.data;
-    } catch (error) {
+    } catch (error:any) {
         console.log(error);
+        toast.error(error?.response?.data?.message);
+        return error;
     }
 }

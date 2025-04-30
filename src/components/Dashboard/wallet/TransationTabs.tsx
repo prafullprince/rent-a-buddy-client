@@ -17,14 +17,14 @@ const TransationTabs = () => {
   };
 
   return (
-    <div className="flex items-center gap-4 mt-6">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
       {/* tabs */}
       {tabs.map((tab, index) => {
         return (
           <button
             key={index}
             onClick={() => handleTabClick(tab.id)}
-            className={`bg-white text-black px-5 font-semibold flex items-center gap-2 py-3 rounded-lg cursor-pointer relative ${
+            className={`bg-white text-black text-start px-5 font-semibold flex items-center gap-2 py-3 rounded-lg cursor-pointer relative ${
               tab.id === activeTab ? "border-b" : ""
             }`}
           >

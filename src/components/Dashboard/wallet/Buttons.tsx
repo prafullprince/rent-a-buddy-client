@@ -19,7 +19,7 @@ const Buttons = () => {
   };
 
   return (
-    <div className="flex items-center gap-4 mt-6">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 mt-6">
       <button onClick={modalHandler} className="bg-yellow-300 text-black px-5 font-semibold flex items-center gap-2 py-3 rounded-lg cursor-pointer">
         <TbRecharging className="text-2xl" />
         Recharge

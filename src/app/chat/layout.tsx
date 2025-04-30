@@ -7,17 +7,24 @@ import ChatSidebar from "@/components/Chat/ChatSidebar";
 import { fetchUserDetailsById } from "@/service/apiCall/user.api";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const Layout = ({ children }: { children: any }) => {
+  // hooks
   const { data: session, status } = useSession();
+  const socketref = useRef<WebSocket | null>(null);
+  const RECONNECT_INTERVAL = 3000;
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const PING_INTERVAL = 25000; // 25 seconds
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // state
   const [allChat, setAllChat] = useState<any>([]);
   const [userDetails, setUserDetails] = useState<any>({});
   const [chatLoading, setChatLoading] = useState(false);
-  const [socket, setSocket] = useState<any>(null);
   const [openChatMobile, setOpenChatMobile] = useState(false);
 
+  // fetchUserDetails
   const fetchUserDetails = async () => {
     try {
       const result = await fetchUserDetailsById(session?.serverToken);
@@ -27,52 +34,101 @@ const Layout = ({ children }: { children: any }) => {
     }
   };
 
+  // sideEffect
   useEffect(() => {
     if (status !== "authenticated") return;
     fetchUserDetails();
   }, [status]);
 
+  // handle websocket connection
   useEffect(() => {
-    if (status !== "authenticated" || !userDetails?._id) return;
+    if (!session || !userDetails?._id) return;
 
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    let socket: WebSocket;
 
-    socket.onopen = () => {
-      console.log("WebSocket connected");
-      setChatLoading(true);
-      socket.send(
-        JSON.stringify({
-          type: "fetchAllChat",
-          payload: {
-            userId: userDetails._id,
-          },
-        })
-      );
+    const connectWebSocket = () => {
+      socket = new WebSocket("ws://localhost:4000");
+      socketref.current = socket;
+
+      socket.onopen = () => {
+        console.log("✅ WebSocket connected");
+        setChatLoading(true);
+
+        // Start pinging
+        pingIntervalRef.current = setInterval(() => {
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: "ping" }));
+          }
+        }, PING_INTERVAL);
+
+        // Clear any previous reconnection attempts
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+          reconnectTimeoutRef.current = null;
+        }
+
+        // Fetch all chats
+        socket.send(
+          JSON.stringify({
+            type: "fetchAllChat",
+            payload: {
+              userId: userDetails._id,
+            },
+          })
+        );
+      };
+
+      socket.onclose = (event) => {
+        console.log("❌ WebSocket closed", event.reason || event.code);
+
+        // Stop pinging
+        if (pingIntervalRef.current) {
+          clearInterval(pingIntervalRef.current);
+          pingIntervalRef.current = null;
+        }
+
+        // Schedule reconnection
+        if (!reconnectTimeoutRef.current) {
+          reconnectTimeoutRef.current = setTimeout(() => {
+            console.log("🔁 Attempting to reconnect...");
+            connectWebSocket();
+          }, RECONNECT_INTERVAL);
+        }
+      };
+
+      socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data?.type === "fetchUserAllChats") {
+          setAllChat(data?.payload?.data);
+          setChatLoading(false);
+        }
+
+        if (data?.type === "pong") {
+          console.log("🏓 Pong received from server");
+        }
+      };
     };
 
-    socket.onclose = () => console.log("WebSocket closed");
-    socket.onerror = (error) => console.error("WebSocket Error", error);
-
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      if (data?.type === "fetchUserAllChats") {
-        setAllChat(data?.payload?.data);
-        setChatLoading(false);
-      }
-    };
-
-    setSocket(socket);
+    connectWebSocket();
 
     return () => {
-      socket.close();
+      if (socketref.current) {
+        socketref.current.close();
+      }
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
     };
-  }, [status, userDetails?._id]);
+  }, [session, userDetails?._id]);
 
   if (status === "loading") {
     return (
-      <div className="h-screen w-full flex items-center justify-center text-white">
-        Loading...
+      <div className="flex justify-center items-center py-6">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
       </div>
     );
   }
@@ -91,7 +147,11 @@ const Layout = ({ children }: { children: any }) => {
           openChatMobile={openChatMobile}
           setOpenChatMobile={setOpenChatMobile}
         />
-        <div className={`sm:h-screen max-h-[100dvh] min-h-[100dvh] flex-1 max-w-full rounded-xl sm:block ${openChatMobile ? "block" : "hidden"} sm:max-w-[calc(100%-300px)]`}>
+        <div
+          className={`sm:h-screen max-h-[100dvh] min-h-[100dvh] flex-1 max-w-full rounded-xl sm:block ${
+            openChatMobile ? "block" : "hidden"
+          } sm:max-w-[calc(100%-300px)]`}
+        >
           {children}
         </div>
       </div>

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
-
 "use client";
 import EventOverlayCard from "@/components/HomePage/EventOverlayCard";
 import {
@@ -15,6 +14,7 @@ import IntergalacticSpinner from "@/loading/Loading1";
 import "swiper/css";
 import { IoFilterSharp } from "react-icons/io5";
 import Toggle from "@/components/Common/Toggle";
+import PlanetSpinner from "@/loading/PageLoadingSpinner";
 
 // data
 const Location = ["delhi", "mumbai", "banglore", "pune", "patna"];
@@ -66,19 +66,6 @@ export default function Home() {
     }
   }, [hasmore, cursor, loading, formData]);
 
-  // fetchAvailableEvents
-  const fetchAvailableEvents = async () => {
-    setAvailableLoading(true);
-    try {
-      const result = await allAvailableEvents();
-      setAvailableEvent(result);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setAvailableLoading(false);
-    }
-  };
-
   // changeHandler
   const changeHandler = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -106,7 +93,6 @@ export default function Home() {
       setApplyLoading(false);
     }
   };
-  console.log("formData", formData);
 
   // observerCallback
   const observerCallback = useCallback(
@@ -123,7 +109,7 @@ export default function Home() {
   useEffect(() => {
     const observer = new IntersectionObserver(observerCallback, {
       root: null,
-      rootMargin: "0px 0px 1px 0px", // ✅ Adjusted to prevent multiple triggers
+      rootMargin: "0px 0px 10px 0px", // ✅ Adjusted to prevent multiple triggers
       threshold: 1.0,
     });
 
@@ -138,43 +124,20 @@ export default function Home() {
     };
   }, [observerCallback]);
 
-  // sideEffect
-  useEffect(() => {
-    fetchAvailableEvents();
-  }, []);
-
   return (
     <motion.div
       initial={{ opacity: 0, z: 50 }}
       animate={{ opacity: 1, z: 0 }}
       exit={{ opacity: 0, z: 50 }}
       transition={{ duration: 0.5 }}
-      className="flex justify-center w-full min-h-screen"
+      className="w-[90%] sm:w-[90%] mx-auto min-h-screen"
     >
-      <div className="flex justify-center mx-auto lg:w-[80%] lg:max-w-[80%]">
+      <div className="mx-auto w-full lg:w-[80%] lg:max-w-[80%]">
         <div className="flex flex-col items-start gap-4 mt-8">
-          {/* available profile */}
-          {/* <div className="text-xl font-bold">Top 10 available profiles</div> */}
-          {/* <div className="">
-            {availableLoading ? (
-              <div className="flex items-center justify-center w-full h-16 text-zinc-200 bg-white">
-                <div className="loader1"></div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 flex-wrap">
-                {availableEvent?.map((event: any) => (
-                  <AvailableEvents event={event} />
-                ))}
-              </div>
-            )}
-          </div> */}
-
           {/* filters */}
           <div className="hidden lg:block w-full">
-            <div
-              className="flex items-center justify-between w-full mt-8 gap-4"
-            >
-              <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center justify-between w-full mt-8 gap-4">
+              <div className="flex items-center flex-wrap gap-4">
                 {/* location */}
                 <div className="flex flex-col gap-2 cursor-pointer">
                   <select
@@ -239,7 +202,11 @@ export default function Home() {
                 </div>
 
                 {/* available -> toggle */}
-                <Toggle isToggleOpen={isToggleOpen} setIsToggleOpen={setIsToggleOpen} setFormData={setFormData} />
+                <Toggle
+                  isToggleOpen={isToggleOpen}
+                  setIsToggleOpen={setIsToggleOpen}
+                  setFormData={setFormData}
+                />
 
                 {/*  */}
               </div>
@@ -250,9 +217,7 @@ export default function Home() {
                   className="px-6 py-2 bg-black font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
                 >
                   Apply
-                  {loading && (
-                    <IntergalacticSpinner />
-                  )}
+                  {loading && <IntergalacticSpinner />}
                 </button>
               </motion.div>
             </div>
@@ -264,42 +229,37 @@ export default function Home() {
             <IoFilterSharp className="font-bold text-xl" />
           </div>
 
-          {/* Infinite Scroll Grid */}
-          {/* {loading ? (
-            <div className="flex items-center justify-center w-full h-1/3 text-zinc-200 bg-white">
-              <div className="loader1"></div>
-            </div>
-          ) : ( */}
-            <div className="flex flex-wrap justify-between max-w-[80vw] items-start">
-              {events?.map((event: any, idx: any) => (
-                <EventOverlayCard event={event} key={idx} />
-              ))}
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 xl:grid-cols-3">
+            {events?.map((event: any, idx: any) => (
+              <EventOverlayCard event={event} key={idx} />
+            ))}
 
-              {events?.length === 0 && (
-                <div className="h-10 flex items-center justify-center">
-                  <div className="text-black bg-white">
-                    <p className="text-center text-xl font-bold">No events found</p>
+            {events?.length === 0 && (
+              <div className="h-10 flex items-center justify-center">
+                <div className="text-black bg-white">
+                  <p className="text-center text-xl font-bold">
+                    No events found
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Observer Target */}
+            {hasmore && (
+              <div
+                ref={observerRef}
+                className="h-20 flex items-center justify-center"
+              >
+                {loading ? (
+                  <div className="flex justify-center items-center py-6">
+                    <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
                   </div>
-                </div>
-              )}
-
-              {/* Observer Target */}
-              {hasmore && (
-                <div
-                  ref={observerRef}
-                  className="h-10 flex items-center justify-center"
-                >
-                  {loading ? (
-                    <div className="flex items-center justify-center w-full h-8 text-zinc-200 bg-white">
-                      <div className="loader"></div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              )}
-            </div>
-          {/* )} */}
+                ) : (
+                  ""
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>

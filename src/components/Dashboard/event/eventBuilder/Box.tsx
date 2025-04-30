@@ -84,7 +84,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-4 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {selectedCategory?.subCategories?.map((subCategory: any) => {
         const isChecked = isSelected(subCategory._id);
 
@@ -97,7 +97,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
           >
             <div className="flex flex-col gap-2">
               {/* Topbar */}
-              <div className="flex gap-4 items-start">
+              <div className="flex gap-4 flex-col md:flex-row md:items-start">
                 {/* Image */}
                 <Image
                   src={subCategory?.imageUrl}
@@ -136,7 +136,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
 
                 {/* Price Input */}
                 <div className="max-w-xl flex items-center border border-gray-400 rounded-lg w-full">
-                  <PiCurrencyInr className="mx-4 text-2xl text-yellow-600 font-extrabold" />
+                  <PiCurrencyInr className="sm:mx-4 mx-2 text-2xl text-yellow-600 font-extrabold" />
                   <input
                     type="number"
                     placeholder="Set price"
@@ -157,12 +157,12 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                       )
                     }
                   />
-                  <span className="text-lg pr-2">/hr</span>
+                  <span className="text-lg pr-2 text-gray-500">/hr</span>
                 </div>
 
                 {/* Description Input */}
                 <div className="max-w-xl flex items-center border border-gray-400 rounded-lg w-full pr-2">
-                  <MdDescription className="mx-4 text-2xl text-gray-500" />
+                  <MdDescription className="mx-2 sm:mx-4 text-2xl text-gray-500" />
                   <input
                     type="text"
                     placeholder="Edit description"

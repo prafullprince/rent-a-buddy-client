@@ -14,9 +14,10 @@ const WalletPage = () => {
 
   // state
   const [wallet, setWallet] = useState<any>(null);
-  console.log("wallet", wallet);
+
   // sideEffect
   useEffect(() => {
+    if(!session) return;
     async function getWallet() {
       const result = await getUserWallet(session?.serverToken);
       setWallet(result);

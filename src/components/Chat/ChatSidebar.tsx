@@ -2,96 +2,148 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
-
 "use client";
-import { fetchAllChat, fetchUserDetailsById } from "@/service/apiCall/chat.api";
+import { fetchUserDetailsById } from "@/service/apiCall/chat.api";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { motion } from "framer-motion";
 
-const ChatSidebar = ({ allChat, setAllChat, chatLoading, openChatMobile, setOpenChatMobile }: any) => {
+const PING_INTERVAL = 25000;
+const RECONNECT_INTERVAL = 3000;
 
-  // session
+const ChatSidebar = ({
+  allChat,
+  setAllChat,
+  chatLoading,
+  openChatMobile,
+  setOpenChatMobile,
+}: any) => {
   const { data: session, status } = useSession();
   const router = useRouter();
-
-  // state
-  const [loading, setLoading] = useState(false);
-  const [userDetails, setUserDetails] = useState<any>({});
+  const socketRef = useRef<WebSocket | null>(null);
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [numOfUnseenMessages, setNumOfUnseenMessages] = useState<any[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(true);
-  const [socket, setSocket] = useState<any>(null);
+  const pathName = usePathname();
 
-  console.log("all chat", allChat);
+  console.log("total unseen messages", numOfUnseenMessages);
 
-  // fetchUserDetails
-  const fetchUserDetails = async () => {
-    try {
-      const result = await fetchUserDetailsById(session?.serverToken);
-      setUserDetails(result);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+  // Fetch user details once authenticated
+  useEffect(() => {
+    if (status !== "authenticated" || !session?.serverToken) return;
+
+    const fetchUser = async () => {
+      try {
+        const result = await fetchUserDetailsById(session.serverToken);
+        setUserDetails(result);
+      } catch (err) {
+        console.error("Failed to fetch user details:", err);
+      }
+    };
+
+    fetchUser();
+  }, [status, session?.serverToken]);
+
+  // Get unseen messages
+  const getUnseenMessages = () => {
+    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) return;
+    if (!userDetails?._id || !allChat.length) return;
+
+    const chatIds = allChat.map((chat: any) => chat._id);
+    socketRef.current.send(
+      JSON.stringify({
+        type: "unseenMessageOfParticularChatIdOfUser",
+        payload: { userId: userDetails._id, chatIds },
+      })
+    );
   };
 
-  // handle websocket connection
+  // WebSocket connection (run only when session + userDetails are available)
   useEffect(() => {
-    if (!session) return;
-    const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+    if (!session || !userDetails?._id) return;
 
-    socket.onopen = () => {
-      console.log("WebSocket connected");
+    const connectWebSocket = () => {
+      const socket = new WebSocket("ws://localhost:4000");
+      socketRef.current = socket;
+
+      socket.onopen = () => {
+        console.log("✅ WebSocket connected");
+
+        getUnseenMessages();
+
+        pingIntervalRef.current = setInterval(() => {
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: "ping" }));
+            getUnseenMessages();
+          }
+        }, PING_INTERVAL);
+
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+          getUnseenMessages();
+        }
+      };
+
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data?.type === "numOfUnseenMessages") {
+          setNumOfUnseenMessages(data.payload);
+        }
+      };
+
+      socket.onclose = (event) => {
+        console.warn("WebSocket closed:", event.reason || event.code);
+        if (!reconnectTimeoutRef.current) {
+          reconnectTimeoutRef.current = setTimeout(connectWebSocket, RECONNECT_INTERVAL);
+        }
+
+        if (pingIntervalRef.current) {
+          clearInterval(pingIntervalRef.current);
+          pingIntervalRef.current = null;
+        }
+      };
+
+      socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
     };
 
-    socket.onclose = () => console.log("WebSocket closed");
-    socket.onerror = (error) => console.error("WebSocket Error", error);
+    connectWebSocket();
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-    };
-
-    setSocket(socket);
-
-    // memory cleanup
     return () => {
-      socket.close();
+      if (socketRef.current) socketRef.current.close();
+      if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
     };
-  }, [session]);
+  }, [session, userDetails?._id]);
 
+  // Update unseen messages when chat list changes
   useEffect(() => {
-    if (status === "authenticated") {
-      fetchUserDetails();
+    if (session && userDetails?._id && allChat.length && socketRef.current?.readyState === WebSocket.OPEN) {
+      getUnseenMessages();
     }
-  }, [status]);
-
-  if (status === "loading")
-    return (
-      <div className="flex flex-col gap-4 max-h-[820px] min-h-[820px] bg-white max-w-[300px] min-w-[300px] px-6 py-4">
-        Loading....
-      </div>
-    );
-  if (status === "unauthenticated") return <div>Unauthenticated</div>;
-  if (!session) return <div>Session not found</div>;
-  if (loading)
-    return (
-      <div className="flex flex-col gap-4 max-h-[820px] min-h-[820px] bg-white max-w-[300px] min-w-[300px]">
-        Loadingss....
-      </div>
-    );
+  }, [allChat, pathName, session, userDetails?._id]);
 
   return (
-    <div className={`rounded-xl sm:block ${openChatMobile ? "hidden" : "block"} min-w-full max-w-full sm:max-w-[300px] sm:min-w-[300px]`}>
+    <div
+      className={`rounded-xl sm:block ${
+        openChatMobile ? "hidden" : "block"
+      } min-w-full max-w-full sm:max-w-[300px] sm:min-w-[300px]`}
+    >
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ ease: "easeInOut", duration: 0.8 }}
         className={`flex flex-col gap-4 sm:border-r-1 sm:border-l-1 sm:border-t sm:border-b border-gray-400 max-h-[720px] min-h-[720px] bg-white ${
-          isOpen ? "sm:max-w-[300px] sm:min-w-[300px]" : "sm:max-w-[80px] sm:min-w-[80px] min-w-full max-w-full"
+          isOpen
+            ? "sm:max-w-[300px] sm:min-w-[300px]"
+            : "sm:max-w-[80px] sm:min-w-[80px] min-w-full max-w-full"
         } rounded-tl-xl rounded-bl-xl`}
       >
         <div
@@ -119,8 +171,8 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading, openChatMobile, setOpen
         {/* allChat */}
         <div className="mt-2">
           {chatLoading && (
-            <div className="flex flex-col gap-4 border-r-1 border-l-1 border-black max-h-[820px] min-h-[820px] bg-white max-w-[300px] min-w-[300px]">
-              Loading....
+            <div className="flex justify-center items-center py-6">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
             </div>
           )}
           {!chatLoading && allChat?.length === 0 && <div>No chats</div>}
@@ -132,7 +184,7 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading, openChatMobile, setOpen
                     setCurrentChatId(chit?._id);
 
                     // mark as read
-                    socket?.send(
+                    socketRef?.current?.send(
                       JSON.stringify({
                         type: "markAsRead",
                         payload: {
@@ -141,6 +193,8 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading, openChatMobile, setOpen
                         },
                       })
                     );
+
+                    getUnseenMessages();
 
                     // navigate to chat
                     router.push(
@@ -151,7 +205,8 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading, openChatMobile, setOpen
                       }`
                     );
 
-                    if (window.innerWidth < 640) {  // Tailwind 'sm' is 640px
+                    if (window.innerWidth < 640) {
+                      // Tailwind 'sm' is 640px
                       setOpenChatMobile(true);
                     }
                   }}
@@ -189,27 +244,19 @@ const ChatSidebar = ({ allChat, setAllChat, chatLoading, openChatMobile, setOpen
                       </div>
                     </div>
                   </div>
-                  {/* info */}
 
-                  {/* unseen msg */}
-                  {chit?.message?.length > 0 &&
-                    chit?.message?.filter((msg: any) => {
-                      return (
-                        msg?.receiver === userDetails?._id &&
-                        msg?.isSeen === false
-                      );
-                    }).length > 0 && (
-                      <>
-                        <div className="absolute top-4 right-8 text-xs text-gray-100 bg-red-500 rounded-full px-2 py-1 font-semibold flex items-center justify-center">
-                          {chit?.message?.length > 0 &&
-                            chit?.message?.filter((msg: any) => {
-                              return (
-                                msg?.receiver === userDetails?._id &&
-                                msg?.isSeen === false
-                              );
-                            }).length}
-                        </div>
-                      </>
+                  {/* info -> unseen msg */}
+                  {numOfUnseenMessages?.length > 0 &&
+                    numOfUnseenMessages?.find(
+                      (msg: any) => msg?.chatId === chit?._id
+                    )?.unSeenCount > 0 && (
+                      <div className="absolute bottom-2 right-4 text-xs text-gray-100 bg-red-500 rounded-full min-w-6 min-h-6 font-semibold flex items-center justify-center">
+                        {
+                          numOfUnseenMessages?.find(
+                            (msg: any) => msg?.chatId === chit?._id
+                          )?.unSeenCount
+                        }
+                      </div>
                     )}
                 </div>
               ))}

@@ -1,6 +1,6 @@
 
 // baseUrl
-const BASE_URL = "https://rent-a-buddy-server-1.onrender.com/api";
+const BASE_URL = "http://localhost:4000/api";
 
 // service
 // chatpage

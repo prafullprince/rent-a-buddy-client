@@ -29,7 +29,6 @@ export const fetchAllChat = async (token: any) => {
 
 // getUserDetailsById
 export const fetchUserDetailsById = async (token: any) => {
-  const tid = toast.loading("Fetching user details...");
   try {
     // apiCall
     const response = await apiConnector(
@@ -42,11 +41,10 @@ export const fetchUserDetailsById = async (token: any) => {
       }
     );
     return response.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    toast.error(error?.response?.data?.message);
     return error;
-  } finally {
-    toast.dismiss(tid);
   }
 };
 

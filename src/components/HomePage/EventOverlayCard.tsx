@@ -36,9 +36,9 @@ const EventOverlayCard = ({ event }: { event: any }) => {
   }, [event]);
 
   return (
-    <div className="flex items-center pb-4">
+    <div className="flex items-center pb-4 w-full">
       <div
-        className="relative min-w-56 max-w-56 sm:min-w-68 min-h-[320px] sm:max-w-64 max-h-[320px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-105 transition-all duration-300"
+        className="relative w-full sm:min-w-68 min-h-[400px] sm:min-h-[320px] sm:max-w-64 sm:max-h-[320px] max-h-[400px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-105 transition-all duration-300"
         onClick={() => router.push(`/event/${event?._id}`)}
       >
         {/* Background Image */}
@@ -48,7 +48,7 @@ const EventOverlayCard = ({ event }: { event: any }) => {
           height={400}
           alt="Background"
           priority
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover bg-center"
         />
 
         {/* topbar */}
@@ -83,7 +83,7 @@ const EventOverlayCard = ({ event }: { event: any }) => {
 
         {/* bottom Content */}
         <div className="absolute z-50 bottom-2 left-2 right-2 w-full flex flex-col items-start gap-2">
-          {/* about */}
+          {/* location */}
           <div className="bg-black/40 rounded-lg rounded-bl-none p-2 flex items-center gap-2">
             <GrLocation className="text-lg text-yellow-400" />
             <p className="text-white font-medium text-sm">
@@ -135,10 +135,10 @@ const EventOverlayCard = ({ event }: { event: any }) => {
             <RatingStars rating={4} totalRating={8} className="text-xl" />
             <div className="flex items-center gap-1">
               <MdOutlineCurrencyRupee className="text-yellow-300 text-xl" />
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 pr-4">
                 <p className="text-white/90 font-semibold">{minimumPrice}</p>
                 <p className="text-white/90 font-semibold">~</p>
-                <p className="text-white/90 font-semibold">{maximumPrice}</p>◊
+                <p className="text-white/90 font-semibold">{maximumPrice}</p>
               </div>
             </div>
           </div>
