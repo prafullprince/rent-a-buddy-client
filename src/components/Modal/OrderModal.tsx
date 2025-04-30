@@ -118,7 +118,7 @@ const OrderModal = ({
     let socket: WebSocket;
 
     const connectWebSocket = () => {
-      socket = new WebSocket("ws://localhost:4000");
+      socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
       socketref.current = socket;
 
       // on open
