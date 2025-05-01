@@ -11,6 +11,7 @@ export const fetchUserDetailsById = async (token:any) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     });
+    console.log("rrrrrrrrrrrrrrrrrrrrr",response);
     return response.data.data;
   } catch (error) {
     console.log(error);
@@ -46,5 +47,63 @@ export const updateProfileApiCall = async (token:any,formData:any) => {
   } catch (error) {
     console.log(error);
     return error;
+  }
+};
+
+
+// createPostApiCall
+export const createPostApiCall = async (token:any,formData:any) => {
+  const tid = toast.loading("Creating post...");
+  try {
+    const response = await apiConnector("POST", profileEndpoints.CREATE_POST,formData,{
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    });
+    toast.success("Post created successfully");
+    return response.data.data;
+  } catch (error: any) {
+    console.log(error);
+    toast.error(error?.response?.data?.message || "Error creating post");
+    return error;
+  } finally {
+    toast.dismiss(tid);
+  }
+};
+
+
+// getPostsByUserApiCall
+export const getPostsByUserApiCall = async (userId:any, token:any) => {
+  try {
+    const response = await apiConnector("POST", profileEndpoints.GET_USER_POSTS,{ userId }, {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    });
+    return response.data.data;
+  } catch (error: any) {
+    console.log(error);
+    toast.error(error?.response?.data?.message || "Error getting posts");
+    return error;
+  }
+};
+
+
+// deletePostByIdApiCall
+export const deletePostByIdApiCall = async (token:any,postId:any) => {
+  const tid = toast.loading("Deleting post...");
+  try {
+    const response = await apiConnector("POST", profileEndpoints.DELETE_POST_BY_ID,{
+      postId: postId
+    },{
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    });
+    toast.success("Post deleted successfully");
+    return response.data.data;
+  } catch (error: any) {
+    console.log(error);
+    toast.error(error?.response?.data?.message || "Error deleting post");
+    return error;
+  } finally {
+    toast.dismiss(tid);
   }
 };

@@ -1,6 +1,6 @@
 
 // baseUrl
-const BASE_URL = "https://rent-a-buddy-server-1.onrender.com/api";
+const BASE_URL = "https://rent-a-buddy-server-1.onrender.com/api"
 
 // service
 // chatpage
@@ -10,11 +10,8 @@ const BASE_URL = "https://rent-a-buddy-server-1.onrender.com/api";
 // layout
 
 // https://rent-a-buddy-server-1.onrender.com/api
+// http://localhost:4000/api
 
-// https://studyforge.onrender.com/api/v1
-// "http://localhost:4000/api/v1"
-// https://study-forge.onrender.com
-// "https://study-hub-2.onrender.com/api/v1"
 
 // auth
 export const authEndPoints = {
@@ -55,16 +52,6 @@ export const paymentEndPoints = {
     GET_USER_WALLET: BASE_URL + "/payment/getUserWallet"
 }
 
-// extra
-export const extraEndPoints = {
-    SEARCH_COURSE: BASE_URL + "/course/searchCourse",
-    VIEWS: BASE_URL + "/course/totalViews",
-    NOTIFICATION: BASE_URL + "/course/notifications",
-    MARK_AS_READ: BASE_URL + "/course/markAsReadNot",
-    ALL_NOTIFICATION: BASE_URL + "/course/allNotifications",
-    SEARCH_RESULT: BASE_URL + "/course/searchResult"
-}
-
 // rating
 export const ratingEndPoints = {
     CREATE_RATING: BASE_URL + "/course/createRating",
@@ -76,9 +63,12 @@ export const profileEndpoints = {
     GET_USER_DETAILS_BY_ID: BASE_URL + "/user/userDetailsById",
     UPLOAD_PROFILE_PICTURE: BASE_URL + "/user/updateProfilePicture",
     UPDATE_PROFILE: BASE_URL + "/user/updateProfile",
+    CREATE_POST: BASE_URL + "/user/createPost",
+    GET_USER_POSTS: BASE_URL + "/user/getPostsByUser",
+    DELETE_POST_BY_ID: BASE_URL + "/user/deletePostById",
 }
 
-
+ 
 // chat
 export const chatEndPoints = {
     CREATE_CHAT: BASE_URL + "/course/createChat",

@@ -40,7 +40,7 @@ const page = () => {
     <div className="">
       {/* box */}
       <div className="w-[90%] sm:w-[80%] mx-auto">
-        <div className="flex items-center mt-4 gap-4">
+        <div className="flex items-center mt-4 gap-4 cursor-pointer">
           <IoArrowBackSharp onClick={()=>{
             router.push("/");
           }} className="text-2xl font-bold text-start text-gray-500" />

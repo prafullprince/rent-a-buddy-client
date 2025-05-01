@@ -1,4 +1,5 @@
 import { FaUser, FaWallet, FaHistory, FaCalendarAlt, FaCog } from "react-icons/fa";
+import { MdAddToPhotos } from "react-icons/md";
 
 export const dashboardLinks = [
   {
@@ -28,6 +29,12 @@ export const dashboardLinks = [
   },
   {
     id: 6,
+    name: "Post",
+    path: "/dashboard/post",
+    icon: <MdAddToPhotos />,
+  },
+  {
+    id: 7,
     name: "Settings",
     path: "/dashboard/settings",
     icon: <FaCog />,

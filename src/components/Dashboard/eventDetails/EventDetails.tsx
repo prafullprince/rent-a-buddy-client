@@ -13,6 +13,7 @@ import OrderModal from "@/components/Modal/OrderModal";
 import { getUserWallet } from "@/service/apiCall/wallet.api";
 import { useRouter } from "next/navigation";
 import { GoGitPullRequest } from "react-icons/go";
+import MyPost from "../my-profile/MyPost";
 
 
 const EventDetails = ({ eventDetails }: any) => {
@@ -213,9 +214,12 @@ const EventDetails = ({ eventDetails }: any) => {
       </div>
 
       {/* post */}
+      <div className="">
+        <MyPost type="event" />
+      </div>
 
       {/* request order */}
-      <div className="w-full flex justify-center shadow-sm py-2 bg-gray-300 rounded-lg">
+      <div className="w-full flex justify-center shadow-sm py-2 bg-gray-300 rounded-lg mt-3">
         <button
           onClick={() => {
             setModalData({
@@ -230,7 +234,7 @@ const EventDetails = ({ eventDetails }: any) => {
               btn2Text: "Cancel",
             });
           }}
-          className="px-5 py-2 text-sm cursor-pointer bg-black rounded-full text-white flex items-center gap-2"
+          className="px-5 py-3 text-sm cursor-pointer bg-black rounded-full text-white flex items-center gap-2"
         >
           <GoGitPullRequest className="text-lg" />
           Request Order
