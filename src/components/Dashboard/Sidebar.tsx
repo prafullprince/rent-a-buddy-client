@@ -24,7 +24,7 @@ const Sidebar = () => {
     >
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute top-6 left-4 cursor-pointer px-2 py-2 rounded-lg bg-slate-400 hover:bg-slate-600 transition-all duration-200 text-xl"
+        className={`absolute top-4 left-4 cursor-pointer px-2 py-2 rounded-lg bg-slate-400 hover:bg-slate-600 transition-all duration-200 text-xl ${isOpen ? '' : ''}`}
       >
         {!isOpen ? (
           <BsLayoutSidebarInset className="text-3xl text-slate-700" />
@@ -34,7 +34,7 @@ const Sidebar = () => {
       </div>
 
       {/* sidebar content box */}
-      <div className="flex flex-col gap-4 items-start px-4 py-4 pt-28">
+      <div className={`flex flex-col gap-4 items-start ${isOpen ? "px-4 py-4 pt-28" : "sm:px-4 sm:py-4 sm:pt-28"}`}>
         {dashboardLinks?.map((link: any) => {
           if(link?.type && link?.type !== session?.accountType) return null;
           return (

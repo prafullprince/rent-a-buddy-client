@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Image from "next/image";
-import React from "react";
+import React, { memo } from "react";
 import { IoMdDoneAll } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
@@ -11,7 +11,7 @@ const Sender = ({
   userDetails,
   socketRef,
   setModalData,
-  session
+  session,
 }: any) => {
   return (
     <>
@@ -91,7 +91,8 @@ const Sender = ({
 
                       {/* active */}
                       {msg?.order?.status === "accepted" &&
-                          msg?.order?.isActive === true && msg?.order?.isCompleted === false && (
+                        msg?.order?.isActive === true &&
+                        msg?.order?.isCompleted === false && (
                           <div className="flex justify-end">
                             <div className="px-4 py-1 text-[12px] bg-blue-300 text-black rounded-full font-semibold">
                               Live...
@@ -177,17 +178,15 @@ const Sender = ({
 
                   {/* buttons */}
                   {msg?.order?.status === "accepted" &&
-                      msg?.order?.isActive === false &&
-                      msg?.order?.isCompleted === false && (
+                    msg?.order?.isActive === false &&
+                    msg?.order?.isCompleted === false && (
                       <div className="flex justify-end">
                         <button
                           className="bg-yellow-300 cursor-pointer text-black py-2 px-4 rounded-lg mr-3"
                           onClick={() => {
                             setModalData({
                               heading: `Send Money `,
-                              subHeading: `(${
-                                msg?.order?.totalPrice
-                              }rs)`,
+                              subHeading: `(${msg?.order?.totalPrice}rs)`,
                               text1: "Are you sure to make payment?",
                               text2: "This action cannot be undone.",
                               btn1Text: "Confirm",
@@ -209,35 +208,35 @@ const Sender = ({
 
                   {/* rejected */}
                   {msg?.order?.status === "rejected" && (
-                      <div className="flex justify-end">
-                        <button className="bg-red-200 hover:bg-blue-700 text-black py-2 px-4 rounded-lg mr-3">
-                          Order rejected
-                        </button>
-                      </div>
-                    )}
+                    <div className="flex justify-end">
+                      <button className="bg-red-200 hover:bg-blue-700 text-black py-2 px-4 rounded-lg mr-3">
+                        Order rejected
+                      </button>
+                    </div>
+                  )}
 
                   {/* pending */}
                   {msg?.order?.status === "pending" && (
-                      <div className="flex items-center gap-1 mt-2 justify-end">
-                        <button
-                          onClick={() => {
-                            socketRef.current?.send(
-                              JSON.stringify({
-                                type: "acceptOrder",
-                                payload: {
-                                  msgId: msg?._id,
-                                  mark: "rejected",
-                                },
-                              })
-                            );
-                          }}
-                          className="bg-red-500 text-white rounded-md text-base font-semibold ml-2 cursor-pointer flex items-center gap-2 px-4 py-2 mr-3"
-                        >
-                          <MdOutlineCancel className="text-white text-2xl" />
-                          Cancel
-                        </button>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1 mt-2 justify-end">
+                      <button
+                        onClick={() => {
+                          socketRef.current?.send(
+                            JSON.stringify({
+                              type: "acceptOrder",
+                              payload: {
+                                msgId: msg?._id,
+                                mark: "rejected",
+                              },
+                            })
+                          );
+                        }}
+                        className="bg-red-500 text-white rounded-md text-base font-semibold ml-2 cursor-pointer flex items-center gap-2 px-4 py-2 mr-3"
+                      >
+                        <MdOutlineCancel className="text-white text-2xl" />
+                        Cancel
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -274,4 +273,4 @@ const Sender = ({
   );
 };
 
-export default Sender;
+export default memo(Sender);

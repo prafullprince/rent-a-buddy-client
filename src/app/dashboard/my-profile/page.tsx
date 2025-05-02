@@ -19,9 +19,9 @@ const page = async () => {
   return (
     <div className="p-4">
       {/* topbar */}
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="flex flex-col gap-4 mt-2">
         {/* route */}
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2`}>
           <Link href={"/"} className="text-sm text-[#838894]">
             Home <span>/</span>
           </Link>

@@ -6,15 +6,14 @@ import {
   getPostsByUserApiCall,
 } from "@/service/apiCall/user.api";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { MdDelete } from "react-icons/md";
 import DeletePostModal from "./DeletePostModal";
+import PostSlider from "@/components/Common/PostSlider";
 
 const MyPost = ({ type }: any) => {
   // hook
   const { data: session } = useSession();
-
+  console.log("type", type);
   // state
   const [posts, setPosts] = useState<any>([]);
   const [userDetails, setUserDetails] = useState<any>(null);
@@ -58,7 +57,7 @@ const MyPost = ({ type }: any) => {
     );
 
   return (
-    <div className="w-full max-w-xl">
+    <div className="w-full sm:max-w-xl">
       <h2 className="text-xl mt-8 font-semibold text-black">Gallery</h2>
       <div className="flex gap-4 items-center mt-6 flex-wrap">
         {loading && (
@@ -67,33 +66,8 @@ const MyPost = ({ type }: any) => {
           </div>
         )}
         {!loading &&
-          posts?.map((post: any) => {
-            return (
-              <div key={post?._id} className="flex flex-col gap-2">
-                <div className="flex items-center gap-2 relative">
-                  <Image
-                    src={post?.imageUrl}
-                    alt="profile"
-                    width={300}
-                    height={300}
-                    className="sm:min-w-[260px] sm:min-h-[220px] sm:max-h-[220px] sm:max-w-[260px] min-w-[220px] min-h-[220px] max-w-[300px] max-h-[260px] rounded-sm bg-center bg-cover flex-1 justify-center sm:block"
-                  />
-                  {type == "user" && post?.user === userDetails?._id && (
-                    <div
-                      className="absolute bottom-4 right-3 rounded-full bg-slate-700 flex items-center justify-center w-10 h-10"
-                      onClick={() => {
-                        setModalData({
-                          postId: post?._id,
-                        });
-                      }}
-                    >
-                      <MdDelete className="text-2xl text-red-400 hover:text-red-500 transition-all duration-300 cursor-pointer" />
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          <PostSlider posts={posts} setModalData={setModalData} userDetails={userDetails} type="user" />
+        }
       </div>
       {modalData && (
         <DeletePostModal

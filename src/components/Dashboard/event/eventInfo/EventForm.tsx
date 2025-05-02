@@ -137,11 +137,11 @@ const EventForm = () => {
   }, []);
 
   return (
-    <div className="sm:w-full mt-6 max-w-fit">
+    <div className="w-full mt-6">
       {/* form */}
       <form
         onSubmit={handleSubmit(onsubmit)}
-        className="flex flex-col gap-4 sm:max-w-lg sm:min-w-lg max-w-56"
+        className="flex flex-col gap-4 sm:max-w-lg sm:min-w-lg w-full"
       >
         <div className="flex flex-col gap-4">
           {/* availability */}
@@ -153,7 +153,7 @@ const EventForm = () => {
               register={register}
               name="availability"
               errors={errors}
-              className="sm:w-full max-w-fit"
+              className="w-full"
             />
             {errors.availability && (
               <p className="text-sm text-green-700 mt-2">

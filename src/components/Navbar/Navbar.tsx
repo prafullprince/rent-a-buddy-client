@@ -32,7 +32,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userDetails, setUserDetails] = useState<any>({});
   const [loading, setLoading] = useState(false);
-
+  const [allChat, setAllChat] = useState<any>([]);
+  console.log("allChat", allChat);
 
   // fetchUserDetails
   const fetchUserDetails = async () => {
@@ -46,6 +47,9 @@ const Navbar = () => {
       setLoading(false);
     }
   };
+
+  console.log("sssssssssssssssssssssssssssssssssssssss",userDetails);
+  console.log("sss",allChat[0]?.participants?.find((usr:any) => usr?._id !== userDetails?._id)?._id);
 
   // click outside
   useEffect(() => {
@@ -84,6 +88,17 @@ const Navbar = () => {
       // on open
       socket.onopen = () => {
         console.log("socket open");
+        setLoading(true);
+
+        // fetchAllChat
+        socket.send(
+          JSON.stringify({
+            type: "fetchAllChat",
+            payload: {
+              userId: userDetails?._id,
+            },
+          })
+        );
 
         // Start pinging
         pingIntervalRef.current = setInterval(() => {
@@ -145,6 +160,13 @@ const Navbar = () => {
           console.log("unseenMessages", data.payload);
           dispatch(setTotalUnseenMessages(data.payload.totalMessages));
         }
+
+        // fetch all chats
+        if (data?.type === "fetchUserAllChats") {
+          setAllChat(data?.payload?.data);
+          setLoading(false);
+        }
+
       };
 
       // on error
@@ -215,7 +237,7 @@ const Navbar = () => {
 
           {/* chat */}
           {session && status === "authenticated" && (
-            <Link href={"/chat/null/user/null"} className="relative">
+            <Link href={`/chat/${allChat[0]?._id}/user/${allChat[0]?.participants?.find((usr:any) => usr?._id !== userDetails?._id)?._id}`} className="relative">
               <LuMessageCircleMore className="text-3xl font-bold cursor-pointer" />
               {totalUnseenMessages > 0 && (
                 <div className="absolute top-0 right-0 translate-x-1.5 text-white -translate-y-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-sm">

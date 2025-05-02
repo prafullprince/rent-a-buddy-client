@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 
-
 "use client";
 import Label from "@/components/ui/Label";
 import { useSession } from "next-auth/react";
@@ -17,7 +16,6 @@ import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import toast from "react-hot-toast";
 import PlanetSpinner from "@/loading/PageLoadingSpinner";
 import { motion } from "framer-motion";
-import FullScreen from "@/loading/FullScreen";
 import IntergalacticSpinner from "@/loading/Loading1";
 import { useRouter } from "next/navigation";
 
@@ -140,12 +138,19 @@ const Page = () => {
 
   // session
   if (!session) return null;
-  if (!userDetails) return <FullScreen />;
+  if (!userDetails)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="">
       {/* route */}
-      <div className="p-4 mt-4">
+      <div className="p-4 mt-2">
         <div className="flex items-center gap-2">
           <div
             onClick={() => router.push("/")}
@@ -168,10 +173,12 @@ const Page = () => {
       {/*  */}
       {userLoading ? (
         <div className="min-h-screen flex items-center justify-center">
-          <FullScreen />
+          <div className="">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+          </div>
         </div>
       ) : (
-        <div className="px-6">
+        <div className="px-6 w-full">
           {/* Box */}
           <div className="flex flex-col gap-4">
             {/* heading */}
@@ -180,7 +187,7 @@ const Page = () => {
             </h2>
 
             {/* change profilePictire */}
-            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between bg-black/5 px-4 py-4 rounded-lg sm:min-w-lg sm:max-w-xl max-w-fit shadow-md">
+            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between bg-black/5 px-4 py-4 rounded-lg sm:min-w-lg sm:max-w-lg w-full shadow-md">
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 {/* pp */}
                 <div
@@ -267,7 +274,7 @@ const Page = () => {
             </div>
 
             {/* change details */}
-            <div className="shadow-md px-6 py-4 rounded-lg bg-black/5 sm:min-w-lg sm:max-w-xl max-w-fit">
+            <div className="shadow-md px-6 py-4 rounded-lg bg-black/5 sm:min-w-lg sm:max-w-lg w-full">
               <form
                 onSubmit={handleSubmit(onsubmit)}
                 className="flex flex-col gap-10"

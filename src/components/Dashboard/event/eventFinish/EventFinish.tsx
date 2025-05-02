@@ -58,7 +58,7 @@ const EventFinish = () => {
       </div>
 
       {/* event */}
-      <div className="mt-8">
+      <div className="mt-8 w-full">
         <EventOverlayCard event={eventDetails} />
       </div>
 

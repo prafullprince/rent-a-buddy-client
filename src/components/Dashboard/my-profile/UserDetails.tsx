@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Image from "next/image";
 import { FaEdit } from "react-icons/fa";
 import Link from "next/link";
@@ -27,17 +27,17 @@ const UserDetails = async () => {
             className="rounded-full min-w-32 min-h-32 max-w-32 max-h-32"
           />
 
-          <div className="flex flex-col items-start gap-1">
+          <div className="flex flex-col items-start gap-1 text-wrap break-words">
             {/* name */}
             <p className="text-xl font-semibold">{session?.user?.name}</p>
 
             {/* username */}
-            <p className="text-base text-[#838894]">
+            <p className="text-base text-[#838894] text-wrap break-words max-w-[150px] sm:max-w-[200px] lg:max-w-[300px]">
               {/* {session?.user?.email?.split("@")[0]} */}
               {userDetails?.username || session?.user?.email?.split("@")[0]}
             </p>
 
-            <p className="text-base text-[#838894]">
+            <p className="text-base font-semibold text-[#838894]">
               {/* {session?.user?.email?.split("@")[0]} */}
               {session?.user?.email}
             </p>
@@ -58,4 +58,4 @@ const UserDetails = async () => {
   );
 };
 
-export default UserDetails;
+export default memo(UserDetails);

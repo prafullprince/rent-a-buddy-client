@@ -71,7 +71,7 @@ const Layout = ({ children }: { children: any }) => {
           JSON.stringify({
             type: "fetchAllChat",
             payload: {
-              userId: userDetails._id,
+              userId: userDetails?._id,
             },
           })
         );
@@ -145,6 +145,7 @@ const Layout = ({ children }: { children: any }) => {
           chatLoading={chatLoading}
           openChatMobile={openChatMobile}
           setOpenChatMobile={setOpenChatMobile}
+          sockty={socketref.current}
         />
         <div
           className={`sm:h-screen max-h-[100dvh] min-h-[100dvh] flex-1 max-w-full rounded-xl sm:block ${

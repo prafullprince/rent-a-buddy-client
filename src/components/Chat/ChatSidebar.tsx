@@ -7,7 +7,7 @@ import { fetchUserDetailsById } from "@/service/apiCall/chat.api";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { motion } from "framer-motion";
 
@@ -20,23 +20,26 @@ const ChatSidebar = ({
   chatLoading,
   openChatMobile,
   setOpenChatMobile,
+  sockty,
 }: any) => {
-  const { data: session, status } = useSession();
+  // hooks
+  const { data: session } = useSession();
   const router = useRouter();
   const socketRef = useRef<WebSocket | null>(null);
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pathName = usePathname();
+
+  // state
   const [userDetails, setUserDetails] = useState<any>(null);
   const [numOfUnseenMessages, setNumOfUnseenMessages] = useState<any[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(true);
-  const pathName = usePathname();
 
-  console.log("total unseen messages", numOfUnseenMessages);
 
   // Fetch user details once authenticated
   useEffect(() => {
-    if (status !== "authenticated" || !session?.serverToken) return;
+    if (!session) return;
 
     const fetchUser = async () => {
       try {
@@ -48,12 +51,13 @@ const ChatSidebar = ({
     };
 
     fetchUser();
-  }, [status, session?.serverToken]);
+  }, [session?.serverToken]);
 
   // Get unseen messages
   const getUnseenMessages = () => {
-    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) return;
-    if (!userDetails?._id || !allChat.length) return;
+    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
+      return;
+    if (!userDetails?._id || allChat.length === 0) return;
 
     const chatIds = allChat.map((chat: any) => chat._id);
     socketRef.current.send(
@@ -100,7 +104,10 @@ const ChatSidebar = ({
       socket.onclose = (event) => {
         console.warn("WebSocket closed:", event.reason || event.code);
         if (!reconnectTimeoutRef.current) {
-          reconnectTimeoutRef.current = setTimeout(connectWebSocket, RECONNECT_INTERVAL);
+          reconnectTimeoutRef.current = setTimeout(
+            connectWebSocket,
+            RECONNECT_INTERVAL
+          );
         }
 
         if (pingIntervalRef.current) {
@@ -119,13 +126,19 @@ const ChatSidebar = ({
     return () => {
       if (socketRef.current) socketRef.current.close();
       if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+      if (reconnectTimeoutRef.current)
+        clearTimeout(reconnectTimeoutRef.current);
     };
   }, [session, userDetails?._id]);
 
   // Update unseen messages when chat list changes
   useEffect(() => {
-    if (session && userDetails?._id && allChat.length && socketRef.current?.readyState === WebSocket.OPEN) {
+    if (
+      session &&
+      userDetails?._id &&
+      allChat.length &&
+      socketRef.current?.readyState === WebSocket.OPEN
+    ) {
       getUnseenMessages();
     }
   }, [allChat, pathName, session, userDetails?._id]);
@@ -175,7 +188,19 @@ const ChatSidebar = ({
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
             </div>
           )}
-          {!chatLoading && allChat?.length === 0 && <div>No chats</div>}
+          {!chatLoading && sockty && allChat?.length === 0 && (
+            <div className="">No chats</div>
+          )}
+          {!sockty && allChat?.length === 0 && (
+            <div className="flex justify-center items-center py-6">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+            </div>
+          )}
+          {!chatLoading && !sockty && allChat?.length === 0 && (
+            <div className="flex justify-center items-center py-6">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+            </div>
+          )}
           {!chatLoading && allChat?.length > 0 && (
             <div className="flex flex-col">
               {allChat?.map((chit: any) => (
@@ -268,4 +293,4 @@ const ChatSidebar = ({
   );
 };
 
-export default ChatSidebar;
+export default memo(ChatSidebar);

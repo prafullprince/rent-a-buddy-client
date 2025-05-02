@@ -11,7 +11,7 @@ import RatingStars from "./RatingStars";
 import { GrLocation } from "react-icons/gr";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 
-const EventOverlayCard = ({ event }: { event: any }) => {
+const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
   // navigation
   const router = useRouter();
 
@@ -36,7 +36,7 @@ const EventOverlayCard = ({ event }: { event: any }) => {
   }, [event]);
 
   return (
-    <div className="flex items-center pb-4 w-full">
+    <div className="pb-4 w-full">
       <div
         className="relative w-full sm:min-w-68 min-h-[400px] sm:min-h-[320px] sm:max-w-64 sm:max-h-[320px] max-h-[400px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-105 transition-all duration-300"
         onClick={() => router.push(`/event/${event?._id}`)}
@@ -55,7 +55,7 @@ const EventOverlayCard = ({ event }: { event: any }) => {
         <div className="absolute z-50 top-2 left-2 w-full text-white flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="text-white text-xl font-semibold">
-              {event?.userData?.username}
+              {event?.userData?.username?.substring(0, 15)}..
             </div>
             <MdVerified className="text-blue-500 text-xl" />
           </div>
@@ -69,9 +69,11 @@ const EventOverlayCard = ({ event }: { event: any }) => {
         </div>
 
         {/* fav */}
-        <div className="absolute top-2 right-2 w-10 h-10 bg-black/30 rounded-full flex items-center justify-center z-50">
+        {
+          !type && <div className="absolute top-2 right-2 w-10 h-10 bg-black/30 rounded-full flex items-center justify-center z-50">
           <FcLike className="text-2xl" />
         </div>
+        }
 
         {/* Gradient Top */}
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-gray-700 to-transparent"></div>

@@ -120,3 +120,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* global.css or component CSS module */
+.slider::-webkit-scrollbar {
+  height: 0px;
+}
+
+.slider::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.slider::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.slider::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

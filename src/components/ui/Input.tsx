@@ -23,7 +23,7 @@ const GradientInput: React.FC<GradientInputProps> = ({
   errors
 }) => {
   return (
-    <div className={`relative sm:w-full sm:min-w-lg sm:max-w-lg ${className}`}>
+    <div className={`relative w-full sm:min-w-lg sm:max-w-lg ${className}`}>
       {/* Input Field */}
       <input
         type={type}

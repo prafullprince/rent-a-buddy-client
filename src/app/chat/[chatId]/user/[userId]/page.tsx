@@ -3,7 +3,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-
 "use client";
 import {
   fetchMessage,
@@ -12,8 +11,8 @@ import {
 } from "@/service/apiCall/chat.api";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import React, { memo, useEffect, useRef, useState } from "react";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import wspLogo from "../../../../../../public/assets/wssupLogo.png";
 import { IoArrowBackSharp, IoSendSharp } from "react-icons/io5";
@@ -51,18 +50,19 @@ const Page = () => {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const PING_INTERVAL = 25000; // 25 seconds
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
+  const chatRef = useRef<string>("");
+  const pathName = usePathname();
 
   // state
   const [userDetails, setUserDetails] = useState<User | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [otherUser, setOtherUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-  const [chat, setChat] = useState<string>("");
+  const [msgLoading, setMsgLoading] = useState(false);
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [refreshButton, setRefreshButton] = useState(false);
   const [modalData, setModalData] = useState<any>(null);
-  const [transaction, setTransaction] = useState<any>(null);
-
 
   // Fetch Messages
   const fetchMessages = async () => {
@@ -77,9 +77,10 @@ const Page = () => {
     }
   };
 
-  // Send Message
+  // sendMessage
   const sendMessage = () => {
-    if (!socketRef.current || !chat.trim()) return;
+    const message = chatRef.current.trim();
+    if (!socketRef.current || !message) return;
 
     const messagePayload = {
       type: "sendMessage",
@@ -87,13 +88,26 @@ const Page = () => {
         chatId: chatId,
         sender: userDetails?._id,
         receiver: userId,
-        text: chat,
+        text: message,
         type: "text",
       },
     };
 
-    socketRef.current.send(JSON.stringify(messagePayload));
-    setChat("");
+    console.log("first");
+
+
+
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      setMsgLoading(true);
+      console.log("second");
+      socketRef.current.send(JSON.stringify(messagePayload));
+    } else {
+      toast.error("Connection lost. Trying to reconnect...");
+      // connectWebSocket();
+    }
+    chatRef.current = ""; // clear ref manually
+    const inputElement = document.querySelector<HTMLInputElement>("input");
+    if (inputElement) inputElement.value = ""; // clear UI input
   };
 
   // Fetch User Details
@@ -118,13 +132,15 @@ const Page = () => {
 
   // Fetch Data
   useEffect(() => {
+    if (!chatId || !session || !userId) return;
     fetchMessages();
     fetchOtherUsers();
-  }, [chatId, session, refreshButton]);
+  }, [chatId, session?.serverToken, refreshButton, userId]);
 
   useEffect(() => {
+    if (!session) return;
     fetchUserDetails();
-  }, [session]);
+  }, [session?.serverToken]);
 
   // Handle WebSocket Connection
   useEffect(() => {
@@ -187,19 +203,12 @@ const Page = () => {
         const data = JSON.parse(event.data);
         if (data.type === "receiveMessage") {
           setMessages((prev) => [...prev, data.payload]);
+          setMsgLoading(false);
         }
 
         // reload chat
         if (data.type === "reloadChat") {
-          setLoading(true);
-          try {
-            const response = await fetchMessage(chatId, session?.serverToken);
-            setMessages(Array.isArray(response) ? response : []);
-          } catch (error) {
-            console.error("Error fetching messages:", error);
-          } finally {
-            setLoading(false);
-          }
+          fetchMessages();
         }
 
         if (data.type === "orderAccepted") {
@@ -216,6 +225,9 @@ const Page = () => {
     connectWebSocket();
 
     return () => {
+      if (pingIntervalRef.current) {
+        clearInterval(pingIntervalRef.current);
+      }
       if (socketRef.current) {
         socketRef.current.close();
       }
@@ -227,28 +239,31 @@ const Page = () => {
 
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
-  
+
     const interval = setInterval(() => {
       if (socketRef.current?.readyState === WebSocket.OPEN) {
-        socketRef.current.send(JSON.stringify({
-          type: "openChat",
-          payload: { chatId: chatId, userId: userDetails._id },
-        }));
+        socketRef.current.send(
+          JSON.stringify({
+            type: "openChat",
+            payload: { chatId: chatId, userId: userDetails._id },
+          })
+        );
         clearInterval(interval); // only run once after open
       }
     }, 300);
-  
+
     return () => {
       if (socketRef.current?.readyState === WebSocket.OPEN) {
-        socketRef.current.send(JSON.stringify({
-          type: "closeChat",
-          payload: { chatId: chatId, userId: userDetails._id },
-        }));
+        socketRef.current.send(
+          JSON.stringify({
+            type: "closeChat",
+            payload: { chatId: chatId, userId: userDetails._id },
+          })
+        );
       }
       clearInterval(interval);
     };
   }, [chatId, userDetails?._id]);
-  
 
   // Auto-scroll to the latest message
   useEffect(() => {
@@ -260,7 +275,7 @@ const Page = () => {
     if (event.key === "Enter") {
       event.preventDefault();
       sendMessage();
-      setChat("");
+      chatRef.current = "";
     }
   };
 
@@ -270,7 +285,13 @@ const Page = () => {
       <div className="h-16 px-2 py-2 flex items-center justify-between bg-gray-200 w-full sm:rounded-tr-xl">
         <div className="">
           <div className="flex items-center gap-2">
-            <button onClick={() => {}} className="px-2 py-2">
+            <button
+              onClick={() => {
+                // back to prev page
+                // router.back();
+              }}
+              className="px-2 py-2"
+            >
               <IoArrowBackSharp className="text-2xl" />
             </button>
             <div className="flex items-center gap-2">
@@ -295,7 +316,9 @@ const Page = () => {
             className="max-h-[600px] min-h-[600px] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
-            Loading....
+            <div className="flex justify-center items-center py-6">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+            </div>
           </div>
         ) : (
           <div
@@ -340,12 +363,13 @@ const Page = () => {
       <div className="w-full bg-gray-300 px-4 py-2 flex items-center gap-2 rounded-br-xl">
         <input
           type="text"
-          value={chat}
-          onChange={(e) => setChat(e.target.value)}
+          defaultValue=""
+          onChange={(e) => (chatRef.current = e.target.value)}
           placeholder="Type a message and press enter"
           onKeyDown={handleKeyDown}
           className="bg-white w-full h-10 px-4 rounded-lg outline-none"
         />
+
         <button
           onClick={sendMessage}
           className="bg-black text-white px-4 py-2 rounded-lg text-xl cursor-pointer"
@@ -358,7 +382,6 @@ const Page = () => {
         <SendMoneyModal
           modalData={modalData}
           setModalData={setModalData}
-          setTransaction={setTransaction}
           setRefreshButton={setRefreshButton}
         />
       )}
@@ -366,4 +389,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default memo(Page);

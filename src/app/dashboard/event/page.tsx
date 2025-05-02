@@ -16,7 +16,7 @@ const Page = () => {
   return (
     <div className="w-full mx-auto flex flex-col px-6">
       {/* route */}
-      <div className="mt-4 pt-4">
+      <div className="mt-2 pt-4">
         <div className="flex items-center gap-2">
           <div
             onClick={() => router.push("/")}
@@ -37,7 +37,7 @@ const Page = () => {
       </div>
 
       {/* eventCard */}
-      <div className="p-6 mt-8 bg-black/5 shadow-md max-w-fit sm:min-w-xl rounded-lg flex">
+      <div className="sm:p-6 p-4 mt-8 bg-black/5 shadow-md w-full sm:min-w-lg rounded-lg flex">
         <div className="flex flex-col gap-4">
           {/* step */}
 

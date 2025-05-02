@@ -19,8 +19,9 @@ export const fetchAllChat = async (token: any) => {
       }
     );
     return response.data.data;
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log("fetchAllChatError", error);
+    toast.error(error?.response?.data?.message);
     return error;
   } finally {
     toast.dismiss(tid);
@@ -42,7 +43,7 @@ export const fetchUserDetailsById = async (token: any) => {
     );
     return response.data.data;
   } catch (error:any) {
-    console.log(error);
+    console.log("fetchUserDetailsByIdError",error);
     toast.error(error?.response?.data?.message);
     return error;
   }
@@ -50,7 +51,6 @@ export const fetchUserDetailsById = async (token: any) => {
 
 // fetchAllMessages
 export const fetchMessage = async (chatId: any, token: any) => {
-  const tid = toast.loading("Fetching all messages...");
   try {
     // apiCall
     const response = await apiConnector(
@@ -63,11 +63,10 @@ export const fetchMessage = async (chatId: any, token: any) => {
       }
     );
     return response.data.data;
-  } catch (error) {
-    console.log(error);
+  } catch (error:any) {
+    console.log("fetchMessageError",error);
+    toast.error("fetchMessageError", error?.response?.data?.message);
     return error;
-  } finally {
-    toast.dismiss(tid);
   }
 };
 
@@ -79,8 +78,9 @@ export const fetchOtherUser = async (userId: any) => {
       userId: userId
     });
     return response.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    toast.error(error?.response?.data?.message || "Error fetching other user");
     return error;
   } finally {
     toast.dismiss(tid);
@@ -89,7 +89,7 @@ export const fetchOtherUser = async (userId: any) => {
 
 // fetchOrdersOfParticularChat
 export const fetchOrdersOfParticularChat = async (chatId: any, token:any) => {
-  const tid = toast.loading("Loading...");
+  const tid = toast.loading("Loading orders of particular chat...");
   try {
     const response = await apiConnector("POST", chatEndPoints.FETCH_ORDERS_CHAT, {
       chatId: chatId
@@ -98,8 +98,9 @@ export const fetchOrdersOfParticularChat = async (chatId: any, token:any) => {
       Authorization: `Bearer ${token}`,
     });
     return response.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    toast.error(error?.response?.data?.message || "Error fetching orders of particular chat");
     return error;
   } finally {
     toast.dismiss(tid);

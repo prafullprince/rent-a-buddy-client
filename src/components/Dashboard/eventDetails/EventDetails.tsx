@@ -14,6 +14,7 @@ import { getUserWallet } from "@/service/apiCall/wallet.api";
 import { useRouter } from "next/navigation";
 import { GoGitPullRequest } from "react-icons/go";
 import MyPost from "../my-profile/MyPost";
+import SubSectionSlider from "@/components/Common/SubSectionSlider";
 
 
 const EventDetails = ({ eventDetails }: any) => {
@@ -29,7 +30,7 @@ const EventDetails = ({ eventDetails }: any) => {
   const [modalData, setModalData] = useState<any>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [wallet, setWallet] = useState<any>(null);
-
+  console.log("eventDetails", eventDetails);
   // fetchUserDetailsByIds
   const fetchUserDetailsByIds = async () => {
     try {
@@ -91,7 +92,7 @@ const EventDetails = ({ eventDetails }: any) => {
         />
         <div className="flex flex-col gap-1">
           {/* username age */}
-          <div className="sm:text-2xl text-xl font-semibold sm:font-bold text-black break-words">
+          <div className="sm:text-2xl text-xl font-semibold sm:font-bold text-black break-words max-w-[140px] sm:max-w-[200px]">
             {eventDetails?.user?.username} (22)
           </div>
 
@@ -153,35 +154,8 @@ const EventDetails = ({ eventDetails }: any) => {
         <motion.div layoutId={`subsection`} className="w-full flex flex-col mt-2">
           {/* subSections */}
           <div className="max-w-lg">
-            <div className="flex gap-2 mt-2">
-              {subSectionDetails?.map((subSec: any) => (
-                <div
-                  className={`px-2 py-2 rounded-lg cursor-pointer ${
-                    currentSubSection?._id === subSec?._id
-                      ? "bg-yellow-300"
-                      : "bg-gray-300 hover:bg-gray-400 transition-all duration-300"
-                  }`}
-                  key={subSec?._id}
-                >
-                  <div
-                    onClick={() => setCurrentSubSection(subSec)}
-                    className="flex items-center gap-1"
-                  >
-                    <Image
-                      src={subSec?.subCategoryId?.imageUrl}
-                      alt="subCategory"
-                      width={24}
-                      height={24}
-                      className="rounded-full w-6 h-6"
-                    />
-                    <div className="flex flex-col gap-1">
-                      <p className="text-sm font-semibold">
-                        {subSec?.subCategoryId?.name}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="flex justify-start">
+              <SubSectionSlider subSectionDetails={subSectionDetails} currentSubSection={currentSubSection} setCurrentSubSection={setCurrentSubSection} />
             </div>
           </div>
 

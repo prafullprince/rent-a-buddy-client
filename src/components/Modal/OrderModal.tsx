@@ -215,7 +215,7 @@ const OrderModal = ({
       <div className="h-fit mx-auto my-4 w-[95%] sm:w-[90%] lg:w-[80%]">
         <motion.div
           ref={btnRef}
-          className="flex flex-col gap-2 bg-gray-100 p-6 relative border-black/40 rounded-lg w-[350px] lg:w-[500px] sm:max-w-xl mx-auto shadow-lg"
+          className="flex flex-col gap-2 bg-gray-100 p-6 relative border-black/40 rounded-lg w-[300px] sm:w-[400px] md:w-[450px] lg:w-[500px] sm:max-w-xl mx-auto shadow-lg"
         >
           {/* heading */}
           <div className="bg-gray-700 font-semibold text-pink-100 rounded-t-lg text-xl absolute top-0 w-full right-0 left-0 h-12 flex items-center justify-between px-6">
