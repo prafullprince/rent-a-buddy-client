@@ -132,7 +132,7 @@ export default function Home() {
       transition={{ duration: 0.5 }}
       className="w-[90%] sm:w-[90%] mx-auto min-h-screen"
     >
-      <div className="mx-auto w-full lg:w-[80%] lg:max-w-[80%]">
+      <div className="mx-auto w-full lg:w-[90%]">
         <div className="flex flex-col items-start gap-4 mt-8">
           {/* filters */}
           <div className="hidden lg:block w-full">
@@ -229,7 +229,7 @@ export default function Home() {
             <IoFilterSharp className="font-bold text-xl" />
           </div>
 
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 xl:grid-cols-3">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {events?.map((event: any, idx: any) => (
               <EventOverlayCard event={event} key={idx} />
             ))}

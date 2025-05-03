@@ -97,7 +97,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
           >
             <div className="flex flex-col gap-2">
               {/* Topbar */}
-              <div className="flex gap-4 flex-col md:flex-row md:items-start">
+              <div className="flex gap-4 flex-col md:flex-row md:items-start md:flex-wrap">
                 {/* Image */}
                 <Image
                   src={subCategory?.imageUrl}

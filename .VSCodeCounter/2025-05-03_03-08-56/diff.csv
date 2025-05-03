@@ -1,0 +1,40 @@
+"filename", "language", "TypeScript", "TypeScript JSX", "CSS", "JSON", "comment", "blank", "total"
+"/Users/vector/Desktop/rent-a-buddy-client/package-lock.json", "JSON", 0, 0, 0, 182, 0, 0, 182
+"/Users/vector/Desktop/rent-a-buddy-client/package.json", "JSON", 0, 0, 0, 3, 0, 0, 3
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/chat/[chatId]/user/[userId]/page.tsx", "TypeScript JSX", 0, 84, 0, 0, -7, 10, 87
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/chat/layout.tsx", "TypeScript JSX", 0, 106, 0, 0, 11, 17, 134
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/my-profile/page.tsx", "TypeScript JSX", 0, 17, 0, 0, 1, -2, 16
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/post/page.tsx", "TypeScript JSX", 0, 32, 0, 0, 2, 4, 38
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/settings/page.tsx", "TypeScript JSX", 0, 8, 0, 0, 0, -1, 7
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/dashboard/wallet/page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 1, 1
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/event/[eventId]/page.tsx", "TypeScript JSX", 0, 19, 0, 0, 0, 0, 19
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/globals.css", "CSS", 0, 0, 14, 0, 1, 5, 20
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/page.tsx", "TypeScript JSX", 0, -12, 0, 0, -24, -4, -40
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/ChatSidebar.tsx", "TypeScript JSX", 0, 52, 0, 0, 0, 11, 63
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/Message/Receiver.tsx", "TypeScript JSX", 0, -14, 0, 0, 2, 1, -11
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/Message/Sender.tsx", "TypeScript JSX", 0, -22, 0, 0, 0, 0, -22
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/SendMoneyModal.tsx", "TypeScript JSX", 0, -1, 0, 0, -1, 0, -2
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Common/HorrizontalSlider.tsx", "TypeScript JSX", 0, 75, 0, 0, 3, 9, 87
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Common/PostSlider.tsx", "TypeScript JSX", 0, 74, 0, 0, 2, 6, 82
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Common/SubSectionSlider.tsx", "TypeScript JSX", 0, 73, 0, 0, 9, 8, 90
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/eventDetails/EventDetails.tsx", "TypeScript JSX", 0, -17, 0, 0, 0, -1, -18
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/my-profile/DeletePostModal.tsx", "TypeScript JSX", 0, 89, 0, 0, 9, 12, 110
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/my-profile/MyEvents.tsx", "TypeScript JSX", 0, 25, 0, 0, 0, 0, 25
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/my-profile/MyPost.tsx", "TypeScript JSX", 0, 75, 0, 0, 3, 8, 86
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/my-profile/UserDetails.tsx", "TypeScript JSX", 0, -3, 0, 0, -1, 1, -3
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/post/CreatePost.tsx", "TypeScript JSX", 0, 15, 0, 0, 1, 4, 20
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/post/PostForm.tsx", "TypeScript JSX", 0, 129, 0, 0, 25, 12, 166
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Dashboard/wallet/RechargeModal.tsx", "TypeScript JSX", 0, 1, 0, 0, 0, 0, 1
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/HomePage/EventOverlayCard.tsx", "TypeScript JSX", 0, 2, 0, 0, 0, 0, 2
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Modal/OrderModal.tsx", "TypeScript JSX", 0, 82, 0, 0, 5, 14, 101
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Navbar/Navbar.tsx", "TypeScript JSX", 0, 73, 0, 0, 9, 9, 91
+"/Users/vector/Desktop/rent-a-buddy-client/src/data/dashboard.tsx", "TypeScript JSX", 0, 7, 0, 0, 0, 0, 7
+"/Users/vector/Desktop/rent-a-buddy-client/src/redux/slice/chat.slice.ts", "TypeScript", 27, 0, 0, 0, 4, 7, 38
+"/Users/vector/Desktop/rent-a-buddy-client/src/redux/slice/event.slice.ts", "TypeScript", 5, 0, 0, 0, 0, 0, 5
+"/Users/vector/Desktop/rent-a-buddy-client/src/redux/store.ts", "TypeScript", 2, 0, 0, 0, 0, -1, 1
+"/Users/vector/Desktop/rent-a-buddy-client/src/service/api.ts", "TypeScript", -5, 0, 0, 0, 3, 1, -1
+"/Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/chat.api.ts", "TypeScript", -1, 0, 0, 0, 0, 1, 0
+"/Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/event.api.ts", "TypeScript", -6, 0, 0, 0, 0, -1, -7
+"/Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/user.api.ts", "TypeScript", 50, 0, 0, 0, 3, 6, 59
+"/Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/wallet.api.ts", "TypeScript", 3, 0, 0, 0, 0, 0, 3
+"Total", "-", 75, 969, 14, 185, 60, 137, 1440

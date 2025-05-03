@@ -21,7 +21,6 @@ export const fetchAllChat = async (token: any) => {
     return response.data.data;
   } catch (error: any) {
     console.log("fetchAllChatError", error);
-    toast.error(error?.response?.data?.message);
     return error;
   } finally {
     toast.dismiss(tid);
@@ -44,7 +43,6 @@ export const fetchUserDetailsById = async (token: any) => {
     return response.data.data;
   } catch (error:any) {
     console.log("fetchUserDetailsByIdError",error);
-    toast.error(error?.response?.data?.message);
     return error;
   }
 };
@@ -65,7 +63,6 @@ export const fetchMessage = async (chatId: any, token: any) => {
     return response.data.data;
   } catch (error:any) {
     console.log("fetchMessageError",error);
-    toast.error("fetchMessageError", error?.response?.data?.message);
     return error;
   }
 };
@@ -80,7 +77,6 @@ export const fetchOtherUser = async (userId: any) => {
     return response.data.data;
   } catch (error:any) {
     console.log(error);
-    toast.error(error?.response?.data?.message || "Error fetching other user");
     return error;
   } finally {
     toast.dismiss(tid);
