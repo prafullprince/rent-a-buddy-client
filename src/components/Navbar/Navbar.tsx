@@ -167,7 +167,7 @@ const Navbar = () => {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
-      className="bg-[#ffffff] text-black h-16 sm:h-[70px] flex items-center justify-center shadow-md"
+      className="bg-slate-50 text-black h-16 sm:h-[70px] flex items-center justify-center shadow-md"
     >
       {/* content div */}
       <div className="flex items-center justify-between w-[95%] lg:w-[80%] px-1 py-2 mx-auto">
@@ -211,7 +211,7 @@ const Navbar = () => {
 
           {/* chat */}
           {session && status === "authenticated" && (
-            <Link href={`/chat/null/user/null`} className="relative">
+            <Link href={`/chat`} className="relative">
               <LuMessageCircleMore className="text-3xl font-bold cursor-pointer" />
               {totalUnseenMessages > 0 && (
                 <div className="absolute top-0 right-0 translate-x-1.5 text-white -translate-y-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-sm">

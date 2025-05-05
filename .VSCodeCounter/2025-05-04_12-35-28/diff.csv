@@ -1,0 +1,9 @@
+"filename", "language", "TypeScript", "TypeScript JSX", "comment", "blank", "total"
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/chat/[chatId]/user/[userId]/page.tsx", "TypeScript JSX", 0, 5, 0, 0, 5
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/chat/layout.tsx", "TypeScript JSX", 0, 0, 1, 0, 1
+"/Users/vector/Desktop/rent-a-buddy-client/src/app/chat/page.tsx", "TypeScript JSX", 0, 8, 3, 2, 13
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/ChatSidebar.tsx", "TypeScript JSX", 0, 2, 0, 0, 2
+"/Users/vector/Desktop/rent-a-buddy-client/src/components/Navbar/Navbar.tsx", "TypeScript JSX", 0, -21, -2, -3, -26
+"/Users/vector/Desktop/rent-a-buddy-client/src/redux/slice/chat.slice.ts", "TypeScript", 5, 0, 0, 0, 5
+"/Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/chat.api.ts", "TypeScript", -4, 0, 0, 0, -4
+"Total", "-", 1, -6, 2, -1, -4

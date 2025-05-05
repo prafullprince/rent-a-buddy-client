@@ -125,6 +125,7 @@
 /* global.css or component CSS module */
 .slider::-webkit-scrollbar {
   height: 0px;
+  width: 0px;
 }
 
 .slider::-webkit-scrollbar-track {

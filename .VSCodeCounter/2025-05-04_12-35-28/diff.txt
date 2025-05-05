@@ -1,0 +1,46 @@
+Date : 2025-05-04 12:35:28
+Directory : /Users/vector/Desktop/rent-a-buddy-client
+Total : 7 files,  -5 codes, 2 comments, -1 blanks, all -4 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript     |          2 |          1 |          0 |          0 |          1 |
+| TypeScript JSX |          5 |         -6 |          2 |         -1 |         -5 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                   | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                      |          7 |         -5 |          2 |         -1 |         -4 |
+| src                                                                                    |          7 |         -5 |          2 |         -1 |         -4 |
+| src/app                                                                                |          3 |         13 |          4 |          2 |         19 |
+| src/app/chat                                                                           |          3 |         13 |          4 |          2 |         19 |
+| src/app/chat (Files)                                                                   |          2 |          8 |          4 |          2 |         14 |
+| src/app/chat/[chatId]                                                                  |          1 |          5 |          0 |          0 |          5 |
+| src/app/chat/[chatId]/user                                                             |          1 |          5 |          0 |          0 |          5 |
+| src/app/chat/[chatId]/user/[userId]                                                    |          1 |          5 |          0 |          0 |          5 |
+| src/components                                                                         |          2 |        -19 |         -2 |         -3 |        -24 |
+| src/components/Chat                                                                    |          1 |          2 |          0 |          0 |          2 |
+| src/components/Navbar                                                                  |          1 |        -21 |         -2 |         -3 |        -26 |
+| src/redux                                                                              |          1 |          5 |          0 |          0 |          5 |
+| src/redux/slice                                                                        |          1 |          5 |          0 |          0 |          5 |
+| src/service                                                                            |          1 |         -4 |          0 |          0 |         -4 |
+| src/service/apiCall                                                                    |          1 |         -4 |          0 |          0 |         -4 |
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                               | language       | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/chat/[chatId]/user/[userId]/page.tsx | TypeScript JSX |          5 |          0 |          0 |          5 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/chat/layout.tsx                      | TypeScript JSX |          0 |          1 |          0 |          1 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/app/chat/page.tsx                        | TypeScript JSX |          8 |          3 |          2 |         13 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Chat/ChatSidebar.tsx          | TypeScript JSX |          2 |          0 |          0 |          2 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/components/Navbar/Navbar.tsx             | TypeScript JSX |        -21 |         -2 |         -3 |        -26 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/redux/slice/chat.slice.ts                | TypeScript     |          5 |          0 |          0 |          5 |
+| /Users/vector/Desktop/rent-a-buddy-client/src/service/apiCall/chat.api.ts              | TypeScript     |         -4 |          0 |          0 |         -4 |
+| Total                                                                                  |                |         -5 |          2 |         -1 |         -4 |
++----------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

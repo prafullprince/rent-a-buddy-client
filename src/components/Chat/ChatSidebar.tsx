@@ -10,7 +10,8 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { memo, useEffect, useRef, useState } from "react";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { motion } from "framer-motion";
-
+import { useDispatch } from "react-redux";
+import { setOpenChatMobile } from "@/redux/slice/chat.slice";
 const PING_INTERVAL = 25000;
 const RECONNECT_INTERVAL = 3000;
 
@@ -19,7 +20,6 @@ const ChatSidebar = ({
   setAllChat,
   chatLoading,
   openChatMobile,
-  setOpenChatMobile,
   sockty,
 }: any) => {
   // hooks
@@ -29,6 +29,7 @@ const ChatSidebar = ({
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pathName = usePathname();
+  const dispatch = useDispatch();
 
   // state
   const [userDetails, setUserDetails] = useState<any>(null);
@@ -153,7 +154,7 @@ const ChatSidebar = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ ease: "easeInOut", duration: 0.8 }}
-        className={`flex flex-col gap-4 sm:border-r-1 sm:border-l-1 sm:border-t sm:border-b border-gray-400 max-h-[720px] min-h-[720px] bg-white ${
+        className={`flex flex-col gap-4 sm:border-r sm:border-l sm:border-t sm:border-b border-gray-200 max-h-[720px] min-h-[720px] bg-white overflow-y-auto slider ${
           isOpen
             ? "sm:max-w-[300px] sm:min-w-[300px]"
             : "sm:max-w-[80px] sm:min-w-[80px] min-w-full max-w-full"
@@ -232,7 +233,7 @@ const ChatSidebar = ({
 
                     if (window.innerWidth < 640) {
                       // Tailwind 'sm' is 640px
-                      setOpenChatMobile(true);
+                      dispatch(setOpenChatMobile(true));
                     }
                   }}
                   key={chit?._id}
@@ -262,7 +263,7 @@ const ChatSidebar = ({
                       <div className="text-lg font-medium text-wrap break-words">
                         {chit?.participants
                           ?.find((usr: any) => usr?._id !== userDetails?._id)
-                          ?.username?.substring(0, 30)}
+                          ?.username?.substring(0, 20)}
                       </div>
                       <div className="text-sm text-gray-400 text-wrap break-words">
                         {/* {chit?.message[chit?.message.length - 1]?.text?.substring(0, 20)}.... */}

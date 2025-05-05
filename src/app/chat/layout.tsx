@@ -7,6 +7,7 @@ import { fetchUserDetailsById } from "@/service/apiCall/user.api";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Layout = ({ children }: { children: any }) => {
   // hooks
@@ -16,12 +17,13 @@ const Layout = ({ children }: { children: any }) => {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const PING_INTERVAL = 25000; // 25 seconds
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const { openChatMobile } = useSelector((state: any) => state.chat);
 
   // state
   const [allChat, setAllChat] = useState<any>([]);
   const [userDetails, setUserDetails] = useState<any>({});
   const [chatLoading, setChatLoading] = useState(false);
-  const [openChatMobile, setOpenChatMobile] = useState(false);
+  // const [openChatMobile, setOpenChatMobile] = useState(false);
 
   // fetchUserDetails
   const fetchUserDetails = async () => {
@@ -46,7 +48,7 @@ const Layout = ({ children }: { children: any }) => {
     let socket: WebSocket;
 
     const connectWebSocket = () => {
-      socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
+      socket = new WebSocket("ws://localhost:4000");
       socketref.current = socket;
 
       socket.onopen = () => {
@@ -122,7 +124,7 @@ const Layout = ({ children }: { children: any }) => {
         clearTimeout(reconnectTimeoutRef.current);
       }
     };
-  }, [session, userDetails?._id]);
+  }, [session, userDetails?._id, socketref.current]);
 
   if (status === "loading") {
     return (
@@ -144,7 +146,6 @@ const Layout = ({ children }: { children: any }) => {
           setAllChat={setAllChat}
           chatLoading={chatLoading}
           openChatMobile={openChatMobile}
-          setOpenChatMobile={setOpenChatMobile}
           sockty={socketref.current}
         />
         <div

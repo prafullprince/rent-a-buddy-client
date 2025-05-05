@@ -8,6 +8,8 @@ import { PiCurrencyInrBold } from "react-icons/pi";
 import Image from "next/image";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setOpenChatMobile } from "@/redux/slice/chat.slice";
 
 
 const location = ["Delhi", "Mumbai", "Banglore", "Pune", "Hyderabad"];
@@ -41,6 +43,7 @@ const OrderModal = ({
   const RECONNECT_INTERVAL = 3000;
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const socketref = useRef<WebSocket | null>(null);
+  const dispatch = useDispatch();
 
   // state  
   const [formData, setFormData] = useState<IFormData>({
@@ -168,7 +171,7 @@ const OrderModal = ({
       socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-    
+
           if (data.type === "orderStatus") {
             console.log("orderStatus", data.payload);
     
@@ -179,6 +182,7 @@ const OrderModal = ({
               );
               setLoading(false);
               setModalData(null);
+              dispatch(setOpenChatMobile(true));
             } else {
               toast.error(data.payload.message);
               setModalData(null);
@@ -363,7 +367,7 @@ const OrderModal = ({
               </label>
               <textarea
                 id="additionalInfo"
-                className="w-full p-2 border border-gray-300 rounded-lg outline-none"
+                className="w-full p-2 border border-gray-300 rounded-lg outline-none placeholder:text-gray-400 placeholder:text-sm"
                 value={formData.additionalInfo}
                 onChange={formHandler}
                 name="additionalInfo"
@@ -466,6 +470,7 @@ const OrderModal = ({
 
                 if(socketref?.current?.readyState === WebSocket.OPEN) {
                   console.log("sending order request", socketref?.current?.readyState);
+                  setLoading(true);
                   socketref.current.send(
                     JSON.stringify({
                       type: "requestOrder",
@@ -474,7 +479,6 @@ const OrderModal = ({
                       },
                     })
                   );
-                  setLoading(true);
                 } else {
                   toast.error("Socket not found");
                 }

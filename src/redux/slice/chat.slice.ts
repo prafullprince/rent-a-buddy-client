@@ -7,7 +7,8 @@ interface chatState {
   totalUnseenMessages: number;
   totalUnseenMessage: {
     [chatId: string]: number
-  }
+  },
+  openChatMobile: boolean;
 }
 
 // initial state
@@ -15,7 +16,8 @@ const initialState: chatState = {
   totalUnseenMessages: 0,
   totalUnseenMessage: {
 
-  }
+  },
+  openChatMobile: false,
 };
 
 // create slice
@@ -30,8 +32,11 @@ const chatSlice = createSlice({
         const { chatId, count } = action.payload;
         state.totalUnseenMessage[chatId] = count;
     },
+    setOpenChatMobile: (state, action: PayloadAction<any>) => {
+      state.openChatMobile = action.payload;
+    },
   },
 });
 
-export const { setTotalUnseenMessages, setTotalUnseenMessagesOfChat } = chatSlice.actions;
+export const { setTotalUnseenMessages, setTotalUnseenMessagesOfChat, setOpenChatMobile } = chatSlice.actions;
 export default chatSlice.reducer;

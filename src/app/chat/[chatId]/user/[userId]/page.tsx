@@ -20,6 +20,8 @@ import toast from "react-hot-toast";
 import SendMoneyModal from "@/components/Chat/SendMoneyModal";
 import Receiver from "@/components/Chat/Message/Receiver";
 import Sender from "@/components/Chat/Message/Sender";
+import { useDispatch } from "react-redux";
+import { setOpenChatMobile } from "@/redux/slice/chat.slice";
 
 // Define types for better maintainability
 interface Message {
@@ -53,6 +55,7 @@ const Page = () => {
   const router = useRouter();
   const chatRef = useRef<string>("");
   const pathName = usePathname();
+  const dispatch = useDispatch();
 
   // state
   const [userDetails, setUserDetails] = useState<User | null>(null);
@@ -289,8 +292,10 @@ const Page = () => {
               onClick={() => {
                 // back to prev page
                 // router.back();
+                dispatch(setOpenChatMobile(false));
+                router.push("/chat");
               }}
-              className="px-2 py-2"
+              className="px-2 py-2 block sm:hidden"
             >
               <IoArrowBackSharp className="text-2xl" />
             </button>
