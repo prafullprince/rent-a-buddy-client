@@ -240,35 +240,62 @@ const Page = () => {
     };
   }, [chatId, userDetails?._id]);
 
+  // useEffect(() => {
+  //   if (!chatId || !userDetails?._id) return;
+
+  //   const interval = setInterval(() => {
+  //     if (socketRef.current?.readyState === WebSocket.OPEN) {
+  //       socketRef.current.send(
+  //         JSON.stringify({
+  //           type: "openChat",
+  //           payload: { chatId: chatId, userId: userDetails._id },
+  //         })
+  //       );
+  //       clearInterval(interval); // only run once after open
+  //     }
+  //   }, 300);
+
+  //   return () => {
+  //     if (socketRef.current?.readyState === WebSocket.OPEN) {
+  //       socketRef.current.send(
+  //         JSON.stringify({
+  //           type: "closeChat",
+  //           payload: { chatId: chatId, userId: userDetails._id },
+  //         })
+  //       );
+  //     }
+  //     clearInterval(interval);
+  //   };
+  // }, [chatId, userDetails?._id]);
+
+  // Auto-scroll to the latest message
+  
+  
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
-
-    const interval = setInterval(() => {
-      if (socketRef.current?.readyState === WebSocket.OPEN) {
-        socketRef.current.send(
-          JSON.stringify({
-            type: "openChat",
-            payload: { chatId: chatId, userId: userDetails._id },
-          })
-        );
-        clearInterval(interval); // only run once after open
-      }
-    }, 300);
-
+  
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          type: "openChat",
+          payload: { chatId, userId: userDetails._id },
+        })
+      );
+    }
+  
     return () => {
       if (socketRef.current?.readyState === WebSocket.OPEN) {
         socketRef.current.send(
           JSON.stringify({
             type: "closeChat",
-            payload: { chatId: chatId, userId: userDetails._id },
+            payload: { chatId, userId: userDetails._id },
           })
         );
       }
-      clearInterval(interval);
     };
   }, [chatId, userDetails?._id]);
+  
 
-  // Auto-scroll to the latest message
   useEffect(() => {
     divRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -318,7 +345,7 @@ const Page = () => {
       <div className="w-full">
         {loading ? (
           <div
-            className="max-h-[600px] min-h-[600px] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
+            className="max-h-[500px] min-h-[500px] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             <div className="flex justify-center items-center py-6">
@@ -327,7 +354,7 @@ const Page = () => {
           </div>
         ) : (
           <div
-            className="sm:max-h-[calc(100vh-180px)] sm:min-h-[calc(100vh-180px)] h-[80dvh] p-4 overflow-y-auto overflow-hidden bg-gray-800 relative"
+            className="max-h-[calc(100dvh-120px)] min-h-[calc(100dvh-120px)] sm:max-h-[calc(100dvh-180px)] sm:min-h-[calc(100dvh-180px)] p-4 overflow-y-auto overflow-hidden bg-gray-800 relative"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             {messages.length === 0 ? (
