@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 
 "use client";
 import {
@@ -10,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import DeletePostModal from "./DeletePostModal";
 import PostSlider from "@/components/Common/PostSlider";
 
-const MyPost = ({ type }: any) => {
+const MyPost = ({ type, eventDetails }: any) => {
   // hook
   const { data: session } = useSession();
   console.log("type", type);
@@ -35,7 +36,7 @@ const MyPost = ({ type }: any) => {
       setLoading(true);
       try {
         const response = await getPostsByUserApiCall(
-          userDetails?._id,
+          eventDetails?.user?._id,
           session?.serverToken
         );
         setPosts(response?.posts);
@@ -66,7 +67,7 @@ const MyPost = ({ type }: any) => {
           </div>
         )}
         {!loading &&
-          <PostSlider posts={posts} setModalData={setModalData} userDetails={userDetails} type="user" />
+          <PostSlider posts={posts} setModalData={setModalData} userDetails={userDetails} session={session} type="user" />
         }
       </div>
       {modalData && (

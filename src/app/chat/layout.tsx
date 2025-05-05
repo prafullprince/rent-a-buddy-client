@@ -23,7 +23,6 @@ const Layout = ({ children }: { children: any }) => {
   const [allChat, setAllChat] = useState<any>([]);
   const [userDetails, setUserDetails] = useState<any>({});
   const [chatLoading, setChatLoading] = useState(false);
-  // const [openChatMobile, setOpenChatMobile] = useState(false);
 
   // fetchUserDetails
   const fetchUserDetails = async () => {

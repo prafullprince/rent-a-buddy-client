@@ -49,7 +49,7 @@ const page = async () => {
         </div>
 
         {/* posts */}
-        <MyPost type="user" />
+        {session?.accountType === "Buddy" && <MyPost type="user" />}
       </div>
     </div>
   );

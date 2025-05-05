@@ -21,7 +21,7 @@ const Sender = ({
             className={`max-w-[65%] relative text-black rounded-lg rounded-tr-none ${
               msg?.type === "text"
                 ? "bg-green-200 px-3 pt-1"
-                : "bg-white min-w-xs max-w-sm"
+                : "bg-white min-w-[270px] max-w-sm"
             }`}
           >
             <div
@@ -33,7 +33,7 @@ const Sender = ({
               <div className="pr-14 pb-2 break-words text-wrap">{msg.text}</div>
             ) : (
               <div
-                className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6`}
+                className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6 break-words text-wrap`}
               >
                 <div className="flex flex-col gap-2">
                   {/* topbar */}

@@ -9,6 +9,7 @@ export default function PostSlider({
   userDetails,
   posts,
   type,
+  session
 }: any) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
@@ -58,7 +59,7 @@ export default function PostSlider({
                     height={300}
                     className="sm:min-w-[260px] sm:min-h-[220px] sm:max-h-[220px] sm:max-w-[260px] min-w-[200px] min-h-[220px] max-h-[260px] rounded-sm bg-center bg-cover flex-1 justify-center sm:block"
                   />
-                  {type == "user" && post?.user === userDetails?._id && (
+                  {type == "user" && post?.user === userDetails?._id && session?.accountType === "Buddy" && (
                     <div
                       className="absolute bottom-4 right-3 rounded-full bg-slate-700 flex items-center justify-center w-10 h-10"
                       onClick={() => {

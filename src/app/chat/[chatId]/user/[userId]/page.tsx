@@ -283,7 +283,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col items-start rounded-xl max-w-full">
+    <div className="flex flex-col items-start rounded-xl max-w-full relative">
       {/* Top Bar */}
       <div className="h-16 px-2 py-2 flex items-center justify-between bg-gray-200 w-full sm:rounded-tr-xl">
         <div className="">
@@ -327,7 +327,7 @@ const Page = () => {
           </div>
         ) : (
           <div
-            className="sm:max-h-[600px] sm:min-h-[600px] h-[80dvh] p-4 overflow-y-auto overflow-hidden bg-gray-800 relative"
+            className="sm:max-h-[calc(100vh-180px)] sm:min-h-[calc(100vh-180px)] h-[80dvh] p-4 overflow-y-auto overflow-hidden bg-gray-800 relative"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             {messages.length === 0 ? (

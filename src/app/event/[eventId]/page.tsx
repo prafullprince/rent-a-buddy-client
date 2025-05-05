@@ -58,6 +58,7 @@ const page = () => {
             <EventDetails eventDetails={eventDetails} />
           )}
         </div>
+
       </div>
     </div>
   );

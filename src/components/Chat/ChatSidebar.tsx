@@ -12,6 +12,8 @@ import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { setOpenChatMobile } from "@/redux/slice/chat.slice";
+import { IoChevronBack, IoSendSharp } from "react-icons/io5";
+import Link from "next/link";
 const PING_INTERVAL = 25000;
 const RECONNECT_INTERVAL = 3000;
 
@@ -35,8 +37,6 @@ const ChatSidebar = ({
   const [userDetails, setUserDetails] = useState<any>(null);
   const [numOfUnseenMessages, setNumOfUnseenMessages] = useState<any[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string>("");
-  const [isOpen, setIsOpen] = useState(true);
-
 
   // Fetch user details once authenticated
   useEffect(() => {
@@ -154,36 +154,20 @@ const ChatSidebar = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ ease: "easeInOut", duration: 0.8 }}
-        className={`flex flex-col gap-4 sm:border-r sm:border-l sm:border-t sm:border-b border-gray-200 max-h-[720px] min-h-[720px] bg-white overflow-y-auto slider ${
-          isOpen
-            ? "sm:max-w-[300px] sm:min-w-[300px]"
-            : "sm:max-w-[80px] sm:min-w-[80px] min-w-full max-w-full"
+        className={`flex flex-col gap-4 sm:border-r sm:border-l sm:border-t sm:border-b border-gray-200 sm:max-h-[calc(100vh-59px)] sm:min-h-[calc(100vh-59px)] bg-white overflow-y-auto slider sm:max-w-[300px] sm:min-w-[300px] min-w-full max-w-full"
         } rounded-tl-xl rounded-bl-xl`}
       >
         <div
-          className={`flex items-center justify-between border-b-2 ${
-            isOpen ? "px-6 py-2" : "px-4 py-2"
-          }`}
+          className={`flex items-center gap-3 border-b-2 px-6 pt-2 pb-4`}
         >
-          {isOpen && (
-            <div className="text-black font-extrabold text-2xl mt-2">Chat</div>
-          )}
-          <div
-            onClick={() => {
-              setIsOpen((prev) => !prev);
-            }}
-            className="cursor-pointer mt-2 bg-gray-100 hover:bg-gray-200 transition-all duration-300 rounded-lg px-2 py-2 ease-in-out"
-          >
-            {isOpen ? (
-              <GoSidebarExpand className="text-2xl" />
-            ) : (
-              <GoSidebarCollapse className="text-3xl" />
-            )}
-          </div>
+          <Link href={`/`} className="h-8 w-8 cursor-pointer rounded-full border flex items-center justify-center mt-2">
+            <IoChevronBack className="text-xl" />
+          </Link>
+          <div className="text-black font-extrabold text-2xl mt-2">Chat</div>
         </div>
 
         {/* allChat */}
-        <div className="mt-2">
+        <div className="">
           {chatLoading && (
             <div className="flex justify-center items-center py-6">
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
@@ -237,9 +221,8 @@ const ChatSidebar = ({
                     }
                   }}
                   key={chit?._id}
-                  className={`flex justify-between relative cursor-pointer hover:bg-gray-200 transition-all duration-200 ${
-                    isOpen ? "px-6 py-3" : "px-4 py-3"
-                  } border-b border-b-gray-200 ${
+                  className={`flex justify-between relative cursor-pointer hover:bg-gray-200 transition-all duration-200 px-6 py-3
+                  border-b border-b-gray-200 ${
                     currentChatId === chit?._id ? "bg-gray-200" : ""
                   }`}
                 >

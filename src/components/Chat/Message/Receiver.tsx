@@ -22,7 +22,7 @@ const Receiver = ({
             className={`max-w-[65%] text-wrap break-words relative text-black rounded-lg rounded-tl-none ${
               msg.type === "text"
                 ? "bg-white px-3 pt-1"
-                : "bg-white min-w-xs max-w-sm"
+                : "bg-white min-w-[270px] max-w-sm"
             }`}
           >
             <div

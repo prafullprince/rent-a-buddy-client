@@ -78,7 +78,7 @@ const EventDetails = ({ eventDetails }: any) => {
 
 
   return (
-    <motion.div className="flex flex-col gap-3 max-w-xl mx-auto break-words text-wrap shadow-sm p-4 rounded-sm bg-gray-100 w-full">
+    <motion.div className="flex flex-col gap-3 max-w-xl mx-auto break-words text-wrap shadow-sm p-4 rounded-sm bg-gray-100 w-full relative pb-24">
       {/* topbar */}
 
       {/* profileDetails */}
@@ -92,7 +92,7 @@ const EventDetails = ({ eventDetails }: any) => {
         />
         <div className="flex flex-col gap-1">
           {/* username age */}
-          <div className="sm:text-2xl text-xl font-semibold sm:font-bold text-black break-words max-w-[140px] sm:max-w-[200px]">
+          <div className="sm:text-2xl text-xl font-semibold sm:font-bold text-black max-w-[140px] sm:max-w-[200px] break-words text-wrap">
             {eventDetails?.user?.username} (22)
           </div>
 
@@ -100,7 +100,7 @@ const EventDetails = ({ eventDetails }: any) => {
           <div></div>
 
           {/* availability */}
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 break-words text-wrap max-w-[140px] sm:max-w-[200px]">
             <span className="text-sm font-semibold text-gray-800">
               Availability:
             </span>{" "}
@@ -108,7 +108,7 @@ const EventDetails = ({ eventDetails }: any) => {
           </p>
 
           {/* location */}
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 break-words text-wrap max-w-[140px] sm:max-w-[200px]">
             <span className="text-sm font-semibold text-gray-800">
               Location:
             </span>{" "}
@@ -117,7 +117,7 @@ const EventDetails = ({ eventDetails }: any) => {
 
           {/* height */}
           {/* location */}
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 break-words text-wrap max-w-[140px] sm:max-w-[200px]">
             <span className="text-sm font-semibold text-gray-800">Height:</span>{" "}
             {`160cm`}
           </p>
@@ -189,11 +189,11 @@ const EventDetails = ({ eventDetails }: any) => {
 
       {/* post */}
       <div className="">
-        <MyPost type="event" />
+        <MyPost type="event" eventDetails={eventDetails} />
       </div>
 
       {/* request order */}
-      <div className="w-full flex justify-center shadow-sm py-2 bg-gray-300 rounded-lg mt-3">
+      <div className="w-full flex justify-center shadow-sm py-3 bg-gray-50 mt-3 fixed bottom-0 left-0 right-0 max-w-xl mx-auto">
         <button
           onClick={() => {
             setModalData({
@@ -208,7 +208,7 @@ const EventDetails = ({ eventDetails }: any) => {
               btn2Text: "Cancel",
             });
           }}
-          className="px-5 py-3 text-sm cursor-pointer bg-black rounded-full text-white flex items-center gap-2"
+          className="px-8 py-3 text-sm cursor-pointer bg-black rounded-full text-white flex items-center gap-2"
         >
           <GoGitPullRequest className="text-lg" />
           Request Order
