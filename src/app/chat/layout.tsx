@@ -138,7 +138,7 @@ const Layout = ({ children }: { children: any }) => {
   }
 
   return (
-    <div className="bg-gray-100 backdrop-blur-sm flex justify-center items-center w-full max-w-full">
+    <div className="bg-gray-100 backdrop-blur-sm flex justify-center items-center w-full max-w-full overflow-y-hidden">
       <div className="w-full sm:w-[90%] lg:w-[80%] mx-auto sm:pt-4 flex rounded-xl">
         <ChatSidebar
           allChat={allChat}
