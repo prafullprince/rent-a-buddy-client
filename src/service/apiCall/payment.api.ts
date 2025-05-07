@@ -152,7 +152,6 @@ export async function sendMoneyApiCall(amount: any, receiverId: any, token: any,
         Authorization: `Bearer ${token}`,
       }
     );
-    console.log("response is:", response.data.data);
     toast.success("Success");
     return response.data.data;
   } catch (error: any) {

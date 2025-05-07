@@ -98,14 +98,12 @@ const Page = () => {
 
     console.log("first");
 
-
-
     if (socketRef.current?.readyState === WebSocket.OPEN) {
       setMsgLoading(true);
       console.log("second");
       socketRef.current.send(JSON.stringify(messagePayload));
     } else {
-      toast.error("Connection lost. Trying to reconnect...");
+      toast.error("Connection lost. Refresh the page to reconnect.");
       // connectWebSocket();
     }
     chatRef.current = ""; // clear ref manually
@@ -268,12 +266,11 @@ const Page = () => {
   //   };
   // }, [chatId, userDetails?._id]);
 
-  // Auto-scroll to the latest message
-  
-  
+
+  // open chat and close chat
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
-  
+
     if (socketRef.current?.readyState === WebSocket.OPEN) {
       socketRef.current.send(
         JSON.stringify({
@@ -282,7 +279,7 @@ const Page = () => {
         })
       );
     }
-  
+
     return () => {
       if (socketRef.current?.readyState === WebSocket.OPEN) {
         socketRef.current.send(
@@ -294,8 +291,8 @@ const Page = () => {
       }
     };
   }, [chatId, userDetails?._id]);
-  
 
+  // Auto-scroll to the latest message
   useEffect(() => {
     divRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -415,6 +412,8 @@ const Page = () => {
           modalData={modalData}
           setModalData={setModalData}
           setRefreshButton={setRefreshButton}
+          socketRef={socketRef}
+          chatId={chatId}
         />
       )}
     </div>

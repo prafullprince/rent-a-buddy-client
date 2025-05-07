@@ -4,46 +4,67 @@
 import { sendMoneyApiCall } from "@/service/apiCall/payment.api";
 import { memo, useEffect, useRef } from "react";
 
-const SendMoneyModal = ({ modalData,setModalData, setTransaction, setRefreshButton }: any) => {
+const SendMoneyModal = ({
+  modalData,
+  setModalData,
+  setRefreshButton,
+  socketRef,
+  chatId
+}: any) => {
+  // hook
+  const btnRef = useRef<HTMLDivElement | null>(null);
 
-    // hook
-    const btnRef = useRef<HTMLDivElement | null>(null);
-
-    // sendMoneyHandler
-    const sendMoneyHandler = async() => {
-        try {
-            const result = await sendMoneyApiCall(modalData.amount, modalData.receiverId, modalData.token, modalData.orderId);
-            setTransaction(result);
-            setModalData(null);
-            setRefreshButton((prev: any) => !prev);
-        } catch (error) {
-            console.log(error);
-        }
+  // sendMoneyHandler
+  const sendMoneyHandler = async () => {
+    try {
+      await sendMoneyApiCall(
+        modalData.amount,
+        modalData.receiverId,
+        modalData.token,
+        modalData.orderId
+      );
+      if (socketRef.current) {
+        socketRef.current.send(
+          JSON.stringify({
+            type: "reloadChatPage",
+            payload: { receiverId: modalData.receiverId, chatId: chatId },
+          })
+        );
+      }
+      setRefreshButton((prev: any) => !prev);
+      setModalData(null);
+    } catch (error: any) {
+      console.log(error);
     }
-    
-    // sideEffect
-    useEffect(()=>{
-        function clickOutsideHandler(e:MouseEvent){
-            if(btnRef.current && !btnRef.current.contains(e.target as Node)){
-                setModalData(null)
-            }
-        }
-        document.addEventListener("mousedown",clickOutsideHandler);
-        return ()=>{
-            document.removeEventListener("mousedown",clickOutsideHandler);
-        }
-    },[]);
+  };
 
+  // sideEffect
+  useEffect(() => {
+    function clickOutsideHandler(e: MouseEvent) {
+      if (btnRef.current && !btnRef.current.contains(e.target as Node)) {
+        setModalData(null);
+      }
+    }
+    document.addEventListener("mousedown", clickOutsideHandler);
+    return () => {
+      document.removeEventListener("mousedown", clickOutsideHandler);
+    };
+  }, []);
 
   return (
     <div className="fixed inset-0 bg-black/20 z-[1000] backdrop-blur-sm">
       <div className="flex items-center justify-center h-screen mx-auto">
-        <div ref={btnRef} className="flex flex-col gap-2 bg-gray-800 p-6 relative border-gray-400 rounded-lg w-[350px] md:max-w-[500px] md:min-w-[450px]">
+        <div
+          ref={btnRef}
+          className="flex flex-col gap-2 bg-gray-800 p-6 relative border-gray-400 rounded-lg w-[350px] md:max-w-[500px] md:min-w-[450px]"
+        >
           {/* heading */}
           <div className="bg-gray-700 font-semibold text-pink-50 rounded-t-lg text-xl absolute top-0 w-full right-0 left-0 h-12 flex items-center justify-between px-6">
             <div className="">
-                {modalData.heading}
-                <span className="text-yellow-400 font-semibold">{modalData.subHeading}</span>
+              {modalData.heading}
+              <span className="text-yellow-400 font-semibold">
+                {modalData.subHeading}
+              </span>
             </div>
             <button
               onClick={modalData.btn2Handler}

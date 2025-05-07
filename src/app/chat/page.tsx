@@ -17,7 +17,7 @@ const ChatPage = () => {
       {/* Message Box */}
       <div className="w-full">
         <div
-          className="max-h-[720px] min-h-[720px] p-4 overflow-auto bg-gray-800 bg-center bg-cover border rounded-tr-xl rounded-br-xl border-gray-100"
+          className="max-h-[calc(100dvh-120px)] min-h-[calc(100dvh-120px)] sm:max-h-[calc(100dvh-180px)] sm:min-h-[calc(100dvh-180px)] p-4 overflow-y-auto overflow-hidden bg-gray-800 relative"
           style={{ backgroundImage: `url(${whatsappImg.src})` }}
         ></div>
       </div>
