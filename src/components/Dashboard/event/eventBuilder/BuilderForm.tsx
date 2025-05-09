@@ -40,7 +40,7 @@ const BuilderForm = () => {
   const fetchCategoriesData = async () => {
     setLoading(true);
     try {
-      const result = await fetchCategorySubCategory();
+      const result: any = await fetchCategorySubCategory();
       setCategorys(result?.data);
       setSelectedCategory(result?.data[0]);
     } catch (error) {

@@ -21,6 +21,11 @@ export const fetchAllChat = async (token: any) => {
     return response.data.data;
   } catch (error: any) {
     console.log("fetchAllChatError", error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
@@ -43,6 +48,11 @@ export const fetchUserDetailsById = async (token: any) => {
     return response.data.data;
   } catch (error:any) {
     console.log("fetchUserDetailsByIdError",error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   }
 };
@@ -63,6 +73,11 @@ export const fetchMessage = async (chatId: any, token: any) => {
     return response.data.data;
   } catch (error:any) {
     console.log("fetchMessageError",error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   }
 };
@@ -77,6 +92,11 @@ export const fetchOtherUser = async (userId: any) => {
     return response.data.data;
   } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
@@ -96,7 +116,11 @@ export const fetchOrdersOfParticularChat = async (chatId: any, token:any) => {
     return response.data.data;
   } catch (error:any) {
     console.log(error);
-    toast.error(error?.response?.data?.message || "Error fetching orders of particular chat");
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);

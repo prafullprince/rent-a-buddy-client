@@ -15,6 +15,7 @@ import "swiper/css";
 import { IoFilterSharp } from "react-icons/io5";
 import Toggle from "@/components/Common/Toggle";
 import PlanetSpinner from "@/loading/PageLoadingSpinner";
+import toast from "react-hot-toast";
 
 // data
 const Location = ["delhi", "mumbai", "banglore", "pune", "patna"];
@@ -53,11 +54,16 @@ export default function Home() {
     try {
       const data: any = await getInfiniteEvents(15, formData, cursor);
 
-      setEvents((prev: any) => [...prev, ...data.data]);
-      setHasmore(data.pagination.hasMore);
-      setCursor(data.pagination.nextCursor);
-    } catch (error) {
-      console.error("Error fetching events:", error);
+      // setEvents((prev: any) => [...prev, ...data?.data]);
+      // setHasmore(data?.pagination?.hasMore);
+      // setCursor(data?.pagination?.nextCursor);
+      if (data && Array.isArray(data.data)) {
+        setEvents((prev: any) => [...prev, ...data.data]);
+        setHasmore(data.pagination?.hasMore ?? false);
+        setCursor(data.pagination?.nextCursor ?? null);
+      }
+    } catch (error:any) {
+      throw error;
     } finally {
       setLoading(false);
       setTimeout(() => {

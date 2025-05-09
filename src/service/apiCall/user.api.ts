@@ -13,8 +13,13 @@ export const fetchUserDetailsById = async (token:any) => {
     });
     console.log("rrrrrrrrrrrrrrrrrrrrr",response);
     return response.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   }
 };
@@ -28,8 +33,13 @@ export const updateProfilePictureApiCall = async (token:any,formData:any) => {
       Authorization: `Bearer ${token}`,
     });
     return response.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   }
 };
@@ -44,8 +54,13 @@ export const updateProfileApiCall = async (token:any,formData:any) => {
     });
     toast.success("Profile updated successfully");
     return response.data.data;
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   }
 };
@@ -63,7 +78,11 @@ export const createPostApiCall = async (token:any,formData:any) => {
     return response.data.data;
   } catch (error: any) {
     console.log(error);
-    toast.error(error?.response?.data?.message || "Error creating post");
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
@@ -81,7 +100,11 @@ export const getPostsByUserApiCall = async (userId:any, token:any) => {
     return response.data.data;
   } catch (error: any) {
     console.log(error);
-    toast.error(error?.response?.data?.message || "Error getting posts");
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   }
 };
@@ -101,7 +124,11 @@ export const deletePostByIdApiCall = async (token:any,postId:any) => {
     return response.data.data;
   } catch (error: any) {
     console.log(error);
-    toast.error(error?.response?.data?.message || "Error deleting post");
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);

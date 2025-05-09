@@ -3,13 +3,17 @@ import { apiConnector } from "../apiConnector";
 
 // fetchCategoriesSubCategories
 export const fetchCategorySubCategory = async () => {
-    try {
-        // apiCall
-        const response = await apiConnector("GET", categoryEndPoints.FETCH_CATEGORY_SUBCATEGORY);
+  try {
+    // apiCall
+    const response = await apiConnector(
+      "GET",
+      categoryEndPoints.FETCH_CATEGORY_SUBCATEGORY
+    );
 
-        console.log("response", response);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
+    console.log("response", response);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};

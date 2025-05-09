@@ -18,9 +18,14 @@ export const getInfiniteEvents = async (limit:number,filters?:any,cursor?:any) =
     });
     // console.log("response is:", response.data.data);
     return response.data.data;
-  } catch (error) {
-    console.log(error);
-    return error;
+  } catch (error:any) {
+    console.error("Error fetching events:", error);
+      if (error.response?.status === 429) {
+        toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+      } else {
+        toast.error(error?.response?.data?.message || "Something went wrong");
+      }
+      return error;
   }
 };
 
@@ -36,8 +41,14 @@ export const createEvent = async (formData:any,token:any) => {
     console.log("response is:", response.data.data);
     toast.success("Success");
     return response.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+    return error;
     return error;
   } finally {
     toast.dismiss(tid);
@@ -55,8 +66,13 @@ export const createServiceApi = async (selectedData:any,token:any) => {
     });
     toast.success("Success");
     return response;
-  } catch (error) {
+  } catch (error:any) {
     console.log("createService error is:",error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
@@ -74,8 +90,13 @@ export const eventSummary = async (eventId:any,token:any) => {
     });
     toast.success("Success");
     return response.data.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
@@ -95,8 +116,13 @@ export const published = async (eventId:any,status:any,token:any) => {
     toast.success("Success");
     // return response.data.data;
     return;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
@@ -114,8 +140,13 @@ export const eventSummaryOfUser = async (token:any) => {
     });
 
     return response.data.data.data[0];
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
@@ -134,8 +165,13 @@ export const editEventApi = async (updates:any, token:any) => {
     console.log("response is:", response.data.data);
     toast.success("Success");
     return true;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
@@ -150,7 +186,11 @@ export const eventDetailsById = async (eventId:any) => {
     return response.data.data;
   } catch (error:any) {
     console.log(error);
-    toast.error(error.response.data.message);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   }
 };
@@ -161,8 +201,13 @@ export const allAvailableEvents = async () => {
     // apiCall
     const response = await apiConnector("GET", eventEndPoints.ALL_EVENTS);
     return response.data.data;
-  } catch (error) {
+  } catch (error:any) {
     console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   }
 };
@@ -181,7 +226,11 @@ export const markAsActiveInactive = async (mark:any,token:any, eventId:any) => {
     return response.data.data;
   } catch (error:any) {
     console.log(error);
-    toast.error(error.response.data.message);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     return error;
   } finally {
     toast.dismiss(tid);
