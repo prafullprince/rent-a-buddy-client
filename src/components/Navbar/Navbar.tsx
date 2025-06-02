@@ -14,6 +14,10 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import { fetchUserDetailsById } from "@/service/apiCall/user.api";
 import { useDispatch, useSelector } from "react-redux";
 import { setTotalUnseenMessages } from "@/redux/slice/chat.slice";
+import { RiDashboardHorizontalFill, RiLogoutBoxFill } from "react-icons/ri";
+import { IoLogOut } from "react-icons/io5";
+import { TbLogout2 } from "react-icons/tb";
+
 
 const Navbar = () => {
   // session
@@ -195,11 +199,11 @@ const Navbar = () => {
           </div>
           {/* Be Buddy */}
           {session && session?.accountType !== "Buddy" && (
-            <div className="border-0 rounded-lg cursor-pointer bg-black text-white px-4 py-[8px] flex items-center gap-2 hover:shadow-md hover:shadow-black duration-300 transition-all">
+            <div className="border-0 rounded-full cursor-pointer bg-black text-white md:px-4 px-2 py-[8px] flex items-center gap-2 hover:shadow-md hover:shadow-black duration-300 transition-all">
               <div className="w-6 h-6 rounded-full flex items-center justify-center border-white border-2">
                 <FaStar className="text-xs" />
               </div>
-              <p className="text-lg font-medium hidden md:block">Be a Buddy</p>
+              <p className="text-sm font-medium hidden md:block">Be a Buddy</p>
             </div>
           )}
 
@@ -247,7 +251,7 @@ const Navbar = () => {
               <AnimatePresence>
                 {isOpen && (
                   <motion.div
-                    className="absolute top-16 right-0 shadow-md rounded-lg p-2 w-[120px] z-[1000] bg-slate-800 text-white"
+                    className="absolute top-16 right-0 shadow-xl rounded-lg p-2 w-[120px] z-[1000] bg-white text-slate-700 hover:text-slate-900 duration-300 transition-all text-sm font-semibold"
                     initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, y: 0, x: 0 }}
                     transition={{ duration: 0.3 }}
@@ -256,18 +260,20 @@ const Navbar = () => {
                   >
                     <div
                       ref={dropdownRef}
-                      className="flex flex-col gap-2 items-start px-2 py-1"
+                      className="flex flex-col gap-2 items-start px-1 py-1"
                     >
                       <Link
                         href={"/dashboard/my-profile"}
-                        className="cursor-pointer"
+                        className="cursor-pointer flex items-center gap-1"
                       >
+                        <RiDashboardHorizontalFill className="text-lg" />
                         Dashboard
                       </Link>
                       <button
-                        className="cursor-pointer"
+                        className="cursor-pointer flex items-center gap-1"
                         onClick={() => signOut()}
                       >
+                        <RiLogoutBoxFill className="text-lg font-semibold" />
                         Logout
                       </button>
                     </div>

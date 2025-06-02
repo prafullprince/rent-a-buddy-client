@@ -13,7 +13,6 @@ import OrderModal from "@/components/Modal/OrderModal";
 import { getUserWallet } from "@/service/apiCall/wallet.api";
 import { useRouter } from "next/navigation";
 import { GoGitPullRequest } from "react-icons/go";
-import MyPost from "../my-profile/MyPost";
 import SubSectionSlider from "@/components/Common/SubSectionSlider";
 
 
@@ -30,7 +29,7 @@ const EventDetails = ({ eventDetails }: any) => {
   const [modalData, setModalData] = useState<any>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [wallet, setWallet] = useState<any>(null);
-  console.log("eventDetails", eventDetails);
+  
   // fetchUserDetailsByIds
   const fetchUserDetailsByIds = async () => {
     try {
@@ -88,12 +87,13 @@ const EventDetails = ({ eventDetails }: any) => {
           alt="event"
           width={40}
           height={40}
-          className="rounded-full w-28 min-w-28 h-28 min-h-28"
+          className="rounded-full w-22 min-w-22 h-22 min-h-22"
         />
         <div className="flex flex-col gap-1">
           {/* username age */}
-          <div className="sm:text-2xl text-xl font-semibold sm:font-bold text-black max-w-[140px] sm:max-w-[200px] break-words text-wrap">
-            {eventDetails?.user?.username} (22)
+          <div className="sm:text-xl text-lg font-semibold sm:font-bold text-black/80 max-w-[170px] sm:max-w-[200px] lg:max-w-[300px] break-words text-wrap">
+            {eventDetails?.user?.username} 
+            <span>(22)</span>
           </div>
 
           {/* stats */}
@@ -101,7 +101,7 @@ const EventDetails = ({ eventDetails }: any) => {
 
           {/* availability */}
           <p className="text-sm text-gray-500 break-words text-wrap max-w-[140px] sm:max-w-[200px]">
-            <span className="text-sm font-semibold text-gray-800">
+            <span className="text-xs font-bold text-gray-500">
               Availability:
             </span>{" "}
             {eventDetails?.availability}
@@ -109,7 +109,7 @@ const EventDetails = ({ eventDetails }: any) => {
 
           {/* location */}
           <p className="text-sm text-gray-500 break-words text-wrap max-w-[140px] sm:max-w-[200px]">
-            <span className="text-sm font-semibold text-gray-800">
+            <span className="text-xs font-bold text-gray-500">
               Location:
             </span>{" "}
             {eventDetails?.location}
@@ -118,7 +118,7 @@ const EventDetails = ({ eventDetails }: any) => {
           {/* height */}
           {/* location */}
           <p className="text-sm text-gray-500 break-words text-wrap max-w-[140px] sm:max-w-[200px]">
-            <span className="text-sm font-semibold text-gray-800">Height:</span>{" "}
+            <span className="text-xs font-bold text-gray-500">Height:</span>{" "}
             {`160cm`}
           </p>
         </div>
@@ -134,7 +134,7 @@ const EventDetails = ({ eventDetails }: any) => {
               className="cursor-pointer relative"
               key={section?._id}
             >
-              <div className="py-2 font-semibold text-base">
+              <div className="py-2 font-semibold text-sm">
                 {section?.categoryId?.name}
               </div>
 
@@ -161,7 +161,11 @@ const EventDetails = ({ eventDetails }: any) => {
 
           {/* subSectionDetails */}
           <div className="flex flex-col gap-2 mt-4">
-            <div className="flex sm:flex-row sm:items-start gap-4 flex-col">
+            <motion.div
+              initial={{ y: 10 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.3 }}
+            className="flex sm:flex-row sm:items-start gap-4 flex-col">
               <Image
                 src={currentSubSection?.subCategoryId?.imageUrl || fallbackImage}
                 alt="subSectionImage"
@@ -173,24 +177,24 @@ const EventDetails = ({ eventDetails }: any) => {
                 {/* price */}
                 <div className="flex items-center gap-1">
                   <PiCurrencyInrBold className="text-yellow-600 text-lg" />
-                  <p>{currentSubSection?.price}/hr</p>
+                  <p className="text-xs">{currentSubSection?.price}/hr</p>
                 </div>
 
                 {/* about */}
-                <div className="text-gray-600 text-sm">
-                  <span className="text-gray-800 font-semibold">About:</span>{" "}
+                <div className="text-gray-600 text-xs">
+                  {/* <span className="text-gray-800 font-semibold">About:</span>{" "} */}
                   {currentSubSection?.about}
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>
 
       {/* post */}
-      <div className="">
+      {/* <div className="">
         <MyPost type="event" eventDetails={eventDetails} />
-      </div>
+      </div> */}
 
       {/* request order */}
       <div className="w-full flex justify-center shadow-sm py-3 bg-gray-50 mt-3 fixed bottom-0 left-0 right-0 max-w-xl mx-auto">
@@ -208,9 +212,9 @@ const EventDetails = ({ eventDetails }: any) => {
               btn2Text: "Cancel",
             });
           }}
-          className="px-8 py-3 text-sm cursor-pointer bg-black rounded-full text-white flex items-center gap-2"
+          className="px-5 py-3 text-xs cursor-pointer bg-black rounded-full text-white flex items-center gap-2"
         >
-          <GoGitPullRequest className="text-lg" />
+          <GoGitPullRequest className="text-base" />
           Request Order
         </button>
       </div>

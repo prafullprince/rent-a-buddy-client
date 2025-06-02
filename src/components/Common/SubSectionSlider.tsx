@@ -56,7 +56,7 @@ export default function SubSectionSlider({
         <div className="flex items-center gap-3">
           {subSectionDetails?.map((subSec: any) => (
             <div
-              className={`px-2 py-2 rounded-lg cursor-pointer ${
+              className={`px-2 py-[6px] rounded-full cursor-pointer ${
                 currentSubSection?._id === subSec?._id
                   ? "bg-yellow-300"
                   : "bg-gray-300 hover:bg-gray-400 transition-all duration-300"
@@ -72,10 +72,10 @@ export default function SubSectionSlider({
                   alt="subCategory"
                   width={24}
                   height={24}
-                  className="rounded-full min-w-6 min-h-6 max-w-6 max-h-6"
+                  className="rounded-full min-w-5 min-h-5 max-w-5 max-h-5"
                 />
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm font-semibold">
+                  <p className="text-xs font-semibold">
                     {subSec?.subCategoryId?.name}
                   </p>
                 </div>

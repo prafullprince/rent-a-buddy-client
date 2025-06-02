@@ -8,6 +8,7 @@ import { eventDetailsById } from "@/service/apiCall/event.api";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoArrowBackSharp } from "react-icons/io5";
+import { motion } from 'framer-motion';
 
 const page = () => {
   // hook
@@ -37,14 +38,18 @@ const page = () => {
   }, [eventId]);
 
   return (
-    <div className="">
+    <motion.div
+      initial={{ x: -20}}
+      animate={{ x: 0 }}
+      transition={{ duration: 0.3 }}
+    className="">
       {/* box */}
       <div className="w-[90%] sm:w-[80%] mx-auto">
         <div className="flex items-center mt-4 gap-4 cursor-pointer">
           <IoArrowBackSharp onClick={()=>{
             router.push("/");
           }} className="text-2xl font-bold text-start text-gray-500" />
-          <h2 className="text-2xl font-bold text-start text-gray-500">
+          <h2 className="text-base md:text-lg lg:text-xl font-bold text-start text-gray-500">
             Event Details
           </h2>
         </div>
@@ -60,7 +65,7 @@ const page = () => {
         </div>
 
       </div>
-    </div>
+    </motion.div>
   );
 };
 
