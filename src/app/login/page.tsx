@@ -35,13 +35,13 @@ const LoginPage = () => {
       className="min-h-screen text-black flex items-center justify-center"
     >
       {/* Login Form */}
-      <div className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-xl p-8 mx-auto flex flex-col gap-8 m-4 bg-white">
+      <div className="shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-xl p-6 sm:p-8 mx-auto flex flex-col gap-8 m-4 bg-white">
         <div className="flex flex-col gap-2 items-center">
           {/* logo */}
           <Image src={LOGO} alt="logo" className="w-32 h-24" />
 
           {/* heading */}
-          <h1 className="text-3xl font-extrabold mt-8 text-center text-wrap break-words">
+          <h1 className="text-lg sm:text-3xl font-extrabold mt-8 text-center text-wrap break-words">
             Welcome to RentBuddy
           </h1>
 
@@ -59,11 +59,11 @@ const LoginPage = () => {
         ) : (
           <div className="w-full flex items-center justify-center">
             <button
-              className="text-black font-bold py-3 px-5 rounded-xl cursor-pointer bg-zinc-200 flex items-center gap-3 hover:scale-95 duration-300 transition-all w-fit"
+              className="text-black font-bold py-2 px-3 rounded-xl cursor-pointer bg-zinc-200 flex items-center gap-2 hover:scale-95 duration-300 transition-all w-fit"
               onClick={handleLogin}
             >
-              <FcGoogle className="text-4xl" />
-              <p className="text-lg">Continue with Google</p>
+              <FcGoogle className="text-2xl" />
+              <p className="text-sm">Continue with Google</p>
             </button>
           </div>
         )}

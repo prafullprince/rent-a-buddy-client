@@ -73,7 +73,9 @@ const AllAvailableEventsLive = () => {
       >
         <div className="flex items-center gap-3">
           {availableLoading ? (
-            <div>Loading</div>
+            <div className="flex justify-center items-center py-6">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+            </div>
           ) : (
             <>
               {availableEvent?.map((story: any) => (

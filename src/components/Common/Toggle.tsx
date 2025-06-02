@@ -5,7 +5,7 @@ import React from "react";
 const Toggle = ({ isToggleOpen, setIsToggleOpen, setFormData }: any) => {
   console.log("isToggleOpen", isToggleOpen);
   return (
-    <button className="relative ml-4 cursor-pointer" onClick={() => {
+    <button className="relative cursor-pointer" onClick={() => {
       setIsToggleOpen(!isToggleOpen);
       setFormData((prevState: any) => ({
         ...prevState,

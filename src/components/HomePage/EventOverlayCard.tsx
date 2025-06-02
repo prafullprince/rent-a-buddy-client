@@ -10,6 +10,7 @@ import { MdOutlineCurrencyRupee, MdVerified } from "react-icons/md";
 import RatingStars from "./RatingStars";
 import { GrLocation } from "react-icons/gr";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
+import { motion } from 'framer-motion';
 
 const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
   // navigation
@@ -36,7 +37,12 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
   }, [event]);
 
   return (
-    <div className="pb-4 w-full">
+    <motion.div
+     initial={{ opacity: 0, y: -30 }}
+     animate={{ opacity: 1, y: 0 }}
+     exit={{ opacity: 0, y: -10 }}
+     transition={{ duration: 0.3 }}
+    className="pb-4 w-full">
       <div
         className="relative w-full sm:w-full min-h-[350px] max-h-[350px] sm:max-w-full sm:max-h-[400px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-[1.03] transition-all duration-300"
         onClick={() => router.push(`/event/${event?._id}`)}
@@ -149,7 +155,7 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
         {/* Gradient Bottom */}
         <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-gray-700 to-transparent"></div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

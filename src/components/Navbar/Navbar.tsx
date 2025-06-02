@@ -166,7 +166,7 @@ const Navbar = () => {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
-      className="bg-slate-50 text-black h-16 sm:h-[70px] flex items-center justify-center shadow-md"
+      className="bg-slate-50 text-black h-14 sm:h-[60px] flex items-center justify-center shadow-md"
     >
       {/* content div */}
       <div className="flex items-center justify-between w-[95%] lg:w-[80%] px-1 py-2 mx-auto">
@@ -280,7 +280,7 @@ const Navbar = () => {
           {!session && status === "unauthenticated" && (
             <Link
               href="/login"
-              className={`px-4 py-[8px] hover:shadow-md hover:shadow-black font-semibold text-lg cursor-pointer hover:border-amber-50 transition-all duration-300 bg-black text-white rounded-md`}
+              className={`px-4 py-[8px] hover:shadow-md hover:shadow-black font-semibold text-sm cursor-pointer hover:border-amber-50 transition-all duration-300 bg-black text-white rounded-md`}
             >
               Login
             </Link>

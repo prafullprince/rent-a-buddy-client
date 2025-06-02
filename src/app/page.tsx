@@ -9,14 +9,13 @@ import {
   getInfiniteEvents,
 } from "@/service/apiCall/event.api";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import IntergalacticSpinner from "@/loading/Loading1";
 import "swiper/css";
 import { IoFilterSharp } from "react-icons/io5";
 import Toggle from "@/components/Common/Toggle";
-import PlanetSpinner from "@/loading/PageLoadingSpinner";
-import toast from "react-hot-toast";
-import AllAvailableEventsLive from '@/components/HomePage/AllAvailableEventsLive';
+import AllAvailableEventsLive from "@/components/HomePage/AllAvailableEventsLive";
+import FilterModal from "@/components/HomePage/FilterModal";
 
 // data
 const Location = ["delhi", "mumbai", "banglore", "pune", "patna"];
@@ -39,37 +38,41 @@ export default function Home() {
     username: "",
     rating: "",
     gender: "",
-    isActive: false,
+    isActive: null,
   });
+  console.log("formData", formData);
   const [applyLoading, setApplyLoading] = useState(false);
+  const [filterData, setFilterData] = useState<any>(null);
 
   // Fetch data function
-  const fetchData = useCallback(async () => {
-    if (!hasmore || loading || hasFetched.current) return; // ✅ Block duplicate calls
+  const fetchData = useCallback(
+    async (cursorOverride = cursor) => {
+      if (!hasmore || loading || hasFetched.current) return; // ✅ Block duplicate calls
 
-    hasFetched.current = true; // ✅ Set flag before calling API
-    setLoading(true);
+      hasFetched.current = true; // ✅ Set flag before calling API
+      setLoading(true);
 
-    try {
-      const data: any = await getInfiniteEvents(15, formData, cursor);
+      try {
+        console.log("cursor data: ", cursor);
+        const data: any = await getInfiniteEvents(15, formData, cursorOverride);
+        console.log("filters data: ", data);
 
-      // setEvents((prev: any) => [...prev, ...data?.data]);
-      // setHasmore(data?.pagination?.hasMore);
-      // setCursor(data?.pagination?.nextCursor);
-      if (data && Array.isArray(data.data)) {
-        setEvents((prev: any) => [...prev, ...data.data]);
-        setHasmore(data.pagination?.hasMore ?? false);
-        setCursor(data.pagination?.nextCursor ?? null);
+        if (data && Array.isArray(data.data)) {
+          setEvents((prev: any) => [...prev, ...data.data]);
+          setHasmore(data.pagination?.hasMore ?? false);
+          setCursor(data.pagination?.nextCursor ?? null);
+        }
+      } catch (error: any) {
+        throw error;
+      } finally {
+        setLoading(false);
+        setTimeout(() => {
+          hasFetched.current = false; // ✅ Reset flag after fetch
+        }, 1000); // ✅ Small delay to prevent immediate duplicate calls
       }
-    } catch (error: any) {
-      throw error;
-    } finally {
-      setLoading(false);
-      setTimeout(() => {
-        hasFetched.current = false; // ✅ Reset flag after fetch
-      }, 1000); // ✅ Small delay to prevent immediate duplicate calls
-    }
-  }, [hasmore, cursor, loading, formData]);
+    },
+    [hasmore, cursor, loading, formData]
+  );
 
   // changeHandler
   const changeHandler = (
@@ -86,12 +89,13 @@ export default function Home() {
   const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setApplyLoading(true);
+    setFilterData(null);
     try {
       setEvents([]);
       setCursor(null);
       setHasmore(true);
       hasFetched.current = false; // ✅ Reset flag before new fetch
-      fetchData();
+      await fetchData(null);
     } catch (error) {
       console.log(error);
     } finally {
@@ -107,7 +111,7 @@ export default function Home() {
         fetchData();
       }
     },
-    [fetchData, hasmore, loading]
+    [fetchData, hasmore, loading, cursor]
   );
 
   // observer setup
@@ -130,28 +134,27 @@ export default function Home() {
   }, [observerCallback]);
 
   return (
-    <div className="">
+    <div className="relative">
       <motion.div
         initial={{ opacity: 0, z: 50 }}
         animate={{ opacity: 1, z: 0 }}
         exit={{ opacity: 0, z: 50 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.3 }}
         className="w-[90%] sm:w-[90%] mx-auto min-h-screen"
       >
         <div className="mx-auto w-full lg:w-[90%] mt-4">
-
           {/* allAvailableEvents */}
           <AllAvailableEventsLive />
-          
+
           {/* heading */}
-          <h2 className="font-semibold text-xl mt-3">Find your match</h2>
-          
+          <h2 className="font-semibold text-xl mt-5">Find your match</h2>
+
           {/* content */}
-          <div className="flex flex-col items-start gap-2 mt-3">
+          <div className="flex flex-col items-start gap-2 mt-2">
             {/* filters */}
             <div className="hidden lg:block w-full">
-              <div className="flex flex-wrap items-center justify-between w-full gap-2">
-                <div className="flex items-center flex-wrap gap-4">
+              <div className="flex flex-wrap items-center justify-between w-full">
+                <div className="flex items-center flex-wrap gap-2">
                   {/* location */}
                   <div className="flex flex-col gap-2 cursor-pointer">
                     <select
@@ -228,29 +231,43 @@ export default function Home() {
                 </div>
 
                 {/* button */}
-                <motion.div layoutId="button">
-                  <button
-                    onClick={submitHandler}
-                    className="px-4 py-[6px] bg-black font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
-                  >
-                    Apply
-                    {loading && <IntergalacticSpinner />}
-                  </button>
-                </motion.div>
+                <div className="flex gap-2 h-full">
+                  <div className="lg:block hidden w-[2px] h-[35px] bg-black/50">
+
+                  </div>
+                  <motion.div layoutId="button">
+                    <button
+                      onClick={submitHandler}
+                      className="px-4 py-[6px] bg-black font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
+                    >
+                      Apply
+                      {loading && <IntergalacticSpinner />}
+                    </button>
+                  </motion.div>
+                </div>
               </div>
             </div>
 
             {/* filters in small screen */}
-            <div className="flex items-center gap-3 tracking-normal cursor-pointer bg-gray-500 text-white font-semibold text-lg px-4 py-2 rounded-lg lg:hidden mt-1">
+            <div
+              onClick={() => {
+                setFilterData({
+                  title: "Filters",
+                });
+              }}
+              className="flex items-center gap-2 tracking-normal cursor-pointer bg-gray-500 text-white font-semibold text-sm px-3 py-2 rounded-lg lg:hidden mt-1"
+            >
               <div>Filters</div>
-              <IoFilterSharp className="font-bold text-xl" />
+              <IoFilterSharp className="font-bold text-sm" />
             </div>
 
             {/* event */}
             <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 mt-2">
-              {events?.map((event: any, idx: any) => (
-                <EventOverlayCard event={event} key={idx} />
-              ))}
+              <AnimatePresence mode="wait">
+                {events?.map((event: any, idx: any) => (
+                  <EventOverlayCard event={event} key={idx} />
+                ))}
+              </AnimatePresence>
 
               {events?.length === 0 && (
                 <div className="h-10 flex items-center justify-center">
@@ -281,6 +298,21 @@ export default function Home() {
           </div>
         </div>
       </motion.div>
+
+      <AnimatePresence mode="wait">
+        {filterData && (
+          <FilterModal
+            formData={formData}
+            setFormData={setFormData}
+            changeHandler={changeHandler}
+            isToggleOpen={isToggleOpen}
+            setIsToggleOpen={setIsToggleOpen}
+            submitHandler={submitHandler}
+            loading={loading}
+            setFilterData={setFilterData}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
