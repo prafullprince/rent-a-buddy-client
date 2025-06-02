@@ -15,7 +15,7 @@ const UserDetails = async () => {
 
   return (
     <div className="shadow-md px-3 py-4 rounded-lg bg-black/5 lg:min-w-[600px] w-full">
-      <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between gap-3">
+      <div className="flex sm:flex-row flex-col sm:items-start sm:justify-between gap-3">
         {/* left */}
         <div className="flex sm:flex-row flex-col sm:items-start gap-4">
           {/* pp */}
@@ -24,20 +24,20 @@ const UserDetails = async () => {
             alt="profile"
             width={100}
             height={100}
-            className="rounded-full min-w-32 min-h-32 max-w-32 max-h-32"
+            className="rounded-full min-w-28 min-h-28 max-w-28 max-h-28"
           />
 
           <div className="flex flex-col items-start gap-1 text-wrap break-words">
             {/* name */}
-            <p className="text-xl font-semibold">{session?.user?.name}</p>
+            <p className="text-lg font-semibold">{session?.user?.name}</p>
 
             {/* username */}
-            <p className="text-base text-[#838894] text-wrap break-words max-w-[150px] sm:max-w-[200px] lg:max-w-[300px]">
+            <p className="text-xs text-[#838894] text-wrap break-words max-w-[150px] sm:max-w-[200px] lg:max-w-[300px]">
               {/* {session?.user?.email?.split("@")[0]} */}
               {userDetails?.username || session?.user?.email?.split("@")[0]}
             </p>
 
-            <p className="text-base font-semibold text-[#838894]">
+            <p className="text-sm font-semibold text-[#838894] mt-2">
               {/* {session?.user?.email?.split("@")[0]} */}
               {session?.user?.email}
             </p>
@@ -48,9 +48,9 @@ const UserDetails = async () => {
         </div>
 
         {/* right */}
-        <Link href={'/dashboard/settings'} className="flex items-center px-3 py-2 rounded-lg gap-2 bg-yellow-400 text-black cursor-pointer w-fit">
-          <FaEdit className="text-2xl" />
-          <div className="text-lg font-semibold">Edit</div>
+        <Link href={'/dashboard/settings'} className="flex items-center px-4 py-2 rounded-lg gap-1 bg-yellow-400 text-black cursor-pointer w-fit">
+          <FaEdit className="text-xl" />
+          <div className="text-sm font-semibold">Edit</div>
         </Link>
 
       </div>

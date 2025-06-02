@@ -167,7 +167,7 @@ const EventForm = () => {
           <div className="flex flex-col gap-1 cursor-pointer">
             <Label labelname="Location" />
             <select
-              className="w-full h-12 rounded-sm px-2 border-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] outline-none bg-white"
+              className="w-full h-12 rounded-sm px-2 shadow-sm border border-gray-300 outline-none bg-white"
               {...register("location", {
                 required: "Please select a location",
               })}
@@ -289,7 +289,7 @@ const EventForm = () => {
                 <div className="w-full flex justify-end">
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-lg bg-yellow-300 text-black text-lg cursor-pointer font-semibold"
+                    className="px-3 py-[6px] rounded-lg bg-yellow-300 text-black text-base cursor-pointer font-semibold"
                   >
                     Submit
                   </button>

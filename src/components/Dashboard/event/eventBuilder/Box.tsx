@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { MdDescription } from "react-icons/md";
 import { PiCurrencyInr } from "react-icons/pi";
+import { motion } from 'framer-motion';
 
 // Box
 const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
@@ -16,7 +17,6 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
 
   // Handle tick click (Select / Deselect Subcategory)
   const handleSelect = (categoryId: string, subCategory: any) => {
-    
     setSelectedData((prev: any) => {
       let updatedServiceData = prev.serviceData.map((service: any) => {
         if (service.id === categoryId) {
@@ -84,36 +84,40 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
       {selectedCategory?.subCategories?.map((subCategory: any) => {
         const isChecked = isSelected(subCategory._id);
 
         return (
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
             key={subCategory?._id}
-            className={`bg-white p-4 rounded-md shadow-black/30 ${
+            className={`bg-white px-4 pt-1 pb-4 rounded-md shadow-black/30 ${
               isChecked ? "border-0 border-black shadow-lg" : "shadow-sm"
             }`}
           >
             <div className="flex flex-col gap-2">
               {/* Topbar */}
-              <div className="flex gap-4 flex-col md:flex-row md:items-start md:flex-wrap">
-                {/* Image */}
-                <Image
-                  src={subCategory?.imageUrl}
-                  width={48}
-                  height={48}
-                  alt="category"
-                  className="border-0 rounded-full min-w-12 min-h-12 max-w-12 max-h-12"
-                />
+              <div className="flex gap-4 items-center justify-between">
 
-                {/* Name, About */}
-                <div className="flex flex-col gap-1">
-                  <div className="text-lg font-semibold text-gray-800 leading-[1.1]">
-                    {subCategory?.name}
-                  </div>
-                  <div className="text-sm text-gray-500 leading-[1.2]">
-                    {subCategory?.about}
+                {/* Image, name */}
+                <div className="flex items-center gap-3 mt-2">
+                  {/* Image */}
+                  <Image
+                    src={subCategory?.imageUrl}
+                    width={48}
+                    height={48}
+                    alt="category"
+                    className="border-0 rounded-full min-w-12 min-h-12 max-w-12 max-h-12"
+                  />
+
+                  {/* Name */}
+                  <div className="flex flex-col gap-1">
+                    <div className="text-sm font-semibold text-gray-800 leading-[1.1]">
+                      {subCategory?.name}
+                    </div>
                   </div>
                 </div>
 
@@ -122,25 +126,28 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                   onClick={() =>
                     handleSelect(selectedCategory._id, subCategory)
                   }
-                  className={`flex items-center justify-center min-w-8 min-h-8 max-w-8 max-h-8 border-2 border-black cursor-pointer ${
+                  className={`flex items-center justify-center min-w-7 min-h-7 max-w-7 max-h-7 border-2 border-black cursor-pointer ${
                     isChecked ? "bg-black text-white font-semibold" : "bg-white"
                   }`}
                 >
                   {isChecked && "✔"}
                 </div>
+              </div>
 
+              {/* About */}
+              <div className="text-sm text-gray-500 leading-[1.2]">
+                {subCategory?.about}
               </div>
 
               {/* Data input */}
               <div className="flex flex-col gap-2 mt-4">
-
                 {/* Price Input */}
                 <div className="max-w-xl flex items-center border border-gray-400 rounded-lg w-full">
-                  <PiCurrencyInr className="sm:mx-4 mx-2 text-2xl text-yellow-600 font-extrabold" />
+                  <PiCurrencyInr className="sm:mx-4 mx-2 text-xl md:text-2xl text-yellow-600 font-extrabold" />
                   <input
                     type="number"
                     placeholder="Set price"
-                    className="py-2 outline-none w-full"
+                    className="py-2 outline-none w-full text-xs md:text-lg"
                     value={
                       selectedData.serviceData
                         .find((s: any) => s.id === selectedCategory._id)
@@ -157,16 +164,18 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                       )
                     }
                   />
-                  <span className="text-lg pr-2 text-gray-500">/hr</span>
+                  <span className="text-xs md:text-lg pr-2 text-gray-500">
+                    /hr
+                  </span>
                 </div>
 
                 {/* Description Input */}
                 <div className="max-w-xl flex items-center border border-gray-400 rounded-lg w-full pr-2">
-                  <MdDescription className="mx-2 sm:mx-4 text-2xl text-gray-500" />
+                  <MdDescription className="mx-2 sm:mx-4 text-xl md:text-2xl text-gray-500" />
                   <input
                     type="text"
                     placeholder="Edit description"
-                    className="py-2 outline-none w-full"
+                    className="py-2 outline-none w-full text-xs md:text-lg"
                     value={
                       selectedData.serviceData
                         .find((s: any) => s.id === selectedCategory._id)
@@ -184,11 +193,9 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                     }
                   />
                 </div>
-
               </div>
-
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

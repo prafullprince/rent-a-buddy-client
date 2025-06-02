@@ -1,5 +1,4 @@
 import MyEvents from "@/components/Dashboard/my-profile/MyEvents";
-import MyPost from "@/components/Dashboard/my-profile/MyPost";
 import UserDetails from "@/components/Dashboard/my-profile/UserDetails";
 import { NextAuthOption } from "@/utills/nextauthoption.utills";
 import { getServerSession } from "next-auth";
@@ -37,7 +36,7 @@ const page = async () => {
         </div>
 
         {/* title */}
-        <h2 className="text-2xl mt-3 font-semibold text-black">My Profile</h2>
+        <h2 className="text-xl mt-3 font-semibold text-black">My Profile</h2>
 
         {/* profile */}
         <div className="flex flex-col gap-4 max-w-lg sm:min-w-lg">
@@ -49,7 +48,7 @@ const page = async () => {
         </div>
 
         {/* posts */}
-        {session?.accountType === "Buddy" && <MyPost type="user" />}
+        {/* {session?.accountType === "Buddy" && <MyPost type="user" />} */}
       </div>
     </div>
   );

@@ -249,7 +249,7 @@ const Navbar = () => {
               <AnimatePresence>
                 {isOpen && (
                   <motion.div
-                    className="absolute top-16 right-0 shadow-xl rounded-lg p-2 w-[120px] z-[1000] bg-white text-slate-700 hover:text-slate-900 duration-300 transition-all text-sm font-semibold"
+                    className="absolute top-16 right-0 shadow-xl rounded-lg p-2 w-[120px] z-[1000] bg-slate-100 text-slate-700 hover:text-slate-900 duration-300 transition-all text-sm font-semibold"
                     initial={{ opacity: 0, x: 50 }}
                     animate={{ opacity: 1, y: 0, x: 0 }}
                     transition={{ duration: 0.3 }}

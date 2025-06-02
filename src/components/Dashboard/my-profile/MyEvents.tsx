@@ -61,7 +61,7 @@ const MyEvents = () => {
 
   return (
     <div className="">
-      <h2 className="text-2xl mt-8 font-semibold text-black">My Events</h2>
+      <h2 className="text-xl mt-8 font-semibold text-black">My Events</h2>
       {loading ? (
         <div className="flex justify-center items-center py-6">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
@@ -82,27 +82,27 @@ const MyEvents = () => {
                   dispatch(setStep(1));
                   router.push(`/dashboard/event`);
                 }}
-                className="px-4 cursor-pointer py-2 bg-black text-white rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full"
+                className="px-3 cursor-pointer py-2 text-sm bg-black text-white rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full"
               >
-                <FiEdit className="text-xl font-extrabold" />
+                <FiEdit className="text-lg font-extrabold" />
                 Edit
               </button>
 
               {/* delete button */}
-              <button className="px-4 cursor-pointer py-2 bg-[#ee4266] text-white rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full">
-                <MdDelete className="text-2xl text-red-100" />
+              <button className="px-3 text-sm cursor-pointer py-2 bg-[#ee4266] text-white rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full">
+                <MdDelete className="text-xl text-red-100" />
                 Delete
               </button>
             </div>
 
             <button
               onClick={onlineOffline}
-              className="px-4 cursor-pointer py-2 bg-yellow-500 text-black rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full mt-2"
+              className="px-3 text-sm cursor-pointer py-2 bg-yellow-500 text-black rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full mt-2"
             >
               {!eventDetails?.isActive ? (
-                <MdOnlinePrediction className="text-2xl text-black" />
+                <MdOnlinePrediction className="text-xl text-black" />
               ) : (
-                <IoCloudOffline className="text-2xl text-black" />
+                <IoCloudOffline className="text-xl text-black" />
               )}
               {eventDetails?.isActive ? "Go Offline" : "Go Online"}
             </button>

@@ -44,7 +44,7 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
      transition={{ duration: 0.3 }}
     className="pb-4 w-full">
       <div
-        className="relative w-full sm:w-full min-h-[350px] max-h-[350px] sm:max-w-full sm:max-h-[400px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-[1.03] transition-all duration-300"
+        className="relative w-full sm:min-w-full min-h-[350px] max-h-[350px] sm:max-w-full sm:max-h-[400px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-[1.03] transition-all duration-300"
         onClick={() => router.push(`/event/${event?._id}`)}
       >
         {/* Background Image */}

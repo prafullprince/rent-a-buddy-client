@@ -17,9 +17,9 @@ const Sidebar = () => {
 
   return (
     <motion.div
-      animate={{ opacity: 1 }}
-      initial={{ opacity: 0 }}
-      exit={{ opacity: 0 }}
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
       className="bg-zinc-200 min-h-screen relative"
     >
       <div
@@ -34,7 +34,7 @@ const Sidebar = () => {
       </div>
 
       {/* sidebar content box */}
-      <div className={`flex flex-col gap-4 items-start ${isOpen ? "px-4 py-4 pt-28" : "sm:px-4 sm:py-4 sm:pt-28"}`}>
+      <div className={`flex flex-col gap-2 items-start ${isOpen ? "px-4 py-4 pt-28" : "sm:px-4 sm:py-4 sm:pt-28"}`}>
         {dashboardLinks?.map((link: any) => {
           if(link?.type && link?.type !== session?.accountType) return null;
           return (

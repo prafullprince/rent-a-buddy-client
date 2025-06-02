@@ -120,7 +120,7 @@ const BuilderForm = () => {
             <div className="flex items-center gap-4">
               <motion.button
                 onClick={createService}
-                className="px-6 py-2 bg-black text-white rounded-md cursor-pointer flex items-center gap-1"
+                className="px-4 py-2 text-sm bg-black text-white rounded-md cursor-pointer flex items-center gap-1"
                 layoutId="createService"
               >
                 Done

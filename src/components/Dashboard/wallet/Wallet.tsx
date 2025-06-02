@@ -9,7 +9,7 @@ const Wallet = ({ wallet }:any) => {
     <div className='p-6'>
         {/* heading */}
         <div>
-            <h1 className='text-4xl font-medium'>Wallet</h1>
+            <h1 className='text-2xl font-medium'>Wallet</h1>
         </div>
 
         {/* balance */}

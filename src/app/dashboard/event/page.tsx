@@ -37,7 +37,7 @@ const Page = () => {
       </div>
 
       {/* eventCard */}
-      <div className="sm:p-6 p-4 mt-8 bg-black/5 shadow-md w-full sm:min-w-lg rounded-lg flex">
+      <div className="sm:p-6 p-4 mt-8 bg-black/5 shadow-md w-full sm:min-w-lg rounded-lg">
         <div className="flex flex-col gap-4">
           {/* step */}
 

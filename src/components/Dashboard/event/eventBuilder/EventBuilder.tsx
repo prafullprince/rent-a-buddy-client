@@ -6,7 +6,7 @@ const EventBuilder = () => {
     <div className="flex flex-col gap-2 w-full">
       {/* heading */}
       <div className="">
-        <h2 className="text-2xl font-semibold text-gray-500">Create Services</h2>
+        <h2 className="text-xl font-semibold text-slate-700">Create Services</h2>
       </div>
 
       {/* Builder /> */}

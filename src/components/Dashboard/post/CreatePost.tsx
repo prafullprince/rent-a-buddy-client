@@ -7,7 +7,7 @@ const CreatePost = () => {
       <div className="flex flex-col gap-2 sm:w-full max-w-fit">
         {/* heading */}
         <div className="">
-          <h2 className="text-2xl font-bold text-yellow-500">Create Post</h2>
+          <h2 className="text-xl font-bold text-slate-700">Create Post</h2>
         </div>
 
         <PostForm />

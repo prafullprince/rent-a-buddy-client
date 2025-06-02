@@ -149,7 +149,7 @@ const PostForm = () => {
               <div className="w-full flex justify-end">
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-yellow-300 text-black text-lg cursor-pointer font-semibold"
+                  className="px-4 py-2 rounded-lg bg-yellow-300 text-black text-base cursor-pointer font-semibold"
                 >
                   Submit
                 </button>

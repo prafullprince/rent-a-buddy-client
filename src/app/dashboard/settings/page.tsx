@@ -182,13 +182,13 @@ const Page = () => {
           {/* Box */}
           <div className="flex flex-col gap-4">
             {/* heading */}
-            <h2 className="text-2xl mt-4 font-semibold text-black">
+            <h2 className="text-xl mt-4 font-semibold text-black">
               Edit Profile
             </h2>
 
             {/* change profilePictire */}
             <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between bg-black/5 px-4 py-4 rounded-lg sm:min-w-lg sm:max-w-lg w-full shadow-md">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 {/* pp */}
                 <div
                   className="cursor-pointer"
@@ -232,16 +232,16 @@ const Page = () => {
 
                 {/* buttons */}
                 <div className="flex flex-col items-start gap-2">
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="text-sm font-semibold">
                     Change Profile Picture
                   </h3>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 mt-2">
                     {!preview && (
                       <button
                         onClick={() => {
                           imageRef.current?.click();
                         }}
-                        className="cursor-pointer bg-yellow-400 px-4 py-2 rounded-lg text-base font-semibold"
+                        className="cursor-pointer bg-yellow-400 px-3 py-[6px] rounded-lg text-sm font-semibold"
                       >
                         Change
                       </button>
@@ -252,7 +252,7 @@ const Page = () => {
                         onClick={() => {
                           uploadProfilePicture();
                         }}
-                        className="cursor-pointer bg-black text-white px-4 py-2 rounded-lg text-base font-semibold flex items-center gap-2"
+                        className="cursor-pointer bg-black text-white px-3 py-[6px] rounded-lg text-sm font-semibold flex items-center gap-2"
                       >
                         Submit
                         {dpLoading && <IntergalacticSpinner />}
@@ -263,7 +263,7 @@ const Page = () => {
                         onClick={() => {
                           setPreview("");
                         }}
-                        className="cursor-pointer bg-yellow-300 px-4 py-2 rounded-lg text-base font-semibold text-black"
+                        className="cursor-pointer bg-yellow-300 px-3 py-[6px] rounded-lg text-sm font-semibold text-black"
                       >
                         Remove
                       </button>
@@ -284,7 +284,7 @@ const Page = () => {
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Username" />
                     <input
-                      className="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-sm"
+                      className="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-sm bg-white text-sm"
                       {...register("username")}
                       placeholder="change username"
                       type="text"
@@ -295,10 +295,12 @@ const Page = () => {
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Phone Number" />
                     <input
-                      className="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-sm"
+                      className="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-sm bg-white text-sm"
                       {...register("phoneNumber")}
                       placeholder="change phone number"
                       type="text"
+                      max={10}
+                      min={10}
                     />
                   </div>
 
@@ -306,7 +308,7 @@ const Page = () => {
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Bio" />
                     <textarea
-                      className="w-full p-2 border shadow-sm border-gray-300 rounded-lg outline-none"
+                      className="w-full p-2 border shadow-sm border-gray-300 rounded-lg outline-none bg-white text-sm"
                       {...register("about")}
                       placeholder="change bio"
                       rows={5}
@@ -321,7 +323,7 @@ const Page = () => {
                   <motion.button
                     layoutId="submitbuttonofsettings"
                     type="submit"
-                    className="w-fit px-4 py-2 rounded-lg bg-black text-white text-xl cursor-pointer flex items-center gap-2"
+                    className="w-fit px-4 py-2 rounded-lg bg-black text-white text-base cursor-pointer flex items-center gap-2"
                   >
                     Submit
                     {loading && <PlanetSpinner />}

@@ -81,14 +81,12 @@ export const createServiceApi = async (selectedData:any,token:any) => {
 
 // eventSummary
 export const eventSummary = async (eventId:any,token:any) => {
-  const  tid = toast.loading("Fetching event summary...");
   try {
     // apiCall
     const response = await apiConnector("POST", eventEndPoints.EVENT_SUMMARY,{eventId}, {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     });
-    toast.success("Success");
     return response.data.data.data;
   } catch (error:any) {
     console.log(error);
@@ -98,8 +96,6 @@ export const eventSummary = async (eventId:any,token:any) => {
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
     return error;
-  } finally {
-    toast.dismiss(tid);
   }
 };
 
@@ -131,7 +127,6 @@ export const published = async (eventId:any,status:any,token:any) => {
 
 // eventSummaryOfUser
 export const eventSummaryOfUser = async (token:any) => {
-  const  tid = toast.loading("Fetching event summary...");
   try {
     // apiCall
     const response = await apiConnector("GET", eventEndPoints.EVENT_SUMMARY_OF_USER, {}, {
@@ -148,8 +143,6 @@ export const eventSummaryOfUser = async (token:any) => {
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
     return error;
-  } finally {
-    toast.dismiss(tid);
   }
 };
 
