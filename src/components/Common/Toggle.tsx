@@ -13,13 +13,13 @@ const Toggle = ({ isToggleOpen, setIsToggleOpen, setFormData }: any) => {
       }));
     }}>
       <div
-        className={`w-16 h-9 relative rounded-full flex items-center justify-center transition-all duration-300 ${
-          isToggleOpen ? "bg-blue-500" : "bg-gray-400"
+        className={`w-14 h-7 relative rounded-full flex items-center justify-center transition-all duration-300 ${
+          isToggleOpen ? "bg-green-600" : "bg-gray-400"
         }`}
       >
         <div
-          className={`w-6 h-6 absolute rounded-full left-1 bg-white shadow-md transform transition-transform duration-300 ${
-            isToggleOpen ? "translate-x-8" : ""
+          className={`w-5 h-5 absolute rounded-full left-1 bg-white shadow-md transform transition-transform duration-300 ${
+            isToggleOpen ? "translate-x-7" : ""
           }`}
         ></div>
       </div>

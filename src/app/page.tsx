@@ -16,6 +16,7 @@ import { IoFilterSharp } from "react-icons/io5";
 import Toggle from "@/components/Common/Toggle";
 import PlanetSpinner from "@/loading/PageLoadingSpinner";
 import toast from "react-hot-toast";
+import AllAvailableEventsLive from '@/components/HomePage/AllAvailableEventsLive';
 
 // data
 const Location = ["delhi", "mumbai", "banglore", "pune", "patna"];
@@ -41,8 +42,6 @@ export default function Home() {
     isActive: false,
   });
   const [applyLoading, setApplyLoading] = useState(false);
-  const [availableEvent, setAvailableEvent] = useState<any>([]);
-  const [availableLoading, setAvailableLoading] = useState(false);
 
   // Fetch data function
   const fetchData = useCallback(async () => {
@@ -62,7 +61,7 @@ export default function Home() {
         setHasmore(data.pagination?.hasMore ?? false);
         setCursor(data.pagination?.nextCursor ?? null);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       throw error;
     } finally {
       setLoading(false);
@@ -139,22 +138,32 @@ export default function Home() {
         transition={{ duration: 0.5 }}
         className="w-[90%] sm:w-[90%] mx-auto min-h-screen"
       >
-        <div className="mx-auto w-full lg:w-[90%]">
-          <div className="flex flex-col items-start gap-4">
+        <div className="mx-auto w-full lg:w-[90%] mt-4">
+
+          {/* allAvailableEvents */}
+          <AllAvailableEventsLive />
+          
+          {/* heading */}
+          <h2 className="font-semibold text-xl mt-3">Find your match</h2>
+          
+          {/* content */}
+          <div className="flex flex-col items-start gap-2 mt-3">
             {/* filters */}
             <div className="hidden lg:block w-full">
-              <div className="flex flex-wrap items-center justify-between w-full mt-8 gap-4">
+              <div className="flex flex-wrap items-center justify-between w-full gap-2">
                 <div className="flex items-center flex-wrap gap-4">
                   {/* location */}
                   <div className="flex flex-col gap-2 cursor-pointer">
                     <select
                       id="location"
-                      className="px-3 w-44 py-2 border border-gray-300 cursor-pointer rounded-lg outline-none bg-black text-white font-medium"
+                      className="w-44 px-2 py-[6px] appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
                       value={formData.location}
                       onChange={changeHandler}
                       name="location"
                     >
-                      <option value="">location</option>
+                      <option value="" className="text-sm text-slate-300">
+                        location
+                      </option>
                       {Location.map((loc: any, index: number) => (
                         <option key={index} value={loc}>
                           {loc}
@@ -168,7 +177,7 @@ export default function Home() {
                     <input
                       type="text"
                       placeholder="username"
-                      className="px-2 py-[6px] border border-gray-300 rounded-lg outline-none w-44 bg-black text-white font-medium placeholder:text-gray-50 placeholder:text-sm"
+                      className="px-2 py-[6px] appearance-none border border-gray-300 rounded-full outline-none w-44 bg-white text-slate-600 font-medium text-sm placeholder:text-sm"
                       value={formData.username}
                       onChange={changeHandler}
                       name="username"
@@ -179,7 +188,7 @@ export default function Home() {
                   <div>
                     <select
                       id="rating"
-                      className="px-3 w-44 py-2 border border-gray-300 cursor-pointer rounded-lg outline-none bg-black text-white"
+                      className="w-44 px-2 py-[6px] appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
                       value={formData.rating}
                       onChange={changeHandler}
                       name="rating"
@@ -197,7 +206,7 @@ export default function Home() {
                   <div>
                     <select
                       id="gender"
-                      className="px-3 w-44 py-2 border border-gray-300 cursor-pointer rounded-lg outline-none bg-black text-white"
+                      className="w-44 px-2 py-[6px] appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
                       value={formData.gender}
                       onChange={changeHandler}
                       name="gender"
@@ -218,10 +227,11 @@ export default function Home() {
                   {/*  */}
                 </div>
 
+                {/* button */}
                 <motion.div layoutId="button">
                   <button
                     onClick={submitHandler}
-                    className="px-6 py-2 bg-black font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
+                    className="px-4 py-[6px] bg-black font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
                   >
                     Apply
                     {loading && <IntergalacticSpinner />}
@@ -231,12 +241,13 @@ export default function Home() {
             </div>
 
             {/* filters in small screen */}
-            <div className="flex items-center gap-3 tracking-normal cursor-pointer bg-gray-500 text-white font-semibold text-lg px-4 py-2 rounded-lg lg:hidden mt-4">
+            <div className="flex items-center gap-3 tracking-normal cursor-pointer bg-gray-500 text-white font-semibold text-lg px-4 py-2 rounded-lg lg:hidden mt-1">
               <div>Filters</div>
               <IoFilterSharp className="font-bold text-xl" />
             </div>
 
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-2">
+            {/* event */}
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 mt-2">
               {events?.map((event: any, idx: any) => (
                 <EventOverlayCard event={event} key={idx} />
               ))}

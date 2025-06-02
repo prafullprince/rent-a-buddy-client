@@ -38,7 +38,7 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
   return (
     <div className="pb-4 w-full">
       <div
-        className="relative w-full sm:w-full min-h-[400px] sm:min-h-[350px] sm:max-w-full sm:max-h-[400px] max-h-[400px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-105 transition-all duration-300"
+        className="relative w-full sm:w-full min-h-[350px] max-h-[350px] sm:max-w-full sm:max-h-[400px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-[1.03] transition-all duration-300"
         onClick={() => router.push(`/event/${event?._id}`)}
       >
         {/* Background Image */}
@@ -54,24 +54,24 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
         {/* topbar */}
         <div className="absolute z-50 top-2 left-2 w-full text-white flex flex-col gap-1">
           <div className="flex items-center gap-2">
-            <div className="text-white text-xl font-semibold">
+            <div className="text-white text-base font-bold">
               {event?.userData?.username?.substring(0, 15)}..
             </div>
-            <MdVerified className="text-blue-500 text-xl" />
+            <MdVerified className="text-blue-500 text-lg" />
           </div>
 
           {event?.isActive && (
-            <div className="flex items-center gap-1 bg-black/30 rounded-full w-fit px-4 py-2">
-              <AiOutlineThunderbolt className="text-base text-green-400" />
-              <p className="text-sm leading-0.5 font-medium">Available</p>
+            <div className="flex items-center bg-black/20 rounded-full w-fit px-2 py-1">
+              <AiOutlineThunderbolt className="text-xs text-green-400" />
+              <p className="text-xs leading-0.5 font-medium">Available</p>
             </div>
           )}
         </div>
 
         {/* fav */}
         {
-          !type && <div className="absolute top-2 right-2 w-10 h-10 bg-black/30 rounded-full flex items-center justify-center z-50">
-          <FcLike className="text-2xl" />
+          !type && <div className="absolute top-1 right-2 w-8 h-8 bg-black/30 rounded-full flex items-center justify-center z-50">
+          <FcLike className="text-xl" />
         </div>
         }
 
@@ -86,29 +86,29 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
         {/* bottom Content */}
         <div className="absolute z-50 bottom-2 left-2 right-2 w-full flex flex-col items-start gap-2">
           {/* location */}
-          <div className="bg-black/40 rounded-lg rounded-bl-none p-2 flex items-center gap-2">
-            <GrLocation className="text-lg text-yellow-400" />
+          <div className="bg-black/40 rounded-lg rounded-bl-none px-2 py-1 flex items-center gap-1">
+            <GrLocation className="text-sm text-yellow-400" />
             <p className="text-white font-medium text-sm">
               {event?.location?.substring(0, 30)}
             </p>
           </div>
 
           {/* category */}
-          <div className="mt-2 flex items-center gap-2">
-            <div className="flex items-center gap-1 bg-white/90 px-3 py-1 rounded-full">
+          <div className="mt-1 flex items-center gap-2">
+            <div className="flex items-center gap-1 bg-white/90 px-2 py-1 rounded-full">
               <Image
                 src={event?.subCategoryData?.[0]?.imageUrl || fallbackImage}
                 alt="event"
                 width={24}
                 height={24}
-                className="rounded-full w-6 h-6"
+                className="rounded-full w-5 h-5"
               />
-              <p className="text-base font-medium">
+              <p className="text-xs font-semibold">
                 {event?.subCategoryData?.[0]?.name}
               </p>
             </div>
 
-            <div className="relative w-9 h-9 rounded-full border border-orange-100">
+            <div className="relative w-7 h-7 rounded-full border border-cyan-700">
               {/* top radient shadow */}
               <div className="absolute top-0 h-2 bg-black/10 blur-sm"></div>
 
@@ -116,7 +116,7 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
               <div className="absolute bottom-0 h-2 bg-black/10 blur-sm"></div>
 
               {/* content */}
-              <p className="absolute inset-0 text-white flex items-center justify-center font-semibold text-lg">
+              <p className="absolute inset-0 text-white flex items-center justify-center font-semibold text-sm">
                 {"+"}
                 {event?.subCategoryData?.length > 1
                   ? event?.subCategoryData?.length - 1
@@ -134,13 +134,13 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
 
           {/* rating and price */}
           <div className="flex items-center justify-between gap-8 w-full px-2">
-            <RatingStars rating={4} totalRating={8} className="text-xl" />
+            <RatingStars rating={4} totalRating={8} className="text-sm" />
             <div className="flex items-center gap-1">
-              <MdOutlineCurrencyRupee className="text-yellow-300 text-xl" />
+              <MdOutlineCurrencyRupee className="text-yellow-300 text-base" />
               <div className="flex items-center gap-1 pr-4">
-                <p className="text-white/90 font-semibold">{minimumPrice}</p>
-                <p className="text-white/90 font-semibold">~</p>
-                <p className="text-white/90 font-semibold">{maximumPrice}</p>
+                <p className="text-white/90 font-semibold text-xs">{minimumPrice}</p>
+                <p className="text-white/90 font-semibold text-sm">~</p>
+                <p className="text-white/90 font-semibold text-xs">{maximumPrice}</p>
               </div>
             </div>
           </div>
