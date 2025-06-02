@@ -15,8 +15,6 @@ import { fetchUserDetailsById } from "@/service/apiCall/user.api";
 import { useDispatch, useSelector } from "react-redux";
 import { setTotalUnseenMessages } from "@/redux/slice/chat.slice";
 import { RiDashboardHorizontalFill, RiLogoutBoxFill } from "react-icons/ri";
-import { IoLogOut } from "react-icons/io5";
-import { TbLogout2 } from "react-icons/tb";
 
 
 const Navbar = () => {
