@@ -20,6 +20,7 @@ const FilterModal = ({
   loading,
   setFilterData,
 }: any) => {
+  console.log("child re-rendered")
   return (
     <div className="inset-0 fixed z-[1000] bg-black/50 backdrop-blur-sm overflow-auto flex items-center lg:hidden">
       <div className="h-fit mx-auto my-4 w-[95%] sm:w-[90%] lg:w-[80%]">

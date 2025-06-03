@@ -62,7 +62,7 @@ const AllAvailableEventsLive = () => {
 
       <div
         ref={sliderRef}
-        className="overflow-x-auto whitespace-nowrap scroll-smooth scrollbar-hide px-2 w-full cursor-grab active:cursor-grabbing select-none slider mt-3"
+        className="overflow-x-auto whitespace-nowrap scroll-smooth scrollbar-hide px-2 w-full cursor-grab active:cursor-grabbing select-none slider mt-3 snap-mandatory"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={endDrag}
@@ -70,6 +70,7 @@ const AllAvailableEventsLive = () => {
         onTouchStart={handleMouseDown}
         onTouchMove={handleMouseMove}
         onTouchEnd={endDrag}
+        style={{ scrollBehavior: "smooth" }}
       >
         <div className="flex items-center gap-3">
           {availableLoading ? (
@@ -82,7 +83,7 @@ const AllAvailableEventsLive = () => {
                 <Link
                   href={`/event/${story?._id}`}
                   key={story?._id}
-                  className="relative"
+                  className="relative snap-start"
                 >
                   {/* Image */}
                   <Image

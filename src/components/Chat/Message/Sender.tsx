@@ -5,6 +5,7 @@ import React, { memo } from "react";
 import { IoMdDoneAll } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
+import { RiCoinsLine } from "react-icons/ri";
 
 const Sender = ({
   msg,
@@ -30,7 +31,7 @@ const Sender = ({
               } w-0 h-0 rotate-90 translate-x-2 translate-y-0`}
             ></div>
             {msg?.type === "text" ? (
-              <div className="pr-14 pb-2 break-words text-wrap">{msg.text}</div>
+              <div className="pr-13 pb-2 break-words text-wrap text-sm">{msg.text}</div>
             ) : (
               <div
                 className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6 break-words text-wrap`}
@@ -114,10 +115,10 @@ const Sender = ({
                   </div>
 
                   {/* Info */}
-                  <div className="flex flex-col gap-1 px-2">
+                  <div className="flex flex-col gap-1 px-2 mt-1">
                     {/* date */}
                     <div className="flex items-center gap-1">
-                      <div className="text-sm text-black font-semibold">
+                      <div className="text-xs text-black font-semibold">
                         Date:{" "}
                       </div>
                       <p className="text-xs font-semibold text-gray-400">
@@ -127,7 +128,7 @@ const Sender = ({
 
                     {/* time */}
                     <div className="flex items-center gap-1">
-                      <div className="text-sm text-black font-semibold">
+                      <div className="text-xs text-black font-semibold">
                         Time:{" "}
                       </div>
                       <p className="text-xs font-semibold text-gray-400">
@@ -137,7 +138,7 @@ const Sender = ({
 
                     {/* venue */}
                     <div className="flex items-center gap-1">
-                      <div className="text-sm text-black font-semibold">
+                      <div className="text-xs text-black font-semibold">
                         Location:{" "}
                       </div>
                       <p className="text-xs font-semibold text-gray-400">
@@ -147,7 +148,7 @@ const Sender = ({
 
                     {/* additionalInfo */}
                     <div className="flex items-center gap-1">
-                      <div className="text-sm text-black font-semibold">
+                      <div className="text-xs text-black font-semibold">
                         Info:{" "}
                       </div>
                       <p className="text-xs font-semibold text-gray-400">
@@ -157,7 +158,7 @@ const Sender = ({
 
                     {/* cabFare */}
                     <div className="flex items-center gap-1">
-                      <div className="text-sm text-black font-semibold">
+                      <div className="text-xs text-black font-semibold">
                         CabFare:{" "}
                       </div>
                       <p className="text-xs font-semibold text-gray-400">
@@ -167,7 +168,7 @@ const Sender = ({
 
                     {/* FinalPrice */}
                     <div className="flex items-center gap-1">
-                      <div className="text-sm text-black font-semibold">
+                      <div className="text-xs text-black font-semibold">
                         FinalPrice:{" "}
                       </div>
                       <p className="text-xs font-semibold text-gray-400">
@@ -180,9 +181,9 @@ const Sender = ({
                   {msg?.order?.status === "accepted" &&
                     msg?.order?.isActive === false &&
                     msg?.order?.isCompleted === false && (
-                      <div className="flex justify-end">
+                      <div className="flex justify-start ml-2 mt-1">
                         <button
-                          className="bg-yellow-300 cursor-pointer text-black py-2 px-4 rounded-lg mr-3"
+                          className="bg-yellow-300 cursor-pointer text-black py-2 px-3 text-sm rounded-lg mr-3 flex items-center gap-1"
                           onClick={() => {
                             setModalData({
                               heading: `Send Money `,
@@ -201,6 +202,7 @@ const Sender = ({
                             });
                           }}
                         >
+                          <RiCoinsLine className="text-black text-xl" />
                           Make Payment
                         </button>
                       </div>
@@ -208,8 +210,8 @@ const Sender = ({
 
                   {/* rejected */}
                   {msg?.order?.status === "rejected" && (
-                    <div className="flex justify-end">
-                      <button className="bg-red-200 hover:bg-blue-700 text-black py-2 px-4 rounded-lg mr-3">
+                    <div className="flex justify-start mt-1">
+                      <button className="bg-red-200 hover:bg-blue-700 text-black py-2 px-3 text-sm rounded-lg ml-2">
                         Order rejected
                       </button>
                     </div>
@@ -217,7 +219,7 @@ const Sender = ({
 
                   {/* pending */}
                   {msg?.order?.status === "pending" && (
-                    <div className="flex items-center gap-1 mt-2 justify-end">
+                    <div className="flex items-center gap-1 mt-1 justify-start">
                       <button
                         onClick={() => {
                           socketRef.current?.send(
@@ -230,9 +232,9 @@ const Sender = ({
                             })
                           );
                         }}
-                        className="bg-red-500 text-white rounded-md text-base font-semibold ml-2 cursor-pointer flex items-center gap-2 px-4 py-2 mr-3"
+                        className="bg-red-500 text-white rounded-md text-sm font-semibold ml-2 cursor-pointer flex items-center gap-1 px-3 py-2 mr-3"
                       >
-                        <MdOutlineCancel className="text-white text-2xl" />
+                        <MdOutlineCancel className="text-white text-xl" />
                         Cancel
                       </button>
                     </div>
@@ -242,7 +244,7 @@ const Sender = ({
             )}
 
             {/* dateTime */}
-            <span className="text-right text-xs text-gray-500 text-richblack-25 font-bold absolute bottom-1 right-6">
+            <span className="text-right text-[10px] text-gray-500 text-richblack-25 font-bold absolute bottom-1 right-6">
               {new Date(msg?.createdAt).toLocaleString("en-us", {
                 hour: "2-digit",
                 minute: "2-digit",

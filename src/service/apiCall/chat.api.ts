@@ -84,7 +84,6 @@ export const fetchMessage = async (chatId: any, token: any) => {
 
 // fetch other user
 export const fetchOtherUser = async (userId: any) => {    
-  const tid = toast.loading("Loading...");
   try {
     const response = await apiConnector("POST", chatEndPoints.FETCH_OTHER_USER, {
       userId: userId
@@ -98,8 +97,6 @@ export const fetchOtherUser = async (userId: any) => {
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
     return error;
-  } finally {
-    toast.dismiss(tid);
   }
 };
 

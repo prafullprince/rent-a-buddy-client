@@ -22,6 +22,7 @@ import Receiver from "@/components/Chat/Message/Receiver";
 import Sender from "@/components/Chat/Message/Sender";
 import { useDispatch } from "react-redux";
 import { setOpenChatMobile } from "@/redux/slice/chat.slice";
+import { motion } from 'framer-motion';
 
 // Define types for better maintainability
 interface Message {
@@ -238,35 +239,6 @@ const Page = () => {
     };
   }, [chatId, userDetails?._id]);
 
-  // useEffect(() => {
-  //   if (!chatId || !userDetails?._id) return;
-
-  //   const interval = setInterval(() => {
-  //     if (socketRef.current?.readyState === WebSocket.OPEN) {
-  //       socketRef.current.send(
-  //         JSON.stringify({
-  //           type: "openChat",
-  //           payload: { chatId: chatId, userId: userDetails._id },
-  //         })
-  //       );
-  //       clearInterval(interval); // only run once after open
-  //     }
-  //   }, 300);
-
-  //   return () => {
-  //     if (socketRef.current?.readyState === WebSocket.OPEN) {
-  //       socketRef.current.send(
-  //         JSON.stringify({
-  //           type: "closeChat",
-  //           payload: { chatId: chatId, userId: userDetails._id },
-  //         })
-  //       );
-  //     }
-  //     clearInterval(interval);
-  //   };
-  // }, [chatId, userDetails?._id]);
-
-
   // open chat and close chat
   useEffect(() => {
     if (!chatId || !userDetails?._id) return;
@@ -307,7 +279,11 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col items-start rounded-xl max-w-full relative">
+    <motion.div className="flex flex-col items-start rounded-xl max-w-full relative"
+      initial={{ opacity: 0, y: -40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Top Bar */}
       <div className="h-16 px-2 py-2 flex items-center justify-between bg-gray-200 w-full sm:rounded-tr-xl">
         <div className="">
@@ -325,7 +301,7 @@ const Page = () => {
             </button>
             <div className="flex items-center gap-2">
               <Image
-                className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10"
+                className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10 border-1 border-blue-300"
                 alt="dp"
                 src={otherUser?.image || fallbackImage}
                 width={40}
@@ -342,7 +318,7 @@ const Page = () => {
       <div className="w-full">
         {loading ? (
           <div
-            className="max-h-[500px] min-h-[500px] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
+            className="max-h-[calc(100dvh-115px)] min-h-[calc(100dvh-115px)] sm:max-h-[calc(100dvh-180px)] sm:min-h-[calc(100dvh-180px)] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             <div className="flex justify-center items-center py-6">
@@ -416,7 +392,7 @@ const Page = () => {
           chatId={chatId}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

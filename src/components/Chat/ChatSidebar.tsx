@@ -8,14 +8,13 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React, { memo, useEffect, useRef, useState } from "react";
-import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { setOpenChatMobile } from "@/redux/slice/chat.slice";
-import { IoChevronBack, IoSendSharp } from "react-icons/io5";
+import { IoChevronBack } from "react-icons/io5";
 import Link from "next/link";
 const PING_INTERVAL = 25000;
-const RECONNECT_INTERVAL = 3000;
+const RECONNECT_INTERVAL = 2000;
 
 const ChatSidebar = ({
   allChat,
@@ -71,49 +70,64 @@ const ChatSidebar = ({
 
   // WebSocket connection (run only when session + userDetails are available)
   useEffect(() => {
-    if (!session || !userDetails?._id) return;
+    if (!userDetails?._id) return;
+
+    let pingRef = pingIntervalRef.current;
+    let reconnectRef = reconnectTimeoutRef.current;
 
     const connectWebSocket = () => {
+
+      // create socket
       const socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
       socketRef.current = socket;
 
+      // when socket open
       socket.onopen = () => {
         console.log("✅ WebSocket connected");
 
+        // getUnseenMessage
         getUnseenMessages();
 
-        pingIntervalRef.current = setInterval(() => {
+        // start pinging
+        pingRef = setInterval(() => {
           if (socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: "ping" }));
             getUnseenMessages();
           }
         }, PING_INTERVAL);
 
-        if (reconnectTimeoutRef.current) {
-          clearTimeout(reconnectTimeoutRef.current);
-          getUnseenMessages();
+        // reconnect
+        if (reconnectRef) {
+          clearTimeout(reconnectRef);
+          reconnectRef = null;
+          // getUnseenMessages();
         }
       };
 
+      // when socket receive message
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+
         if (data?.type === "numOfUnseenMessages") {
           setNumOfUnseenMessages(data.payload);
         }
       };
 
+      // when socket close
       socket.onclose = (event) => {
-        console.warn("WebSocket closed:", event.reason || event.code);
-        if (!reconnectTimeoutRef.current) {
-          reconnectTimeoutRef.current = setTimeout(
+        console.log("WebSocket closed:", event.reason || event.code);
+        console.log("reconnectRef", reconnectRef);
+        if (!reconnectRef) {
+          console.log("trying to reconnect");
+          reconnectRef = setTimeout(
             connectWebSocket,
             RECONNECT_INTERVAL
           );
         }
-
-        if (pingIntervalRef.current) {
-          clearInterval(pingIntervalRef.current);
-          pingIntervalRef.current = null;
+        console.log("reconnectRef", reconnectRef);
+        if (pingRef) {
+          clearInterval(pingRef);
+          pingRef = null;
         }
       };
 
@@ -122,15 +136,17 @@ const ChatSidebar = ({
       };
     };
 
+    // connect
     connectWebSocket();
 
+    // cleanup
     return () => {
       if (socketRef.current) socketRef.current.close();
-      if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-      if (reconnectTimeoutRef.current)
-        clearTimeout(reconnectTimeoutRef.current);
+      if (pingRef) clearInterval(pingRef);
+      if (reconnectRef)
+        clearTimeout(reconnectRef);
     };
-  }, [session, userDetails?._id]);
+  }, [userDetails?._id]);
 
   // Update unseen messages when chat list changes
   useEffect(() => {
@@ -145,48 +161,40 @@ const ChatSidebar = ({
   }, [allChat, pathName, session, userDetails?._id]);
 
   return (
-    <div
+    <motion.div
+      initial={{ y: -30 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.3 }}
       className={`rounded-xl sm:block ${
         openChatMobile ? "hidden" : "block"
       } min-w-full max-w-full sm:max-w-[300px] sm:min-w-[300px]`}
     >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ ease: "easeInOut", duration: 0.8 }}
+      <div
         className={`flex flex-col gap-4 sm:border-r sm:border-l sm:border-t sm:border-b border-gray-200 sm:max-h-[calc(100vh-59px)] sm:min-h-[calc(100vh-59px)] bg-white overflow-y-auto slider sm:max-w-[300px] sm:min-w-[300px] min-w-full max-w-full"
         } rounded-tl-xl rounded-bl-xl`}
       >
-        <div
-          className={`flex items-center gap-3 border-b-2 px-6 pt-2 pb-4`}
-        >
-          <Link href={`/`} className="h-8 w-8 cursor-pointer rounded-full border flex items-center justify-center mt-2">
+        {/* topbar */}
+        <div className={`flex items-center gap-5 border-b-2 px-6 pt-2 pb-4`}>
+          <Link
+            href={`/`}
+            className="h-8 w-8 cursor-pointer rounded-full border flex items-center justify-center mt-2"
+          >
             <IoChevronBack className="text-xl" />
           </Link>
-          <div className="text-black font-extrabold text-2xl mt-2">Chat</div>
+          <div className="text-black font-extrabold text-xl mt-2">Chat</div>
         </div>
 
         {/* allChat */}
-        <div className="">
+        <div>
           {chatLoading && (
             <div className="flex justify-center items-center py-6">
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
             </div>
           )}
           {!chatLoading && sockty && allChat?.length === 0 && (
-            <div className="">No chats</div>
+            <div className="text-center">No chats</div>
           )}
-          {!sockty && allChat?.length === 0 && (
-            <div className="flex justify-center items-center py-6">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
-            </div>
-          )}
-          {!chatLoading && !sockty && allChat?.length === 0 && (
-            <div className="flex justify-center items-center py-6">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
-            </div>
-          )}
-          {!chatLoading && allChat?.length > 0 && (
+          {!chatLoading && allChat?.length > 0 && sockty && (
             <div className="flex flex-col">
               {allChat?.map((chit: any) => (
                 <div
@@ -228,7 +236,7 @@ const ChatSidebar = ({
                 >
                   {/* image, details */}
                   <div className="flex items-start gap-4">
-                    <div className="border-2 border-gray-400 rounded-full p-[2px]">
+                    <div className="">
                       <Image
                         src={
                           chit?.participants?.find(
@@ -239,11 +247,11 @@ const ChatSidebar = ({
                         width={40}
                         height={40}
                         priority
-                        className="rounded-full min-w-10 max-w-10 min-h-10 max-h-10 aspect-auto"
+                        className="rounded-full min-w-12 max-w-12 min-h-12 max-h-12 aspect-auto border-2 border-slate-300"
                       />
                     </div>
                     <div className="flex flex-col gap-[2px]">
-                      <div className="text-lg font-medium text-wrap break-words">
+                      <div className="text-base font-medium text-wrap break-words">
                         {chit?.participants
                           ?.find((usr: any) => usr?._id !== userDetails?._id)
                           ?.username?.substring(0, 20)}
@@ -272,8 +280,8 @@ const ChatSidebar = ({
             </div>
           )}
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 

@@ -42,7 +42,7 @@ const Layout = ({ children }: { children: any }) => {
 
   // handle websocket connection
   useEffect(() => {
-    if (!session || !userDetails?._id) return;
+    if (!userDetails?._id) return;
 
     let socket: WebSocket;
 
@@ -123,7 +123,7 @@ const Layout = ({ children }: { children: any }) => {
         clearTimeout(reconnectTimeoutRef.current);
       }
     };
-  }, [session, userDetails?._id, socketref.current]);
+  }, [userDetails?._id]);
 
   if (status === "loading") {
     return (

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from "react";
+import { memo } from 'react';
 
 const Toggle = ({ isToggleOpen, setIsToggleOpen, setFormData }: any) => {
   console.log("isToggleOpen", isToggleOpen);
@@ -27,4 +28,4 @@ const Toggle = ({ isToggleOpen, setIsToggleOpen, setFormData }: any) => {
   );
 };
 
-export default Toggle;
+export default memo(Toggle);

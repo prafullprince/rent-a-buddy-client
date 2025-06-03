@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
+// /* eslint-disable react-hooks/exhaustive-deps */
 
 "use client";
 import EventOverlayCard from "@/components/HomePage/EventOverlayCard";
 import {
-  allAvailableEvents,
   getInfiniteEvents,
 } from "@/service/apiCall/event.api";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -40,7 +39,7 @@ export default function Home() {
     gender: "",
     isActive: null,
   });
-  console.log("formData", formData);
+
   const [applyLoading, setApplyLoading] = useState(false);
   const [filterData, setFilterData] = useState<any>(null);
 
@@ -53,10 +52,9 @@ export default function Home() {
       setLoading(true);
 
       try {
-        console.log("cursor data: ", cursor);
         const data: any = await getInfiniteEvents(15, formData, cursorOverride);
-        console.log("filters data: ", data);
 
+        // update state
         if (data && Array.isArray(data.data)) {
           setEvents((prev: any) => [...prev, ...data.data]);
           setHasmore(data.pagination?.hasMore ?? false);
@@ -111,24 +109,29 @@ export default function Home() {
         fetchData();
       }
     },
-    [fetchData, hasmore, loading, cursor]
+    [fetchData, hasmore, loading]
   );
 
   // observer setup
   useEffect(() => {
+    const targetElememt = observerRef.current;
+
+    // observer setup
     const observer = new IntersectionObserver(observerCallback, {
       root: null,
       rootMargin: "0px 0px 10px 0px", // ✅ Adjusted to prevent multiple triggers
       threshold: 1.0,
     });
 
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
+    // observe targetElement
+    if (targetElememt) {
+      observer.observe(targetElememt);
     }
 
+    // cleanup fn
     return () => {
-      if (observerRef.current) {
-        observer.unobserve(observerRef.current);
+      if (targetElememt) {
+        observer.unobserve(targetElememt);
       }
     };
   }, [observerCallback]);
@@ -232,9 +235,7 @@ export default function Home() {
 
                 {/* button */}
                 <div className="flex gap-2 h-full">
-                  <div className="lg:block hidden w-[2px] h-[35px] bg-black/50">
-
-                  </div>
+                  <div className="lg:block hidden w-[2px] h-[35px] bg-black/50"></div>
                   <motion.div layoutId="button">
                     <button
                       onClick={submitHandler}
@@ -283,7 +284,7 @@ export default function Home() {
               {hasmore && (
                 <div
                   ref={observerRef}
-                  className="h-20 flex items-center justify-center"
+                  className="flex items-center justify-center h-25"
                 >
                   {loading ? (
                     <div className="flex justify-center items-center py-6">
