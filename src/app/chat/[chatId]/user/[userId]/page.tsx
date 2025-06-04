@@ -168,7 +168,7 @@ const Page = () => {
  
    // 1. Create PeerConnection
    const pc = setupPeerConnection(); // setup ICE, ontrack, etc.
- 
+   console.log("pc", pc);
    // 2. Get local media (mic + camera)
    try {
      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -181,6 +181,7 @@ const Page = () => {
      if (localVideoRef.current) {
        localVideoRef.current.srcObject = stream;
      }
+     console.log("localVideoRef.current", localVideoRef.current);
    } catch (error) {
      console.error("Failed to get local media:", error);
      return;
@@ -192,7 +193,7 @@ const Page = () => {
    // 4. Create answer
    const answer = await pc.createAnswer();
    await pc.setLocalDescription(answer);
- 
+   
    // 5. Send answer back to caller
    socketRef.current.send(
      JSON.stringify({
@@ -207,6 +208,8 @@ const Page = () => {
  
    // mark call as accepted
    setIsCallAccepted(true);
+   console.log("isCallAccepted", isCallAccepted);
+   console.log("pc", pc);
  };
 
  // handleReject
@@ -224,6 +227,7 @@ const Page = () => {
    setIsCallStart(false);
    setIncomingCall(false);
    setIsCallAccepted(false);
+   setIsCallModal(false);
 
    // Optionally, send reject message via socket if your backend supports it
  };
