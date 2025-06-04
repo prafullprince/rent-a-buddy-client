@@ -402,6 +402,7 @@ const Page = () => {
     };
     connectWebSocket();
 
+    // cleanup
     return () => {
       if (pingIntervalRef.current) {
         clearInterval(pingIntervalRef.current);
