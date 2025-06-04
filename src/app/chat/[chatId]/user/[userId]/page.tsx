@@ -75,7 +75,7 @@ const Page = () => {
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [refreshButton, setRefreshButton] = useState(false);
   const [modalData, setModalData] = useState<any>(null);
-  const [isCaller, setCaller] = useState(false);
+  const [isCallStart, setIsCallStart] = useState(false);
   const [isIncomingCall, setIncomingCall] = useState(false);
   const [isCallAccepted, setIsCallAccepted] = useState(false);
 
@@ -120,7 +120,7 @@ const Page = () => {
  const handleVideoCall = async () => {
    if (!chatId || !userDetails?._id || !socketRef.current) return;
 
-   setCaller(true);
+   setIsCallStart(true);
 
    const pc = setupPeerConnection();
 
@@ -217,7 +217,7 @@ const Page = () => {
    if (localVideoRef.current) localVideoRef.current.srcObject = null;
    if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
 
-   setCaller(false);
+   setIsCallStart(false);
    setIncomingCall(false);
    setIsCallAccepted(false);
 
@@ -578,10 +578,13 @@ const Page = () => {
       </div>
 
       {/* video */}
-      <div className="absolute top-10 right-10 left-10 bottom-10 hidden">
+      {
+        isCallStart &&
+        <div className="absolute top-10 right-10 left-10 bottom-10 hidden">
           <video ref={localVideoRef} autoPlay playsInline muted></video>
           <video ref={remoteVideoRef} autoPlay playsInline></video>
       </div>
+      }
 
       {modalData && (
         <SendMoneyModal
