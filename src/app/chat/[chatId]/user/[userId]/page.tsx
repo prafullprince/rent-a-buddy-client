@@ -393,7 +393,7 @@ const Page = () => {
 
         // on receiver from sender -> incoming call
         if(data.type === "createOffer") {
-          setIncomingOffer(data.payload.offer);
+          setIncomingOffer(data.payload);
           setIsCallModal(true);
         }
 
