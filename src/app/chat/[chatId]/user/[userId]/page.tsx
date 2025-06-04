@@ -80,6 +80,7 @@ const Page = () => {
   const [isCallAccepted, setIsCallAccepted] = useState(false);
 
   const [incomingOffer, setIncomingOffer] = useState<any>(null);
+  const [isCallModal, setIsCallModal] = useState(false);
   
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
@@ -382,6 +383,7 @@ const Page = () => {
         // on receiver from sender -> incoming call
         if(data.type === "createOffer") {
           setIncomingOffer(data.payload.offer);
+          setIsCallModal(true);
         }
 
         // on sender from receiver -> call accepted
@@ -491,11 +493,7 @@ const Page = () => {
           </div>
         </div>
 
-        {/* right */}
-        <div className="flex flex-col gap-1">
-            <div onClick={handleAccept}>Acc</div>
-            <div onClick={handleReject}>Dec</div>
-        </div>
+        {/* icon */}
         <div className="flex items-center gap-6 mr-4">
           <button className="cursor-pointer">
             <IoCallSharp className="text-2xl text-slate-600" />
@@ -585,6 +583,18 @@ const Page = () => {
           <video ref={remoteVideoRef} autoPlay playsInline></video>
       </div>
       }
+
+      {
+        isCallModal && 
+        <div className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-18 shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit">
+            <button onClick={handleAccept} className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold">Accept</button>
+            <button onClick={handleReject} className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold">Decline</button>
+        </div>
+      }
+        {/* <div className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-[300px] shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit">
+            <button onClick={handleAccept} className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold">Accept</button>
+            <button onClick={handleReject} className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold">Decline</button>
+        </div> */}
 
       {modalData && (
         <SendMoneyModal
