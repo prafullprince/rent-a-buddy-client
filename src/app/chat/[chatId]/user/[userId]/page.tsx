@@ -492,9 +492,9 @@ const Page = () => {
         </div>
 
         {/* right */}
-        <div className="flex items-center gap-6 mr-4">
-            <div onClick={handleAccept}>Accept</div>
-            <div onClick={handleReject}>Reject</div>
+        <div className="flex flex-col gap-1">
+            <div onClick={handleAccept}>Acc</div>
+            <div onClick={handleReject}>Dec</div>
         </div>
         <div className="flex items-center gap-6 mr-4">
           <button className="cursor-pointer">
@@ -520,7 +520,7 @@ const Page = () => {
           </div>
         ) : (
           <div
-            className="max-h-[calc(100dvh-120px)] min-h-[calc(100dvh-120px)] sm:max-h-[calc(100dvh-180px)] sm:min-h-[calc(100dvh-180px)] p-4 overflow-y-auto overflow-hidden bg-gray-800 relative"
+            className="max-h-[calc(100dvh-120px)] min-h-[calc(100dvh-120px)] sm:max-h-[calc(100dvh-180px)] sm:min-h-[calc(100dvh-180px)] p-4 overflow-y-auto bg-gray-800"
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             {messages.length === 0 ? (
@@ -556,11 +556,6 @@ const Page = () => {
           </div>
         )}
 
-        {/* video */}
-        <div className="absolute top-5 right-5 left-5 bottom-5">
-          <video ref={localVideoRef} autoPlay playsInline muted></video>
-          <video ref={remoteVideoRef} autoPlay playsInline></video>
-        </div>
       </div>
 
       {/* Send Message */}
@@ -580,6 +575,12 @@ const Page = () => {
         >
           <IoSendSharp />
         </button>
+      </div>
+
+      {/* video */}
+      <div className="absolute top-10 right-10 left-10 bottom-10 hidden">
+          <video ref={localVideoRef} autoPlay playsInline muted></video>
+          <video ref={remoteVideoRef} autoPlay playsInline></video>
       </div>
 
       {modalData && (
