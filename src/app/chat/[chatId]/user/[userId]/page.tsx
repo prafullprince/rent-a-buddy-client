@@ -112,6 +112,9 @@ const Page = () => {
    pc.ontrack = (event) => {
      // Add incoming track to remote stream
      remoteStreamRef.current?.addTrack(event.track);
+     if(remoteVideoRef.current){
+      remoteVideoRef.current.srcObject = event.streams[0];
+     }
    };
 
    return pc;
@@ -390,7 +393,7 @@ const Page = () => {
         if (data.type === "createAnswer") {
           if(pcRef.current) {
             const { answer } = data.payload;
-            pcRef.current.setRemoteDescription(answer);
+            await pcRef.current.setRemoteDescription(answer);
           }
           setIsCallAccepted(true);
         }
@@ -578,14 +581,22 @@ const Page = () => {
       {/* video */}
       {
         isCallStart &&
-        <div className="absolute top-10 right-10 left-10 bottom-10 z-10">
+        <div className="absolute top-10 right-10 left-10 bottom-10 z-20">
           <video ref={localVideoRef} autoPlay playsInline muted></video>
+          {/* <video ref={remoteVideoRef} autoPlay playsInline></video> */}
+        </div>
+      }
+
+      {
+        isCallAccepted && !isCallModal &&
+        <div className="absolute top-10 right-10 left-10 bottom-10 z-10">
+          {/* <video ref={localVideoRef} autoPlay playsInline muted></video> */}
           <video ref={remoteVideoRef} autoPlay playsInline></video>
         </div>
       }
 
       {
-        isCallModal && 
+        isCallModal && !isCallAccepted &&
         <div className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-18 shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit">
             <button onClick={handleAccept} className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold">Accept</button>
             <button onClick={handleReject} className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold">Decline</button>
