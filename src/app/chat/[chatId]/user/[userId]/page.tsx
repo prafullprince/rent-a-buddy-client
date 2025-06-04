@@ -174,9 +174,11 @@ const Page = () => {
     if (!socketRef.current || !incomingOffer || !chatId || !userDetails?._id)
       return;
 
+    setIsCallAccepted(true);
+
     // 1. Create PeerConnection
     const pc = setupPeerConnection(); // setup ICE, ontrack, etc.
-    console.log("pc", pc);
+    
     // 2. Get local media (mic + camera)
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -222,7 +224,7 @@ const Page = () => {
     );
 
     // mark call as accepted
-    setIsCallAccepted(true);
+    
     console.log("isCallAccepted", isCallAccepted);
     console.log("pc", pc);
   };
@@ -470,6 +472,13 @@ const Page = () => {
   useEffect(() => {
     divRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if ((isCallStart || isCallAccepted) && localVideoRef.current && streamRef.current) {
+      localVideoRef.current.srcObject = streamRef.current;
+    }
+  }, [isCallStart, isCallAccepted]);
+  
 
   // Handle Enter Key for Sending Message
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
