@@ -392,8 +392,8 @@ const Page = () => {
         // on sender from receiver -> call accepted
         if (data.type === "createAnswer") {
           if(pcRef.current) {
-            const { answer } = data.payload;
-            await pcRef.current.setRemoteDescription(answer);
+            // const sdp = data.payload;
+            await pcRef.current.setRemoteDescription(data.payload);
           }
           setIsCallAccepted(true);
         }
