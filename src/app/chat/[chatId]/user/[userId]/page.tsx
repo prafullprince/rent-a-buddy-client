@@ -581,7 +581,7 @@ const Page = () => {
         <div className="absolute top-10 right-10 left-10 bottom-10">
           <video ref={localVideoRef} autoPlay playsInline muted></video>
           <video ref={remoteVideoRef} autoPlay playsInline></video>
-      </div>
+        </div>
       }
 
       {
