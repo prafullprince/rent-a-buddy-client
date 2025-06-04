@@ -49,10 +49,10 @@ const Layout = ({ children }: { children: any }) => {
     const connectWebSocket = () => {
       socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
       socketref.current = socket;
+      setChatLoading(true);
 
       socket.onopen = () => {
         console.log("✅ WebSocket connected");
-        setChatLoading(true);
 
         // Start pinging
         pingIntervalRef.current = setInterval(() => {

@@ -15,14 +15,15 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import React, { memo, useEffect, useRef, useState } from "react";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import wspLogo from "../../../../../../public/assets/wssupLogo.png";
-import { IoArrowBackSharp, IoSendSharp } from "react-icons/io5";
+import { IoArrowBackSharp, IoCallSharp, IoSendSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
 import SendMoneyModal from "@/components/Chat/SendMoneyModal";
 import Receiver from "@/components/Chat/Message/Receiver";
 import Sender from "@/components/Chat/Message/Sender";
 import { useDispatch } from "react-redux";
 import { setOpenChatMobile } from "@/redux/slice/chat.slice";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+import { FaVideo } from "react-icons/fa";
 
 // Define types for better maintainability
 interface Message {
@@ -49,6 +50,13 @@ const Page = () => {
   const { data: session } = useSession();
   const divRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<WebSocket | null>(null);
+
+  const pcRef = useRef<RTCPeerConnection | null>(null);
+  const localVideoRef = useRef<HTMLVideoElement | null>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const remoteStreamRef = useRef<MediaStream | null>(null);
+
   const RECONNECT_INTERVAL = 3000;
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const PING_INTERVAL = 25000; // 25 seconds
@@ -67,6 +75,154 @@ const Page = () => {
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [refreshButton, setRefreshButton] = useState(false);
   const [modalData, setModalData] = useState<any>(null);
+  const [isCaller, setCaller] = useState(false);
+  const [isIncomingCall, setIncomingCall] = useState(false);
+  const [isCallAccepted, setIsCallAccepted] = useState(false);
+
+  const [incomingOffer, setIncomingOffer] = useState<any>(null);
+  
+  // --- WebRTC Setup ---
+  const setupPeerConnection = () => {
+   const pc = new RTCPeerConnection();
+   pcRef.current = pc;
+
+   // add-ice-candidate
+   pc.onicecandidate = (event) => {
+     if (event.candidate && socketRef.current?.readyState === WebSocket.OPEN) {
+       socketRef.current.send(
+         JSON.stringify({
+           type: "add-ice-candidate",
+           payload: {
+             chatId,
+             userId: userDetails?._id,
+             candidate: event.candidate,
+           },
+         })
+       );
+     }
+   };
+
+   // Prepare remote stream to accumulate tracks
+   remoteStreamRef.current = new MediaStream();
+   if (remoteVideoRef.current) {
+     remoteVideoRef.current.srcObject = remoteStreamRef.current;
+   }
+
+   pc.ontrack = (event) => {
+     // Add incoming track to remote stream
+     remoteStreamRef.current?.addTrack(event.track);
+   };
+
+   return pc;
+ };
+
+ // handleVideoCall
+ const handleVideoCall = async () => {
+   if (!chatId || !userDetails?._id || !socketRef.current) return;
+
+   setCaller(true);
+
+   const pc = setupPeerConnection();
+
+   // Get local media stream and add to peer connection
+   try {
+     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+     streamRef.current = stream;
+     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+     if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+   } catch (err) {
+     console.error("Failed to get local media stream:", err);
+     return;
+   }
+
+   // When negotiation needed, create and send offer
+   pc.onnegotiationneeded = async () => {
+     try {
+       const offer = await pc.createOffer();
+       await pc.setLocalDescription(offer);
+       if (socketRef.current?.readyState === WebSocket.OPEN) {
+         socketRef.current.send(
+           JSON.stringify({
+             type: "createOffer",
+             payload: {
+               chatId,
+               userId: userDetails?._id,
+               offer: pc.localDescription,
+             },
+           })
+         );
+       }
+     } catch (err) {
+       console.error("Error during negotiation:", err);
+     }
+   };
+ };
+
+ // handleAccept
+ const handleAccept = async () => {
+   if (!socketRef.current || !incomingOffer || !chatId || !userDetails?._id) return;
+ 
+   // 1. Create PeerConnection
+   const pc = setupPeerConnection(); // setup ICE, ontrack, etc.
+ 
+   // 2. Get local media (mic + camera)
+   try {
+     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+     streamRef.current = stream;
+ 
+     // Add tracks to PeerConnection
+     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+ 
+     // Show local video
+     if (localVideoRef.current) {
+       localVideoRef.current.srcObject = stream;
+     }
+   } catch (error) {
+     console.error("Failed to get local media:", error);
+     return;
+   }
+ 
+   // 3. Set remote description with caller's offer
+   await pc.setRemoteDescription(new RTCSessionDescription(incomingOffer)); // <-- comes from WebSocket earlier
+ 
+   // 4. Create answer
+   const answer = await pc.createAnswer();
+   await pc.setLocalDescription(answer);
+ 
+   // 5. Send answer back to caller
+   socketRef.current.send(
+     JSON.stringify({
+       type: "createAnswer",
+       payload: {
+         chatId,
+         userId: userDetails._id,
+         sdp: pc.localDescription,
+       },
+     })
+   );
+ 
+   // mark call as accepted
+   setIsCallAccepted(true);
+ };
+
+ // handleReject
+ const handleReject = () => {
+   // Cleanup peer connection and streams
+   pcRef.current?.close();
+   pcRef.current = null;
+
+   streamRef.current?.getTracks().forEach((track) => track.stop());
+   streamRef.current = null;
+
+   if (localVideoRef.current) localVideoRef.current.srcObject = null;
+   if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+
+   setCaller(false);
+   setIncomingCall(false);
+   setIsCallAccepted(false);
+
+   // Optionally, send reject message via socket if your backend supports it
+ };
 
   // Fetch Messages
   const fetchMessages = async () => {
@@ -222,6 +378,26 @@ const Page = () => {
         if (data?.type === "pong") {
           console.log("🏓 Pong received from server");
         }
+
+        // on receiver from sender -> incoming call
+        if(data.type === "createOffer") {
+          setIncomingOffer(data.payload.offer);
+        }
+
+        // on sender from receiver -> call accepted
+        if (data.type === "createAnswer") {
+          if(pcRef.current) {
+            const { answer } = data.payload;
+            pcRef.current.setRemoteDescription(answer);
+          }
+          setIsCallAccepted(true);
+        }
+
+        // add-ice-candidate
+        if (data.type === "add-ice-candidate") {
+          const { candidate } = data.payload;
+          pcRef.current?.addIceCandidate(candidate);
+        }
       };
     };
     connectWebSocket();
@@ -236,6 +412,7 @@ const Page = () => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
+      socket.onmessage = null;
     };
   }, [chatId, userDetails?._id]);
 
@@ -279,43 +456,58 @@ const Page = () => {
   };
 
   return (
-    <motion.div className="flex flex-col items-start rounded-xl max-w-full relative"
+    <motion.div
+      className="flex flex-col items-start rounded-xl max-w-full relative"
       initial={{ opacity: 0, y: -40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
       {/* Top Bar */}
       <div className="h-16 px-2 py-2 flex items-center justify-between bg-gray-200 w-full sm:rounded-tr-xl">
-        <div className="">
+        {/* left */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              // back to prev page
+              // router.back();
+              dispatch(setOpenChatMobile(false));
+              router.push("/chat");
+            }}
+            className="px-2 py-2 block sm:hidden"
+          >
+            <IoArrowBackSharp className="text-2xl" />
+          </button>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                // back to prev page
-                // router.back();
-                dispatch(setOpenChatMobile(false));
-                router.push("/chat");
-              }}
-              className="px-2 py-2 block sm:hidden"
-            >
-              <IoArrowBackSharp className="text-2xl" />
-            </button>
-            <div className="flex items-center gap-2">
-              <Image
-                className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10 border-1 border-blue-300"
-                alt="dp"
-                src={otherUser?.image || fallbackImage}
-                width={40}
-                height={40}
-                priority
-              />
-              <div>{otherUser?.username}</div>
-            </div>
+            <Image
+              className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10 border-1 border-blue-300"
+              alt="dp"
+              src={otherUser?.image || fallbackImage}
+              width={40}
+              height={40}
+              priority
+            />
+            <div>{otherUser?.username}</div>
           </div>
+        </div>
+
+        {/* right */}
+        <div className="flex items-center gap-6 mr-4">
+            <div onClick={handleAccept}>Accept</div>
+            <div onClick={handleReject}>Reject</div>
+        </div>
+        <div className="flex items-center gap-6 mr-4">
+          <button className="cursor-pointer">
+            <IoCallSharp className="text-2xl text-slate-600" />
+          </button>
+
+          <button onClick={handleVideoCall} className="cursor-pointer">
+            <FaVideo className="text-2xl text-slate-600" />
+          </button>
         </div>
       </div>
 
       {/* Message Box */}
-      <div className="w-full">
+      <div className="w-full relative">
         {loading ? (
           <div
             className="max-h-[calc(100dvh-115px)] min-h-[calc(100dvh-115px)] sm:max-h-[calc(100dvh-180px)] sm:min-h-[calc(100dvh-180px)] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
@@ -362,6 +554,12 @@ const Page = () => {
             <div ref={divRef}></div>
           </div>
         )}
+
+        {/* video */}
+        <div className="absolute top-5 right-5 left-5 bottom-5">
+          <video ref={localVideoRef} autoPlay playsInline muted></video>
+          <video ref={remoteVideoRef} autoPlay playsInline></video>
+        </div>
       </div>
 
       {/* Send Message */}
