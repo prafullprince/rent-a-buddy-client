@@ -9,7 +9,7 @@ const BASE_URL = "https://rent-a-buddy-server-1.onrender.com/api";
 // layout
 
 // https://rent-a-buddy-server-1.onrender.com/api
-// http://localhost:4000/api
+// http://localhost:4000/api 
 
 
 // auth
