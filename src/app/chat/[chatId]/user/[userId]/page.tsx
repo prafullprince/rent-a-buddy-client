@@ -147,7 +147,7 @@ const Page = () => {
              type: "createOffer",
              payload: {
                chatId,
-               userId: userDetails?._id,
+               userId: userId,
                offer: pc.localDescription,
              },
            })
@@ -196,7 +196,7 @@ const Page = () => {
        type: "createAnswer",
        payload: {
          chatId,
-         userId: userDetails._id,
+         userId: userId,
          sdp: pc.localDescription,
        },
      })
