@@ -81,161 +81,171 @@ const Page = () => {
 
   const [incomingOffer, setIncomingOffer] = useState<any>(null);
   const [isCallModal, setIsCallModal] = useState(false);
-  
+
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
-   const pc = new RTCPeerConnection();
-   pcRef.current = pc;
+    const pc = new RTCPeerConnection();
+    pcRef.current = pc;
 
-   // add-ice-candidate
-   pc.onicecandidate = (event) => {
-     if (event.candidate && socketRef.current?.readyState === WebSocket.OPEN) {
-       socketRef.current.send(
-         JSON.stringify({
-           type: "add-ice-candidate",
-           payload: {
-             chatId,
-             userId: userId,
-             candidate: event.candidate,
-           },
-         })
-       );
-     }
-   };
+    // add-ice-candidate
+    pc.onicecandidate = (event) => {
+      if (event.candidate && socketRef.current?.readyState === WebSocket.OPEN) {
+        socketRef.current.send(
+          JSON.stringify({
+            type: "add-ice-candidate",
+            payload: {
+              chatId,
+              userId: userId,
+              candidate: event.candidate,
+            },
+          })
+        );
+      }
+    };
 
-   // Prepare remote stream to accumulate tracks
-   remoteStreamRef.current = new MediaStream();
-   if (remoteVideoRef.current) {
-     remoteVideoRef.current.srcObject = remoteStreamRef.current;
-   }
+    // Prepare remote stream to accumulate tracks
+    remoteStreamRef.current = new MediaStream();
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = remoteStreamRef.current;
+    }
 
-   pc.ontrack = (event) => {
-     // Add incoming track to remote stream
-     remoteStreamRef.current?.addTrack(event.track);
-     if(remoteVideoRef.current){
-      remoteVideoRef.current.srcObject = event.streams[0];
-     }
-   };
+    pc.ontrack = (event) => {
+      // Add incoming track to remote stream
+      remoteStreamRef.current?.addTrack(event.track);
+      if (remoteVideoRef.current) {
+        remoteVideoRef.current.srcObject = event.streams[0];
+      }
+    };
 
-   return pc;
- };
+    return pc;
+  };
 
- // handleVideoCall
- const handleVideoCall = async () => {
-   if (!chatId || !userDetails?._id || !socketRef.current) return;
+  // handleVideoCall
+  const handleVideoCall = async () => {
+    if (!chatId || !userDetails?._id || !socketRef.current) return;
 
-   setIsCallStart(true);
+    setIsCallStart(true);
 
-   const pc = setupPeerConnection();
+    const pc = setupPeerConnection();
 
-   // Get local media stream and add to peer connection
-   try {
-     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-     streamRef.current = stream;
-     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
-     if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-   } catch (err) {
-     console.error("Failed to get local media stream:", err);
-     return;
-   }
+    // Get local media stream and add to peer connection
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      streamRef.current = stream;
+      stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+      if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+    } catch (err) {
+      console.error("Failed to get local media stream:", err);
+      return;
+    }
 
-   // When negotiation needed, create and send offer
-   pc.onnegotiationneeded = async () => {
-     try {
-       const offer = await pc.createOffer();
-       await pc.setLocalDescription(offer);
-       if (socketRef.current?.readyState === WebSocket.OPEN) {
-         socketRef.current.send(
-           JSON.stringify({
-             type: "createOffer",
-             payload: {
-               chatId,
-               userId: userId,
-               offer: pc.localDescription,
-             },
-           })
-         );
-       }
-     } catch (err) {
-       console.error("Error during negotiation:", err);
-     }
-   };
- };
+    // When negotiation needed, create and send offer
+    pc.onnegotiationneeded = async () => {
+      try {
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        if (socketRef.current?.readyState === WebSocket.OPEN) {
+          socketRef.current.send(
+            JSON.stringify({
+              type: "createOffer",
+              payload: {
+                chatId,
+                userId: userId,
+                offer: pc.localDescription,
+              },
+            })
+          );
+        }
+      } catch (err) {
+        console.error("Error during negotiation:", err);
+      }
+    };
+  };
 
- // handleAccept
- const handleAccept = async () => {
-  console.log("socketRef.current", socketRef.current);
-  console.log("incomingOffer", incomingOffer);
-  console.log("chatId", chatId);
-  console.log("userDetails?._id", userDetails?._id);
-   if (!socketRef.current || !incomingOffer || !chatId || !userDetails?._id) return;
- 
-   // 1. Create PeerConnection
-   const pc = setupPeerConnection(); // setup ICE, ontrack, etc.
-   console.log("pc", pc);
-   // 2. Get local media (mic + camera)
-   try {
-     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-     streamRef.current = stream;
- 
-     // Add tracks to PeerConnection
-     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
- 
-     // Show local video
-     if (localVideoRef.current) {
-      console.log("handle accept localVideoRef.current", localVideoRef.current);
-       localVideoRef.current.srcObject = stream;
-     }
-     console.log("localVideoRef.current", localVideoRef.current);
-   } catch (error) {
-     console.error("Failed to get local media:", error);
-     return;
-   }
- 
-   // 3. Set remote description with caller's offer
-   await pc.setRemoteDescription(new RTCSessionDescription(incomingOffer)); // <-- comes from WebSocket earlier
- 
-   // 4. Create answer
-   const answer = await pc.createAnswer();
-   await pc.setLocalDescription(answer);
-   
-   // 5. Send answer back to caller
-   socketRef.current.send(
-     JSON.stringify({
-       type: "createAnswer",
-       payload: {
-         chatId,
-         userId: userId,
-         sdp: pc.localDescription,
-       },
-     })
-   );
- 
-   // mark call as accepted
-   setIsCallAccepted(true);
-   console.log("isCallAccepted", isCallAccepted);
-   console.log("pc", pc);
- };
+  // handleAccept
+  const handleAccept = async () => {
+    console.log("socketRef.current", socketRef.current);
+    console.log("incomingOffer", incomingOffer);
+    console.log("chatId", chatId);
+    console.log("userDetails?._id", userDetails?._id);
+    if (!socketRef.current || !incomingOffer || !chatId || !userDetails?._id)
+      return;
 
- // handleReject
- const handleReject = () => {
-   // Cleanup peer connection and streams
-   pcRef.current?.close();
-   pcRef.current = null;
+    // 1. Create PeerConnection
+    const pc = setupPeerConnection(); // setup ICE, ontrack, etc.
+    console.log("pc", pc);
+    // 2. Get local media (mic + camera)
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      streamRef.current = stream;
 
-   streamRef.current?.getTracks().forEach((track) => track.stop());
-   streamRef.current = null;
+      // Add tracks to PeerConnection
+      stream.getTracks().forEach((track) => pc.addTrack(track, stream));
 
-   if (localVideoRef.current) localVideoRef.current.srcObject = null;
-   if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+      // Show local video
+      if (localVideoRef.current) {
+        console.log(
+          "handle accept localVideoRef.current",
+          localVideoRef.current
+        );
+        localVideoRef.current.srcObject = stream;
+      }
+      console.log("localVideoRef.current", localVideoRef.current);
+    } catch (error) {
+      console.error("Failed to get local media:", error);
+      return;
+    }
 
-   setIsCallStart(false);
-   setIncomingCall(false);
-   setIsCallAccepted(false);
-   setIsCallModal(false);
+    // 3. Set remote description with caller's offer
+    await pc.setRemoteDescription(new RTCSessionDescription(incomingOffer)); // <-- comes from WebSocket earlier
 
-   // Optionally, send reject message via socket if your backend supports it
- };
+    // 4. Create answer
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+
+    // 5. Send answer back to caller
+    socketRef.current.send(
+      JSON.stringify({
+        type: "createAnswer",
+        payload: {
+          chatId,
+          userId: userId,
+          sdp: pc.localDescription,
+        },
+      })
+    );
+
+    // mark call as accepted
+    setIsCallAccepted(true);
+    console.log("isCallAccepted", isCallAccepted);
+    console.log("pc", pc);
+  };
+
+  // handleReject
+  const handleReject = () => {
+    // Cleanup peer connection and streams
+    pcRef.current?.close();
+    pcRef.current = null;
+
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+
+    if (localVideoRef.current) localVideoRef.current.srcObject = null;
+    if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+
+    setIsCallStart(false);
+    setIncomingCall(false);
+    setIsCallAccepted(false);
+    setIsCallModal(false);
+
+    // Optionally, send reject message via socket if your backend supports it
+  };
 
   // Fetch Messages
   const fetchMessages = async () => {
@@ -393,14 +403,14 @@ const Page = () => {
         }
 
         // on receiver from sender -> incoming call
-        if(data.type === "createOffer") {
+        if (data.type === "createOffer") {
           setIncomingOffer(data.payload);
           setIsCallModal(true);
         }
 
         // on sender from receiver -> call accepted
         if (data.type === "createAnswer") {
-          if(pcRef.current) {
+          if (pcRef.current) {
             // const sdp = data.payload;
             await pcRef.current.setRemoteDescription(data.payload);
             setIsCallAccepted(true);
@@ -565,7 +575,6 @@ const Page = () => {
             <div ref={divRef}></div>
           </div>
         )}
-
       </div>
 
       {/* Send Message */}
@@ -588,30 +597,30 @@ const Page = () => {
       </div>
 
       {/* video */}
-      {
-        isCallStart &&
+      {(isCallStart || isCallAccepted) && (
         <div className="absolute top-10 right-10 left-10 bottom-10 z-20 flex flex-col gap-2">
           <video ref={localVideoRef} autoPlay playsInline muted></video>
           <video ref={remoteVideoRef} autoPlay playsInline></video>
         </div>
-      }
+      )}
 
-      {
-        isCallAccepted && !isCallModal &&
-        <div className="absolute top-10 right-10 left-10 bottom-10 z-10">
-          <video ref={localVideoRef} autoPlay playsInline muted></video>
-          <video ref={remoteVideoRef} autoPlay playsInline></video>
-        </div>
-      }
-
-      {
-        isCallModal && !isCallAccepted &&
+      {isCallModal && !isCallAccepted && (
         <div className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-18 shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit">
-            <button onClick={handleAccept} className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold">Accept</button>
-            <button onClick={handleReject} className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold">Decline</button>
+          <button
+            onClick={handleAccept}
+            className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold"
+          >
+            Accept
+          </button>
+          <button
+            onClick={handleReject}
+            className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold"
+          >
+            Decline
+          </button>
         </div>
-      }
-        {/* <div className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-[300px] shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit">
+      )}
+      {/* <div className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-[300px] shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit">
             <button onClick={handleAccept} className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold">Accept</button>
             <button onClick={handleReject} className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold">Decline</button>
         </div> */}
