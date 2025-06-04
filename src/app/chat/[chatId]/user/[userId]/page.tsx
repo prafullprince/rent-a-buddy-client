@@ -164,6 +164,10 @@ const Page = () => {
 
  // handleAccept
  const handleAccept = async () => {
+  console.log("socketRef.current", socketRef.current);
+  console.log("incomingOffer", incomingOffer);
+  console.log("chatId", chatId);
+  console.log("userDetails?._id", userDetails?._id);
    if (!socketRef.current || !incomingOffer || !chatId || !userDetails?._id) return;
  
    // 1. Create PeerConnection
