@@ -402,14 +402,14 @@ const Page = () => {
           if(pcRef.current) {
             // const sdp = data.payload;
             await pcRef.current.setRemoteDescription(data.payload);
+            setIsCallAccepted(true);
           }
-          setIsCallAccepted(true);
         }
 
         // add-ice-candidate
         if (data.type === "add-ice-candidate") {
-          const { candidate } = data.payload;
-          pcRef.current?.addIceCandidate(candidate);
+          // const { candidate } = data.payload;
+          pcRef.current?.addIceCandidate(data.payload);
         }
       };
     };
@@ -589,19 +589,19 @@ const Page = () => {
       {/* video */}
       {
         isCallStart &&
-        <div className="absolute top-10 right-10 left-10 bottom-10 z-20">
+        <div className="absolute top-10 right-10 left-10 bottom-10 z-20 flex flex-col gap-2">
           <video ref={localVideoRef} autoPlay playsInline muted></video>
-          {/* <video ref={remoteVideoRef} autoPlay playsInline></video> */}
-        </div>
-      }
-
-      {
-        isCallAccepted && !isCallModal &&
-        <div className="absolute top-10 right-10 left-10 bottom-10 z-10">
-          {/* <video ref={localVideoRef} autoPlay playsInline muted></video> */}
           <video ref={remoteVideoRef} autoPlay playsInline></video>
         </div>
       }
+
+      {/* {
+        isCallAccepted && !isCallModal &&
+        <div className="absolute top-10 right-10 left-10 bottom-10 z-10">
+          <video ref={localVideoRef} autoPlay playsInline muted></video>
+          <video ref={remoteVideoRef} autoPlay playsInline></video>
+        </div>
+      } */}
 
       {
         isCallModal && !isCallAccepted &&
