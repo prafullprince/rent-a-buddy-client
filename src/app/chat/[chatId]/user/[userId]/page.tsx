@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { setOpenChatMobile } from "@/redux/slice/chat.slice";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaVideo } from "react-icons/fa";
+import { SlCallEnd } from "react-icons/sl";
 
 // Define types for better maintainability
 interface Message {
@@ -613,7 +614,7 @@ const Page = () => {
 
       {/* video */}
       {(isCallStart || isCallAccepted) && (
-        <div className="absolute top-10 right-10 left-10 bottom-10 z-20 flex items-center justify-center bg-black rounded-2xl shadow-2xl overflow-hidden">
+        <div className="absolute top-10 right-10 left-10 bottom-10 z-20 flex items-center justify-center rounded-2xl shadow-2xl overflow-hidden">
           {/* Remote Video (full screen) */}
           <video
             ref={remoteVideoRef}
@@ -628,8 +629,18 @@ const Page = () => {
             autoPlay
             playsInline
             muted
-            className="absolute bottom-4 right-4 w-20 h-24 rounded-xl border-2 border-white shadow-lg object-cover"
+            className="absolute bottom-4 right-4 w-32 h-36 lg:w-40 lg:h-44 rounded-xl border-2 border-white shadow-lg object-cover"
           ></video>
+
+          {/* call managing */}
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-4">
+            <button className="bg-red-600 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-3 py-[6px]">
+              <SlCallEnd />
+            </button>
+            {/* <button className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-700">
+              <MicIcon />
+            </button> */}
+          </div>
         </div>
       )}
 
