@@ -22,7 +22,7 @@ import Receiver from "@/components/Chat/Message/Receiver";
 import Sender from "@/components/Chat/Message/Sender";
 import { useDispatch } from "react-redux";
 import { setOpenChatMobile } from "@/redux/slice/chat.slice";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { FaVideo } from "react-icons/fa";
 
 // Define types for better maintainability
@@ -54,7 +54,7 @@ const Page = () => {
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const localStreamRef = useRef<MediaStream | null>(null);
   const remoteStreamRef = useRef<MediaStream | null>(null);
 
   const RECONNECT_INTERVAL = 3000;
@@ -109,11 +109,12 @@ const Page = () => {
       remoteVideoRef.current.srcObject = remoteStreamRef.current;
     }
 
+    // Add incoming track to remote stream
     pc.ontrack = (event) => {
-      // Add incoming track to remote stream
       remoteStreamRef.current?.addTrack(event.track);
       if (remoteVideoRef.current) {
         remoteVideoRef.current.srcObject = event.streams[0];
+        // event.streams[0] or remoteStreamRef.current -> contains the remote stream (coming from the other user)
       }
     };
 
@@ -130,12 +131,19 @@ const Page = () => {
 
     // Get local media stream and add to peer connection
     try {
+      // stream
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
-      streamRef.current = stream;
+
+      // save stream in localStreamRef
+      localStreamRef.current = stream;
+
+      // add tracks to peer connection for receiver
       stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+
+      // show local video
       if (localVideoRef.current) localVideoRef.current.srcObject = stream;
     } catch (err) {
       console.error("Failed to get local media stream:", err);
@@ -145,8 +153,13 @@ const Page = () => {
     // When negotiation needed, create and send offer
     pc.onnegotiationneeded = async () => {
       try {
+        // createOffer
         const offer = await pc.createOffer();
+
+        // set offer in LocalDescription
         await pc.setLocalDescription(offer);
+
+        // send offer to server for receiver
         if (socketRef.current?.readyState === WebSocket.OPEN) {
           socketRef.current.send(
             JSON.stringify({
@@ -167,10 +180,6 @@ const Page = () => {
 
   // handleAccept
   const handleAccept = async () => {
-    console.log("socketRef.current", socketRef.current);
-    console.log("incomingOffer", incomingOffer);
-    console.log("chatId", chatId);
-    console.log("userDetails?._id", userDetails?._id);
     if (!socketRef.current || !incomingOffer || !chatId || !userDetails?._id)
       return;
 
@@ -178,37 +187,37 @@ const Page = () => {
 
     // 1. Create PeerConnection
     const pc = setupPeerConnection(); // setup ICE, ontrack, etc.
-    
+
     // 2. Get local media (mic + camera)
     try {
+      // stream
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
-      streamRef.current = stream;
+
+      // save stream in localStreamRef
+      localStreamRef.current = stream;
 
       // Add tracks to PeerConnection
       stream.getTracks().forEach((track) => pc.addTrack(track, stream));
 
       // Show local video
       if (localVideoRef.current) {
-        console.log(
-          "handle accept localVideoRef.current",
-          localVideoRef.current
-        );
         localVideoRef.current.srcObject = stream;
       }
-      console.log("localVideoRef.current", localVideoRef.current);
     } catch (error) {
       console.error("Failed to get local media:", error);
       return;
     }
 
     // 3. Set remote description with caller's offer
-    await pc.setRemoteDescription(new RTCSessionDescription(incomingOffer)); // <-- comes from WebSocket earlier
+    await pc.setRemoteDescription(new RTCSessionDescription(incomingOffer));
 
     // 4. Create answer
     const answer = await pc.createAnswer();
+
+    // set answer in LocalDescription
     await pc.setLocalDescription(answer);
 
     // 5. Send answer back to caller
@@ -222,11 +231,6 @@ const Page = () => {
         },
       })
     );
-
-    // mark call as accepted
-    
-    console.log("isCallAccepted", isCallAccepted);
-    console.log("pc", pc);
   };
 
   // handleReject
@@ -235,8 +239,8 @@ const Page = () => {
     pcRef.current?.close();
     pcRef.current = null;
 
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    streamRef.current = null;
+    localStreamRef.current?.getTracks().forEach((track) => track.stop());
+    localStreamRef.current = null;
 
     if (localVideoRef.current) localVideoRef.current.srcObject = null;
     if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
@@ -245,8 +249,6 @@ const Page = () => {
     setIncomingCall(false);
     setIsCallAccepted(false);
     setIsCallModal(false);
-
-    // Optionally, send reject message via socket if your backend supports it
   };
 
   // Fetch Messages
@@ -473,12 +475,16 @@ const Page = () => {
     divRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // localStreaming
   useEffect(() => {
-    if ((isCallStart || isCallAccepted) && localVideoRef.current && streamRef.current) {
-      localVideoRef.current.srcObject = streamRef.current;
+    if (
+      (isCallStart || isCallAccepted) &&
+      localVideoRef.current &&
+      localStreamRef.current
+    ) {
+      localVideoRef.current.srcObject = localStreamRef.current;
     }
   }, [isCallStart, isCallAccepted]);
-  
 
   // Handle Enter Key for Sending Message
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -607,33 +613,53 @@ const Page = () => {
 
       {/* video */}
       {(isCallStart || isCallAccepted) && (
-        <div className="absolute top-10 right-10 left-10 bottom-10 z-20 flex flex-col gap-2">
-          <video ref={localVideoRef} autoPlay playsInline muted></video>
-          <video ref={remoteVideoRef} autoPlay playsInline></video>
+        <div className="absolute top-10 right-10 left-10 bottom-10 z-20 flex items-center justify-center bg-black rounded-2xl shadow-2xl overflow-hidden">
+          {/* Remote Video (full screen) */}
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="w-full h-full object-cover"
+          ></video>
+
+          {/* Local Video (small overlay) */}
+          <video
+            ref={localVideoRef}
+            autoPlay
+            playsInline
+            muted
+            className="absolute bottom-4 right-4 w-20 h-24 rounded-xl border-2 border-white shadow-lg object-cover"
+          ></video>
         </div>
       )}
 
-      {isCallModal && !isCallAccepted && (
-        <div className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-18 shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit">
-          <button
-            onClick={handleAccept}
-            className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold"
+      {/* accept/ decline */}
+      <AnimatePresence mode="wait">
+        {isCallModal && !isCallAccepted && (
+          <motion.div
+            className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-18 shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit"
+            initial={{ y: -20 }}
+            animate={{ y: 72 }}
+            exit={{ y: -20 }}
+            transition={{ duration: 0.3 }}
           >
-            Accept
-          </button>
-          <button
-            onClick={handleReject}
-            className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold"
-          >
-            Decline
-          </button>
-        </div>
-      )}
-      {/* <div className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-[300px] shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit">
-            <button onClick={handleAccept} className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold">Accept</button>
-            <button onClick={handleReject} className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold">Decline</button>
-        </div> */}
+            <button
+              onClick={handleAccept}
+              className="cursor-pointer px-3 py-2 rounded-2xl bg-green-800 text-white text-xs font-semibold"
+            >
+              Accept
+            </button>
+            <button
+              onClick={handleReject}
+              className="cursor-pointer px-3 py-2 rounded-2xl bg-red-500 text-slate-900 text-xs font-semibold"
+            >
+              Decline
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      {/* sendMoneyModal */}
       {modalData && (
         <SendMoneyModal
           modalData={modalData}
