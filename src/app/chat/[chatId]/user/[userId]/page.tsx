@@ -252,6 +252,35 @@ const Page = () => {
     setIsCallModal(false);
   };
 
+  // handleCallEnd
+  const handleCallEnd = () => {
+    // 1. Stop local media tracks
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach((track) => track.stop());
+      localStreamRef.current = null;
+    }
+  
+    // 2. Close the PeerConnection
+    if (pcRef.current) {
+      pcRef.current.close();
+      pcRef.current = null;
+    }
+  
+    // 3. Reset video refs
+    if (localVideoRef.current) {
+      localVideoRef.current.srcObject = null;
+    }
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = null;
+    }
+  
+    // 5. Reset UI states
+    setIsCallStart(false);
+    setIsCallAccepted(false);
+    setIncomingOffer(null);
+    setIsCallModal(false);
+  };
+
   // Fetch Messages
   const fetchMessages = async () => {
     setLoading(true);
@@ -634,7 +663,7 @@ const Page = () => {
 
           {/* call managing */}
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-4">
-            <button className="bg-red-600 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-3 py-[6px]">
+            <button onClick={handleCallEnd} className="bg-red-600 text-lg text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-3 py-[6px]">
               <SlCallEnd />
             </button>
             {/* <button className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-700">
