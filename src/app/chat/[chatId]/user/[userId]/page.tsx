@@ -567,10 +567,18 @@ const Page = () => {
 
   useEffect(() => {
     if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = localStreamRef.current;
+      if(isRemote) {
+        remoteVideoRef.current.srcObject = remoteStreamRef.current;
+      } else {
+        remoteVideoRef.current.srcObject = localStreamRef.current;
+      }
     }
     if (localVideoRef.current) {
-      localVideoRef.current.srcObject = remoteStreamRef.current;
+      if(isRemote) {
+        localVideoRef.current.srcObject = localStreamRef.current;
+      } else {
+        localVideoRef.current.srcObject = remoteStreamRef.current;
+      }
     }
   }, [isRemote, remoteStreamRef, localStreamRef]);
   
@@ -696,7 +704,7 @@ const Page = () => {
         <div className="absolute top-0 right-0 left-0 bottom-1 z-20 flex items-center justify-center rounded-sm shadow-2xl overflow-hidden">
           {/* Remote Video (full screen) */}
           <video
-            ref={ isRemote ? remoteVideoRef : localVideoRef }
+            ref={ remoteVideoRef }
             autoPlay
             playsInline
             className="w-full h-full object-cover z-30"
@@ -705,7 +713,7 @@ const Page = () => {
           {/* Local Video (small overlay) */}
           <video
             onClick={() => setIsRemote((prev:any)=> !prev)}
-            ref={ isRemote ? localVideoRef : remoteVideoRef }
+            ref={ localVideoRef }
             autoPlay
             playsInline
             muted
