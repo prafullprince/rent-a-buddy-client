@@ -82,7 +82,7 @@ const Page = () => {
   const [incomingOffer, setIncomingOffer] = useState<any>(null);
   const [isCallModal, setIsCallModal] = useState(false);
   const [isRemote, setIsRemote] = useState(true);
-
+  console.log("isRemote", isRemote);
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
     const pc = new RTCPeerConnection();
@@ -703,7 +703,7 @@ const Page = () => {
           ></video>
 
           {/* call managing */}
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-4">
+          <div className="absolute top-4 z-50 left-1/2 transform -translate-x-1/2 flex gap-4">
             <button
               onClick={handleCallEnd}
               className="bg-red-600 text-xl text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-4 py-[10px]"
