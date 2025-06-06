@@ -57,9 +57,6 @@ const Page = () => {
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
   const remoteStreamRef = useRef<MediaStream | null>(null);
-  // temp holder for dynamic ref assignment
-  const remoteRef = useRef<HTMLVideoElement>(null);
-  const localRef = useRef<HTMLVideoElement>(null);
 
   const RECONNECT_INTERVAL = 3000;
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -568,6 +565,16 @@ const Page = () => {
     }
   };
 
+  useEffect(() => {
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = localStreamRef.current;
+    }
+    if (localVideoRef.current) {
+      localVideoRef.current.srcObject = remoteStreamRef.current;
+    }
+  }, [isRemote, remoteStreamRef, localStreamRef]);
+  
+
   return (
     <motion.div
       className="flex flex-col items-start rounded-xl max-w-full relative"
@@ -689,11 +696,7 @@ const Page = () => {
         <div className="absolute top-0 right-0 left-0 bottom-1 z-20 flex items-center justify-center rounded-sm shadow-2xl overflow-hidden">
           {/* Remote Video (full screen) */}
           <video
-            ref={(el) => {
-              remoteRef.current = el;
-              if (isRemote) remoteVideoRef.current = el;
-              else localVideoRef.current = el;
-            }}
+            ref={ isRemote ? remoteVideoRef : localVideoRef }
             autoPlay
             playsInline
             className="w-full h-full object-cover z-30"
@@ -701,16 +704,12 @@ const Page = () => {
 
           {/* Local Video (small overlay) */}
           <video
-            onClick={() => setIsRemote((prev) => !prev)}
-            ref={(el) => {
-              localRef.current = el;
-              if (isRemote) localVideoRef.current = el;
-              else remoteVideoRef.current = el;
-            }}
+            onClick={() => setIsRemote((prev:any)=> !prev)}
+            ref={ isRemote ? localVideoRef : remoteVideoRef }
             autoPlay
             playsInline
             muted
-            className="absolute bottom-4 right-4 w-32 h-36 lg:w-40 lg:h-44 rounded-xl border-1 border-slate-300 shadow-xl object-cover z-40"
+            className="absolute bottom-4 right-4 w-36 h-40 lg:w-40 lg:h-44 rounded-xl border-1 border-slate-300 shadow-xl object-cover z-40"
           ></video>
 
           {/* call managing */}
