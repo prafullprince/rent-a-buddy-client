@@ -57,6 +57,9 @@ const Page = () => {
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
   const remoteStreamRef = useRef<MediaStream | null>(null);
+  // temp holder for dynamic ref assignment
+  const remoteRef = useRef<HTMLVideoElement>(null);
+  const localRef = useRef<HTMLVideoElement>(null);
 
   const RECONNECT_INTERVAL = 3000;
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -683,10 +686,14 @@ const Page = () => {
 
       {/* video */}
       {(isCallStart || isCallAccepted) && (
-        <div className="absolute top-0 right-0 left-0 bottom-0 z-20 flex items-center justify-center rounded-2xl shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 left-0 bottom-1 z-20 flex items-center justify-center rounded-sm shadow-2xl overflow-hidden">
           {/* Remote Video (full screen) */}
           <video
-            ref={ isRemote ? remoteVideoRef : localVideoRef }
+            ref={(el) => {
+              remoteRef.current = el;
+              if (isRemote) remoteVideoRef.current = el;
+              else localVideoRef.current = el;
+            }}
             autoPlay
             playsInline
             className="w-full h-full object-cover z-30"
@@ -694,12 +701,16 @@ const Page = () => {
 
           {/* Local Video (small overlay) */}
           <video
-            onClick={() => setIsRemote((prev:any)=> !prev)}
-            ref={ isRemote ? localVideoRef : remoteVideoRef }
+            onClick={() => setIsRemote((prev) => !prev)}
+            ref={(el) => {
+              localRef.current = el;
+              if (isRemote) localVideoRef.current = el;
+              else remoteVideoRef.current = el;
+            }}
             autoPlay
             playsInline
             muted
-            className="absolute bottom-4 right-4 w-32 h-36 lg:w-40 lg:h-44 rounded-xl border-2 border-slate-400 shadow-xl object-cover z-40"
+            className="absolute bottom-4 right-4 w-32 h-36 lg:w-40 lg:h-44 rounded-xl border-1 border-slate-300 shadow-xl object-cover z-40"
           ></video>
 
           {/* call managing */}
