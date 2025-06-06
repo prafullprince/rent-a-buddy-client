@@ -23,6 +23,7 @@ const Layout = ({ children }: { children: any }) => {
   const [allChat, setAllChat] = useState<any>([]);
   const [userDetails, setUserDetails] = useState<any>({});
   const [chatLoading, setChatLoading] = useState(false);
+  const [numOfUnseenMessages, setNumOfUnseenMessages] = useState<any[]>([]);
 
   // fetchUserDetails
   const fetchUserDetails = async () => {
@@ -32,6 +33,21 @@ const Layout = ({ children }: { children: any }) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  // Get unseen messages
+  const getUnseenMessages = () => {
+    if (!socketref.current || socketref.current.readyState !== WebSocket.OPEN)
+      return;
+    if (!userDetails?._id || allChat.length === 0) return;
+
+    const chatIds = allChat.map((chat: any) => chat._id);
+    socketref.current.send(
+      JSON.stringify({
+        type: "unseenMessageOfParticularChatIdOfUser",
+        payload: { userId: userDetails._id, chatIds },
+      })
+    );
   };
 
   // sideEffect
@@ -51,6 +67,7 @@ const Layout = ({ children }: { children: any }) => {
       socketref.current = socket;
       setChatLoading(true);
 
+      // onopen
       socket.onopen = () => {
         console.log("✅ WebSocket connected");
 
@@ -58,6 +75,7 @@ const Layout = ({ children }: { children: any }) => {
         pingIntervalRef.current = setInterval(() => {
           if (socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: "ping" }));
+            getUnseenMessages();
           }
         }, PING_INTERVAL);
 
@@ -78,6 +96,7 @@ const Layout = ({ children }: { children: any }) => {
         );
       };
 
+      // onclose
       socket.onclose = (event) => {
         console.log("❌ WebSocket closed", event.reason || event.code);
 
@@ -96,17 +115,28 @@ const Layout = ({ children }: { children: any }) => {
         }
       };
 
+      // onerror
       socket.onerror = (error) => {
         console.error("WebSocket error:", error);
       };
 
+      // onmessage
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
+
+        // fetchUserAllChats
         if (data?.type === "fetchUserAllChats") {
           setAllChat(data?.payload?.data);
           setChatLoading(false);
+          getUnseenMessages();
         }
 
+        // getUnseenMessage
+        if (data?.type === "numOfUnseenMessages") {
+          setNumOfUnseenMessages(data.payload);
+        }
+
+        // pong
         if (data?.type === "pong") {
           console.log("🏓 Pong received from server");
         }
@@ -115,6 +145,7 @@ const Layout = ({ children }: { children: any }) => {
 
     connectWebSocket();
 
+    // unmount
     return () => {
       if (socketref.current) {
         socketref.current.close();
@@ -122,9 +153,13 @@ const Layout = ({ children }: { children: any }) => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
+      if (pingIntervalRef.current) {
+        clearInterval(pingIntervalRef.current);
+      }
     };
   }, [userDetails?._id]);
 
+  // loading status
   if (status === "loading") {
     return (
       <div className="flex justify-center items-center py-6">
@@ -133,19 +168,21 @@ const Layout = ({ children }: { children: any }) => {
     );
   }
 
+  // unauthenticated
   if (status === "unauthenticated") {
     return redirect("/login");
   }
+
 
   return (
     <div className="bg-gray-100 backdrop-blur-sm flex justify-center items-center w-full max-w-full overflow-y-hidden">
       <div className="w-full sm:w-[90%] lg:w-[80%] mx-auto sm:pt-4 flex rounded-xl">
         <ChatSidebar
           allChat={allChat}
-          setAllChat={setAllChat}
           chatLoading={chatLoading}
-          openChatMobile={openChatMobile}
           sockty={socketref.current}
+          userDetails={userDetails}
+          numOfUnseenMessages={numOfUnseenMessages}
         />
         <div
           className={`sm:h-screen max-h-[100dvh] min-h-[100dvh] flex-1 max-w-full rounded-xl sm:block ${

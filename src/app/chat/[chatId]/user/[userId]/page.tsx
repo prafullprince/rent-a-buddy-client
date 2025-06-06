@@ -11,11 +11,17 @@ import {
 } from "@/service/apiCall/chat.api";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { redirect, useParams, usePathname, useRouter } from "next/navigation";
 import React, { memo, useEffect, useRef, useState } from "react";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import wspLogo from "../../../../../../public/assets/wssupLogo.png";
-import { IoArrowBackSharp, IoCallSharp, IoSendSharp } from "react-icons/io5";
+import {
+  IoArrowBackSharp,
+  IoCallOutline,
+  IoCallSharp,
+  IoSendSharp,
+  IoVideocamOutline,
+} from "react-icons/io5";
 import toast from "react-hot-toast";
 import SendMoneyModal from "@/components/Chat/SendMoneyModal";
 import Receiver from "@/components/Chat/Message/Receiver";
@@ -82,7 +88,7 @@ const Page = () => {
   const [incomingOffer, setIncomingOffer] = useState<any>(null);
   const [isCallModal, setIsCallModal] = useState(false);
   const [isRemote, setIsRemote] = useState(true);
-  console.log("isRemote", isRemote);
+
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
     const pc = new RTCPeerConnection();
@@ -427,6 +433,8 @@ const Page = () => {
 
       socket.onmessage = async (event) => {
         const data = JSON.parse(event.data);
+
+        // receive message
         if (data.type === "receiveMessage") {
           setMessages((prev) => [...prev, data.payload]);
           setMsgLoading(false);
@@ -437,12 +445,14 @@ const Page = () => {
           fetchMessages();
         }
 
+        // accept order
         if (data.type === "orderAccepted") {
           toast.success(data.payload.message);
           setRefreshButton((prev) => !prev);
           setAcceptLoading(false);
         }
 
+        // pong
         if (data?.type === "pong") {
           console.log("🏓 Pong received from server");
         }
@@ -565,67 +575,84 @@ const Page = () => {
     }
   };
 
+  // shift video
   useEffect(() => {
     if (remoteVideoRef.current) {
-      if(isRemote) {
+      if (isRemote) {
         remoteVideoRef.current.srcObject = remoteStreamRef.current;
       } else {
         remoteVideoRef.current.srcObject = localStreamRef.current;
       }
     }
     if (localVideoRef.current) {
-      if(isRemote) {
+      if (isRemote) {
         localVideoRef.current.srcObject = localStreamRef.current;
       } else {
         localVideoRef.current.srcObject = remoteStreamRef.current;
       }
     }
   }, [isRemote, remoteStreamRef, localStreamRef]);
-  
+
+  // on hard refresh
+  useEffect(() => {
+    // Check for hard reload or first load
+    const navEntries = window.performance.getEntriesByType(
+      "navigation"
+    ) as PerformanceNavigationTiming[];
+    const isHardRefresh =
+      navEntries.length > 0 && navEntries[0].type === "reload";
+
+    if (isHardRefresh) {
+      if (window.innerWidth < 640) {
+        dispatch(setOpenChatMobile(true));
+      }
+    }
+  }, [dispatch]);
 
   return (
     <motion.div
       className="flex flex-col items-start rounded-xl max-w-full relative"
-      initial={{ opacity: 0, y: -40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
       {/* Top Bar */}
-      <div className="h-16 px-2 py-2 flex items-center justify-between bg-gray-200 w-full sm:rounded-tr-xl">
+      <div className="h-16 px-1 py-2 flex items-center justify-between bg-slate-50 w-full sm:rounded-tr-xl">
         {/* left */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => {
-              // back to prev page
-              // router.back();
               dispatch(setOpenChatMobile(false));
               router.push("/chat");
             }}
             className="px-2 py-2 block sm:hidden"
           >
-            <IoArrowBackSharp className="text-2xl" />
+            <IoArrowBackSharp className="text-2xl text-slate-500" />
           </button>
-          <div className="flex items-center gap-2">
+
+          <div className="flex items-start gap-2 lg:gap-4">
             <Image
-              className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10 border-1 border-blue-300"
+              className="rounded-full min-w-8 min-h-8 max-h-8 max-w-8"
               alt="dp"
               src={otherUser?.image || fallbackImage}
               width={40}
               height={40}
               priority
             />
-            <div>{otherUser?.username}</div>
+            <div className="text-base font-medium text-black">
+              {otherUser?.username}
+            </div>
           </div>
         </div>
 
         {/* icon */}
         <div className="flex items-center gap-6 mr-4">
           <button className="cursor-pointer">
-            <IoCallSharp className="text-2xl text-slate-600" />
+            <IoCallOutline className="text-2xl text-slate-950" />
           </button>
 
           <button onClick={handleVideoCall} className="cursor-pointer">
-            <FaVideo className="text-2xl text-slate-600" />
+            <IoVideocamOutline className="text-3xl text-slate-900" />
           </button>
         </div>
       </div>
@@ -704,7 +731,7 @@ const Page = () => {
         <div className="absolute top-0 right-0 left-0 bottom-1 z-20 flex items-center justify-center rounded-sm shadow-2xl overflow-hidden">
           {/* Remote Video (full screen) */}
           <video
-            ref={ remoteVideoRef }
+            ref={remoteVideoRef}
             autoPlay
             playsInline
             className="w-full h-full object-cover z-30"
@@ -712,8 +739,8 @@ const Page = () => {
 
           {/* Local Video (small overlay) */}
           <video
-            onClick={() => setIsRemote((prev:any)=> !prev)}
-            ref={ localVideoRef }
+            onClick={() => setIsRemote((prev: any) => !prev)}
+            ref={localVideoRef}
             autoPlay
             playsInline
             muted
