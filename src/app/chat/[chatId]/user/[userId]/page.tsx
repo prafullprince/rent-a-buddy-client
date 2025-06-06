@@ -79,7 +79,6 @@ const Page = () => {
   const [isCallStart, setIsCallStart] = useState(false);
   const [isIncomingCall, setIncomingCall] = useState(false);
   const [isCallAccepted, setIsCallAccepted] = useState(false);
-
   const [incomingOffer, setIncomingOffer] = useState<any>(null);
   const [isCallModal, setIsCallModal] = useState(false);
 
@@ -126,12 +125,12 @@ const Page = () => {
   const handleVideoCall = async () => {
     if (!chatId || !userDetails?._id || !socketRef.current) return;
 
-    setIsCallStart(true);
-
+    // createPeerConnection
     const pc = setupPeerConnection();
 
     // Get local media stream and add to peer connection
     try {
+      setIsCallStart(true);
       // stream
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -148,6 +147,7 @@ const Page = () => {
       if (localVideoRef.current) localVideoRef.current.srcObject = stream;
     } catch (err) {
       console.error("Failed to get local media stream:", err);
+      setIsCallStart(false);
       return;
     }
 
@@ -259,13 +259,13 @@ const Page = () => {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
       localStreamRef.current = null;
     }
-  
+
     // 2. Close the PeerConnection
     if (pcRef.current) {
       pcRef.current.close();
       pcRef.current = null;
     }
-  
+
     // 3. Reset video refs
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = null;
@@ -273,8 +273,18 @@ const Page = () => {
     if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = null;
     }
-  
-    // 5. Reset UI states
+
+    // 5. end from other user too
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          type: "endCall",
+          payload: { chatId, userId: userId },
+        })
+      );
+    }
+
+    // 6. Reset UI states
     setIsCallStart(false);
     setIsCallAccepted(false);
     setIncomingOffer(null);
@@ -436,13 +446,13 @@ const Page = () => {
           console.log("🏓 Pong received from server");
         }
 
-        // on receiver from sender -> incoming call
+        // --- createOffer ---
         if (data.type === "createOffer") {
           setIncomingOffer(data.payload);
           setIsCallModal(true);
         }
 
-        // on sender from receiver -> call accepted
+        // --- createAnswer ---
         if (data.type === "createAnswer") {
           if (pcRef.current) {
             // const sdp = data.payload;
@@ -451,10 +461,39 @@ const Page = () => {
           }
         }
 
-        // add-ice-candidate
+        // --- add-ice-candidate ---
         if (data.type === "add-ice-candidate") {
           // const { candidate } = data.payload;
           pcRef.current?.addIceCandidate(data.payload);
+        }
+
+        // --- endCall ---
+        if (data.type === "endCall") {
+          // 1. Stop local media tracks
+          if (localStreamRef.current) {
+            localStreamRef.current.getTracks().forEach((track) => track.stop());
+            localStreamRef.current = null;
+          }
+
+          // 2. Close the PeerConnection
+          if (pcRef.current) {
+            pcRef.current.close();
+            pcRef.current = null;
+          }
+
+          // 3. Reset video refs
+          if (localVideoRef.current) {
+            localVideoRef.current.srcObject = null;
+          }
+          if (remoteVideoRef.current) {
+            remoteVideoRef.current.srcObject = null;
+          }
+
+          // 6. Reset UI states
+          setIsCallStart(false);
+          setIsCallAccepted(false);
+          setIncomingOffer(null);
+          setIsCallModal(false);
         }
       };
     };
@@ -663,7 +702,10 @@ const Page = () => {
 
           {/* call managing */}
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-4">
-            <button onClick={handleCallEnd} className="bg-red-600 text-lg text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-3 py-[6px]">
+            <button
+              onClick={handleCallEnd}
+              className="bg-red-600 text-lg text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-3 py-[6px]"
+            >
               <SlCallEnd />
             </button>
             {/* <button className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-700">
