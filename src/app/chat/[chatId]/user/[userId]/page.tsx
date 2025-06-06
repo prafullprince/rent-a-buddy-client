@@ -392,8 +392,8 @@ const Page = () => {
           JSON.stringify({
             type: "register",
             payload: {
-              userId: userDetails?._id,
               chatId: chatId,
+              userId: userDetails?._id,
             },
           })
         );
@@ -523,7 +523,7 @@ const Page = () => {
       }
       socket.onmessage = null;
     };
-  }, [chatId, userDetails?._id]);
+  }, [chatId, userDetails?._id, pathName]);
 
   // open chat and close chat
   useEffect(() => {
