@@ -81,6 +81,7 @@ const Page = () => {
   const [isCallAccepted, setIsCallAccepted] = useState(false);
   const [incomingOffer, setIncomingOffer] = useState<any>(null);
   const [isCallModal, setIsCallModal] = useState(false);
+  const [isRemote, setIsRemote] = useState(true);
 
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
@@ -682,29 +683,30 @@ const Page = () => {
 
       {/* video */}
       {(isCallStart || isCallAccepted) && (
-        <div className="absolute top-10 right-10 left-10 bottom-10 z-20 flex items-center justify-center rounded-2xl shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 left-0 bottom-0 z-20 flex items-center justify-center rounded-2xl shadow-2xl overflow-hidden">
           {/* Remote Video (full screen) */}
           <video
-            ref={remoteVideoRef}
+            ref={ isRemote ? remoteVideoRef : localVideoRef }
             autoPlay
             playsInline
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover z-30"
           ></video>
 
           {/* Local Video (small overlay) */}
           <video
-            ref={localVideoRef}
+            onClick={() => setIsRemote((prev:any)=> !prev)}
+            ref={ isRemote ? localVideoRef : remoteVideoRef }
             autoPlay
             playsInline
             muted
-            className="absolute bottom-4 right-4 w-32 h-36 lg:w-40 lg:h-44 rounded-xl border-2 border-white shadow-lg object-cover"
+            className="absolute bottom-4 right-4 w-32 h-36 lg:w-40 lg:h-44 rounded-xl border-2 border-slate-400 shadow-xl object-cover z-40"
           ></video>
 
           {/* call managing */}
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-4">
             <button
               onClick={handleCallEnd}
-              className="bg-red-600 text-lg text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-3 py-[6px]"
+              className="bg-red-600 text-xl text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-4 py-[10px]"
             >
               <SlCallEnd />
             </button>
@@ -719,9 +721,9 @@ const Page = () => {
       <AnimatePresence mode="wait">
         {isCallModal && !isCallAccepted && (
           <motion.div
-            className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-18 shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit"
+            className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-12 shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit"
             initial={{ y: -20 }}
-            animate={{ y: 72 }}
+            animate={{ y: 48 }}
             exit={{ y: -20 }}
             transition={{ duration: 0.3 }}
           >
