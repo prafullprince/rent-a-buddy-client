@@ -88,6 +88,7 @@ const Page = () => {
   const [incomingOffer, setIncomingOffer] = useState<any>(null);
   const [isCallModal, setIsCallModal] = useState(false);
   const [isRemote, setIsRemote] = useState(true);
+  const [isAudioCall, setIsAudioCall] = useState(false);
 
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
@@ -130,7 +131,7 @@ const Page = () => {
 
   // handleVideoCall
   const handleVideoCall = async () => {
-    if (!chatId || !userDetails?._id || !socketRef.current) return;
+    if (!chatId || !userDetails?._id || !socketRef.current || isAudioCall) return;
 
     // createPeerConnection
     const pc = setupPeerConnection();
@@ -186,6 +187,56 @@ const Page = () => {
     };
   };
 
+  // handleAudioCall
+  const handleAudioCall = async () => {
+    if (!chatId || !userDetails?._id || !socketRef.current || !isAudioCall) return;
+    setIsAudioCall(true);
+
+    // Create PeerConnection
+    const pc = setupPeerConnection(); // setup ICE, ontrack, etc.
+
+    // Get local media (mic + camera)
+    try {
+      // stream
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video:false,
+        audio: true
+      });
+
+      // save stream in localStreamRef
+      localStreamRef.current = stream;
+
+      // Add tracks to PeerConnection
+      stream.getTracks().forEach((track)=> pc.addTrack(track, stream));
+
+      // Show local video
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    // When negotiation needed, create and send offer
+    pc.onnegotiationneeded = async () => {
+      try {
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        socketRef.current?.send(
+          JSON.stringify({
+            type: "createOffer",
+            payload: {
+              chatId,
+              userId: userDetails?._id,
+              offer: pc.localDescription,
+            },
+          })
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    } 
+  }
   
   // handleAccept
   const handleAccept = async () => {
@@ -648,7 +699,7 @@ const Page = () => {
 
         {/* icon */}
         <div className="flex items-center gap-6 mr-4">
-          <button className="cursor-pointer">
+          <button onClick={handleAudioCall} className="cursor-pointer">
             <IoCallOutline className="text-2xl text-slate-950" />
           </button>
 
@@ -728,7 +779,7 @@ const Page = () => {
       </div>
 
       {/* video */}
-      {(isCallStart || isCallAccepted) && (
+      {(isCallStart || isCallAccepted) && !isAudioCall && (
         <div className="absolute top-0 right-0 left-0 bottom-1 z-20 flex items-center justify-center rounded-sm shadow-2xl overflow-hidden">
           {/* Remote Video (full screen) */}
           <video
@@ -747,6 +798,32 @@ const Page = () => {
             muted
             className="absolute bottom-4 right-4 w-36 h-40 lg:w-40 lg:h-44 rounded-xl border-1 border-slate-300 shadow-xl object-cover z-40"
           ></video>
+
+          {/* call managing */}
+          <div className="absolute top-4 z-50 left-1/2 transform -translate-x-1/2 flex gap-4">
+            <button
+              onClick={handleCallEnd}
+              className="bg-red-600 text-xl text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-4 py-[10px]"
+            >
+              <SlCallEnd />
+            </button>
+            {/* <button className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-700">
+              <MicIcon />
+            </button> */}
+          </div>
+        </div>
+      )}
+
+      {/* audio */}
+      {(isCallStart || isCallAccepted) && isAudioCall && (
+        <div className="absolute top-0 right-0 left-0 bottom-1 z-20 flex items-center justify-center rounded-sm shadow-2xl overflow-hidden">
+          {/* Remote audio (full screen) */}
+          <audio
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="w-full h-full object-cover z-30 bg-slate-200"
+          ></audio>
 
           {/* call managing */}
           <div className="absolute top-4 z-50 left-1/2 transform -translate-x-1/2 flex gap-4">
