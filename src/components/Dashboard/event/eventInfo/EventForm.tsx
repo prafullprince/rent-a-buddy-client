@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import "@/styles/globals.css";
 import { useDispatch, useSelector } from "react-redux";
-import { setEvent, setStep } from "@/redux/slice/event.slice";
+import { setEditService, setEvent, setStep } from "@/redux/slice/event.slice";
 import Image from "next/image";
 
 // EventForm
@@ -88,6 +88,8 @@ const EventForm = () => {
             const result = await editEventApi(formData, session?.serverToken);
             if (result) {
               dispatch(setStep(2));
+              dispatch(setEditService(true));
+              // dispatch(setEvent(result));
             }
           } catch (error) {
             console.log("error in editEventHandler", error);
@@ -110,6 +112,7 @@ const EventForm = () => {
     try {
       const result = await createEvent(formdata, session?.serverToken);
       dispatch(setStep(2));
+      dispatch(setEditService(true));
       dispatch(setEvent(result));
     } catch (error) {
       console.log("error in createEvent", error);
@@ -259,15 +262,16 @@ const EventForm = () => {
               <div className="flex items-center gap-2">
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-black text-white text-lg cursor-pointer font-semibold"
+                  className="px-3 py-2 rounded-md bg-black text-white text-sm cursor-pointer font-semibold"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => {
+                    dispatch(setEditService(true));
                     dispatch(setStep(2));
                   }}
-                  className="px-4 py-2 rounded-lg bg-yellow-400 text-black text-lg cursor-pointer font-semibold"
+                  className="px-3 py-2 rounded-md bg-yellow-400 text-black text-sm cursor-pointer font-semibold"
                 >
                   Next
                 </button>

@@ -35,6 +35,8 @@ export const eventEndPoints = {
     EVENT_BY_ID: BASE_URL + "/event/getEventById",
     ALL_EVENTS: BASE_URL + "/event/availableEvents",
     MARK_AS_ACTIVE_INACTIVE: BASE_URL + "/event/markAsActiveInactive",
+    EDIT_SERVICE: BASE_URL + "/event/editService",
+    SERVICE_OF_PARTICULAR_EVENT: BASE_URL + "/event/serviceOfParticularEvent",
 }
 
 // category

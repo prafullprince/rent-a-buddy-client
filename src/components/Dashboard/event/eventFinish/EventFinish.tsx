@@ -55,7 +55,7 @@ const EventFinish = () => {
     <div className="w-full">
       {/* heading */}
       <div className="">
-        <h2 className="text-xl font-semibold text-black">Event Finish</h2>
+        <h2 className="text-xl font-semibold text-[#e11313]">Event Finish</h2>
       </div>
 
       {/* event */}

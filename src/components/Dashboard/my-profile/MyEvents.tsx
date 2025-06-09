@@ -7,7 +7,7 @@ import {
   markAsActiveInactive,
 } from "@/service/apiCall/event.api";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { setEditEvent, setEvent, setStep } from "@/redux/slice/event.slice";
 import EventOverlayCard from "@/components/HomePage/EventOverlayCard";
 import { FiEdit } from "react-icons/fi";
@@ -26,6 +26,7 @@ const MyEvents = () => {
   const [eventDetails, setEventDetails] = useState<any>(null);
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
+  console.log("eventDetails", eventDetails);
 
   // fetch eventSummaryOfUser
   const fetchEventSummary = async () => {
@@ -113,4 +114,4 @@ const MyEvents = () => {
   );
 };
 
-export default MyEvents;
+export default memo(MyEvents);

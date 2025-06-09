@@ -8,6 +8,7 @@ interface eventState {
   event: any;
   editEvent: boolean;
   isOpen: boolean;
+  editService: boolean;
 }
 
 // initial state
@@ -16,6 +17,7 @@ const initialState: eventState = {
   event: null,
   editEvent: false,
   isOpen: false,
+  editService: false,
 };
 
 // create slice
@@ -35,8 +37,11 @@ const eventSlice = createSlice({
     setIsOpen(state: any) {
       state.isOpen = !state.isOpen;
     },
+    setEditService(state: any, action: PayloadAction<boolean>) {
+      state.editService = action.payload;
+    },
   },
 });
 
-export const { setStep, setEvent, setEditEvent, setIsOpen } = eventSlice.actions;
+export const { setStep, setEvent, setEditEvent, setIsOpen, setEditService } = eventSlice.actions;
 export default eventSlice.reducer;

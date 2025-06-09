@@ -22,9 +22,9 @@ const UserDetails = async () => {
           <Image
             src={userDetails?.image}
             alt="profile"
-            width={100}
-            height={100}
-            className="rounded-full min-w-28 min-h-28 max-w-28 max-h-28"
+            width={40}
+            height={40}
+            className="rounded-full min-w-24 min-h-24 max-w-24 max-h-24"
           />
 
           <div className="flex flex-col items-start gap-1 text-wrap break-words">

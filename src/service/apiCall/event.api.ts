@@ -79,6 +79,30 @@ export const createServiceApi = async (selectedData:any,token:any) => {
   }
 };
 
+// editServiceApi
+export const editServiceApi = async (selectedData:any,token:any) => {
+  const tid = toast.loading("Editing service...");
+  try {
+    // apiCall
+    const response = await apiConnector("POST", eventEndPoints.EDIT_SERVICE,selectedData, {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    });
+    toast.success("Success");
+    return response;
+  } catch (error:any) {
+    console.log("createService error is:",error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+    return error;
+  } finally {
+    toast.dismiss(tid);
+  }
+};
+
 // eventSummary
 export const eventSummary = async (eventId:any,token:any) => {
   try {
@@ -135,6 +159,26 @@ export const eventSummaryOfUser = async (token:any) => {
     });
 
     return response.data.data.data[0];
+  } catch (error:any) {
+    console.log(error);
+    if (error.response?.status === 429) {
+      toast.error(error?.response?.data?.message || "Too many requests, please try again later");
+    } else {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+    return error;
+  }
+};
+
+// serviceOfParticularEvent
+export const serviceOfParticularEvent = async (eventId:any,token:any) => {
+  try {
+    // apiCall
+    const response = await apiConnector("POST", eventEndPoints.SERVICE_OF_PARTICULAR_EVENT,{eventId}, {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    });
+    return response.data.data;
   } catch (error:any) {
     console.log(error);
     if (error.response?.status === 429) {

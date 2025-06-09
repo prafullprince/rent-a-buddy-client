@@ -4,14 +4,16 @@ import Image from "next/image";
 import React from "react";
 import { MdDescription } from "react-icons/md";
 import { PiCurrencyInr } from "react-icons/pi";
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from "framer-motion";
+import { memo } from "react";
 
 // Box
 const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
+  console.log("selectedDataInsideBox", selectedData);
   // Check if subcategory is selected
   const isSelected = (subCategoryId: string) => {
-    return selectedData.serviceData.some((service: any) =>
-      service.subCategories.some((sub: any) => sub.id === subCategoryId)
+    return selectedData?.serviceData?.some((service: any) =>
+      service?.subCategories?.some((sub: any) => sub.id === subCategoryId)
     );
   };
 
@@ -101,7 +103,6 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
             <div className="flex flex-col gap-2">
               {/* Topbar */}
               <div className="flex gap-4 items-center justify-between">
-
                 {/* Image, name */}
                 <div className="flex items-center gap-3 mt-2">
                   {/* Image */}
@@ -126,11 +127,22 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                   onClick={() =>
                     handleSelect(selectedCategory._id, subCategory)
                   }
-                  className={`flex items-center justify-center min-w-7 min-h-7 max-w-7 max-h-7 border-2 border-black cursor-pointer ${
+                  className={`flex items-center justify-center min-w-7 min-h-7 max-w-7 max-h-7 border-1 border-slate-400 cursor-pointer rounded-sm ${
                     isChecked ? "bg-black text-white font-semibold" : "bg-white"
                   }`}
                 >
-                  {isChecked && "✔"}
+                  <AnimatePresence>
+                    {isChecked && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        ✔
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
@@ -147,11 +159,11 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                   <input
                     type="number"
                     placeholder="Set price"
-                    className="py-2 outline-none w-full text-xs md:text-lg"
+                    className="py-2 outline-none w-full text-xs md:text-sm"
                     value={
                       selectedData.serviceData
-                        .find((s: any) => s.id === selectedCategory._id)
-                        ?.subCategories.find(
+                        ?.find((s: any) => s.id === selectedCategory._id)
+                        ?.subCategories?.find(
                           (sub: any) => sub.id === subCategory._id
                         )?.price || ""
                     }
@@ -164,7 +176,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                       )
                     }
                   />
-                  <span className="text-xs md:text-lg pr-2 text-gray-500">
+                  <span className="text-xs md:text-sm pr-2 text-gray-500">
                     /hr
                   </span>
                 </div>
@@ -175,12 +187,12 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                   <input
                     type="text"
                     placeholder="Edit description"
-                    className="py-2 outline-none w-full text-xs md:text-lg"
+                    className="py-2 outline-none w-full text-xs md:text-sm"
                     value={
                       selectedData.serviceData
-                        .find((s: any) => s.id === selectedCategory._id)
-                        ?.subCategories.find(
-                          (sub: any) => sub.id === subCategory._id
+                        ?.find((s: any) => s.id === selectedCategory?._id)
+                        ?.subCategories?.find(
+                          (sub: any) => sub.id === subCategory?._id
                         )?.about || ""
                     }
                     onChange={(e) =>
@@ -202,4 +214,4 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
   );
 };
 
-export default Box;
+export default memo(Box);

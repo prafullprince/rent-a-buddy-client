@@ -159,6 +159,9 @@ const Navbar = () => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
+      if (pingIntervalRef.current) {
+        clearInterval(pingIntervalRef.current);
+      }
     };
   }, [session, userDetails?._id]);
 
@@ -188,6 +191,8 @@ const Navbar = () => {
 
         {/* buttons */}
         <div className="flex items-center gap-4 sm:gap-6">
+
+          {/* loading */}
           <div className="pr-6">
             {!session && status === "loading" && (
               <div className="flex justify-center items-center py-6">
@@ -195,6 +200,7 @@ const Navbar = () => {
               </div>
             )}
           </div>
+
           {/* Be Buddy */}
           {session && session?.accountType !== "Buddy" && (
             <div className="border-0 rounded-full cursor-pointer bg-black text-white md:px-4 px-2 py-[8px] flex items-center gap-2 hover:shadow-md hover:shadow-black duration-300 transition-all">
@@ -204,11 +210,6 @@ const Navbar = () => {
               <p className="text-sm font-medium hidden md:block">Be a Buddy</p>
             </div>
           )}
-
-          {/* Category Icon
-          <div>
-            <TbCategoryPlus className="text-3xl cursor-pointer" />
-          </div> */}
 
           {/* chat */}
           {session && status === "authenticated" && (
@@ -249,29 +250,29 @@ const Navbar = () => {
               <AnimatePresence>
                 {isOpen && (
                   <motion.div
-                    className="absolute top-16 right-0 shadow-xl rounded-lg p-2 w-[120px] z-[1000] bg-slate-100 text-slate-700 hover:text-slate-900 duration-300 transition-all text-sm font-semibold"
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, y: 0, x: 0 }}
-                    transition={{ duration: 0.3 }}
+                    className="absolute top-16 right-0 shadow-xl rounded-lg p-2 w-fit z-[1000] bg-slate-100 text-slate-700 hover:text-slate-900 duration-300 transition-all text-sm font-semibold"
+                    initial={{ opacity: 0, y: -30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.1 }}
                     exit={{ opacity: 0, y: -50 }}
                     key={"dropdown"}
                   >
                     <div
                       ref={dropdownRef}
-                      className="flex flex-col gap-2 items-start px-1 py-1"
+                      className="flex flex-col gap-3 items-start px-2 py-[6px]"
                     >
                       <Link
                         href={"/dashboard/my-profile"}
                         className="cursor-pointer flex items-center gap-1"
                       >
-                        <RiDashboardHorizontalFill className="text-lg" />
+                        <RiDashboardHorizontalFill className="text-xl" />
                         Dashboard
                       </Link>
                       <button
                         className="cursor-pointer flex items-center gap-1"
                         onClick={() => signOut()}
                       >
-                        <RiLogoutBoxFill className="text-lg font-semibold" />
+                        <RiLogoutBoxFill className="text-xl font-semibold" />
                         Logout
                       </button>
                     </div>
