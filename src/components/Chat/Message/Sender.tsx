@@ -13,6 +13,7 @@ const Sender = ({
   socketRef,
   setModalData,
   session,
+  seenMessage,
 }: any) => {
   return (
     <>
@@ -31,10 +32,14 @@ const Sender = ({
               } w-0 h-0 rotate-90 translate-x-2 translate-y-0`}
             ></div>
             {msg?.type === "text" ? (
-              <div className="pr-13 pb-2 break-words text-wrap text-sm">{msg.text}</div>
+              <div className="pr-13 pb-2 break-words text-wrap text-sm">
+                {msg.text}
+              </div>
             ) : (
               <div
-                className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6 break-words text-wrap`}
+                className={`${
+                  msg?.type === "text" ? "pr-14" : "pr-0"
+                } pb-6 break-words text-wrap`}
               >
                 <div className="flex flex-col gap-2">
                   {/* topbar */}
@@ -263,11 +268,21 @@ const Sender = ({
             </span>
 
             {/* checkMark */}
-            <span className="absolute right-1 bottom-1">
-              <IoMdDoneAll
-                className={msg.isSeen ? "text-blue-500" : "text-gray-500"}
-              />
-            </span>
+            {seenMessage ? (
+              <>
+                <span className="absolute right-1 bottom-1">
+                  <IoMdDoneAll className={"text-blue-500"} />
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="absolute right-1 bottom-1">
+                  <IoMdDoneAll
+                    className={msg.isSeen ? "text-blue-500" : "text-gray-500"}
+                  />
+                </span>
+              </>
+            )}
           </div>
         </div>
       )}

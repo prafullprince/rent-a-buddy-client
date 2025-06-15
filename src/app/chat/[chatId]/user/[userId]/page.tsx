@@ -90,6 +90,9 @@ const Page = () => {
   const [isRemote, setIsRemote] = useState(true);
   const [isAudioCall, setIsAudioCall] = useState(false);
 
+
+  const [seenMessage, setSeenMessage] = useState(false);
+
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
     const pc = new RTCPeerConnection();
@@ -509,6 +512,11 @@ const Page = () => {
           console.log("🏓 Pong received from server");
         }
 
+        // markAsReadYourMessage
+        if (data?.type === "markAsReadYourMessage") {
+          setSeenMessage(true);
+        }
+
         // --- createOffer ---
         if (data.type === "createOffer") {
           setIncomingOffer(data.payload);
@@ -749,6 +757,7 @@ const Page = () => {
                       socketRef={socketRef}
                       setModalData={setModalData}
                       session={session}
+                      seenMessage={seenMessage}
                     />
                   </div>
                 ))}
