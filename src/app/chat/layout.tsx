@@ -10,22 +10,33 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 const Layout = ({ children }: { children: any }) => {
-  // hooks
   const { data: session, status } = useSession();
   const socketref = useRef<WebSocket | null>(null);
   const RECONNECT_INTERVAL = 3000;
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const PING_INTERVAL = 25000; // 25 seconds
+  const PING_INTERVAL = 25000;
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const { openChatMobile } = useSelector((state: any) => state.chat);
 
   // state
-  const [allChat, setAllChat] = useState<any>([]);
+  const [allChat, setAllChat] = useState<any[]>([]);
   const [userDetails, setUserDetails] = useState<any>({});
   const [chatLoading, setChatLoading] = useState(false);
   const [numOfUnseenMessages, setNumOfUnseenMessages] = useState<any[]>([]);
 
-  // fetchUserDetails
+  // refs for latest state
+  const allChatRef = useRef<any[]>([]);
+  const userDetailsRef = useRef<any>({});
+
+  // update refs when state changes
+  useEffect(() => {
+    allChatRef.current = allChat;
+  }, [allChat]);
+
+  useEffect(() => {
+    userDetailsRef.current = userDetails;
+  }, [userDetails]);
+
   const fetchUserDetails = async () => {
     try {
       const result = await fetchUserDetailsById(session?.serverToken);
@@ -35,28 +46,33 @@ const Layout = ({ children }: { children: any }) => {
     }
   };
 
-  // Get unseen messages
   const getUnseenMessages = () => {
-    if (!socketref.current || socketref.current.readyState !== WebSocket.OPEN)
-      return;
-    if (!userDetails?._id || allChat.length === 0) return;
+    const socket = socketref.current;
+    const chatList = allChatRef.current;
+    const user = userDetailsRef.current;
 
-    const chatIds = allChat.map((chat: any) => chat._id);
-    socketref.current.send(
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
+    if (!user?._id || chatList.length === 0) {
+      console.log("⏳ Skipping getUnseenMessages: data not ready");
+      return;
+    }
+
+    const chatIds = chatList.map((chat: any) => chat._id);
+    console.log("📩 Sending unseen message request", { userId: user._id, chatIds });
+
+    socket.send(
       JSON.stringify({
         type: "unseenMessageOfParticularChatIdOfUser",
-        payload: { userId: userDetails._id, chatIds },
+        payload: { userId: user._id, chatIds },
       })
     );
   };
 
-  // sideEffect
   useEffect(() => {
     if (status !== "authenticated") return;
     fetchUserDetails();
   }, [status]);
 
-  // handle websocket connection
   useEffect(() => {
     if (!userDetails?._id) return;
 
@@ -67,11 +83,10 @@ const Layout = ({ children }: { children: any }) => {
       socketref.current = socket;
       setChatLoading(true);
 
-      // onopen
       socket.onopen = () => {
         console.log("✅ WebSocket connected");
 
-        // Start pinging
+        // Ping + unseen message check every 25 seconds
         pingIntervalRef.current = setInterval(() => {
           if (socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: "ping" }));
@@ -79,34 +94,30 @@ const Layout = ({ children }: { children: any }) => {
           }
         }, PING_INTERVAL);
 
-        // Clear any previous reconnection attempts
         if (reconnectTimeoutRef.current) {
           clearTimeout(reconnectTimeoutRef.current);
           reconnectTimeoutRef.current = null;
         }
 
-        // Fetch all chats
+        // Fetch chats
         socket.send(
           JSON.stringify({
             type: "fetchAllChat",
             payload: {
-              userId: userDetails?._id,
+              userId: userDetails._id,
             },
           })
         );
       };
 
-      // onclose
       socket.onclose = (event) => {
         console.log("❌ WebSocket closed", event.reason || event.code);
 
-        // Stop pinging
         if (pingIntervalRef.current) {
           clearInterval(pingIntervalRef.current);
           pingIntervalRef.current = null;
         }
 
-        // Schedule reconnection
         if (!reconnectTimeoutRef.current) {
           reconnectTimeoutRef.current = setTimeout(() => {
             console.log("🔁 Attempting to reconnect...");
@@ -115,28 +126,22 @@ const Layout = ({ children }: { children: any }) => {
         }
       };
 
-      // onerror
       socket.onerror = (error) => {
         console.error("WebSocket error:", error);
       };
 
-      // onmessage
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
-        // fetchUserAllChats
         if (data?.type === "fetchUserAllChats") {
           setAllChat(data?.payload?.data);
           setChatLoading(false);
-          getUnseenMessages();
         }
 
-        // getUnseenMessage
         if (data?.type === "numOfUnseenMessages") {
           setNumOfUnseenMessages(data.payload);
         }
 
-        // pong
         if (data?.type === "pong") {
           console.log("🏓 Pong received from server");
         }
@@ -145,21 +150,21 @@ const Layout = ({ children }: { children: any }) => {
 
     connectWebSocket();
 
-    // unmount
     return () => {
-      if (socketref.current) {
-        socketref.current.close();
-      }
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-      }
-      if (pingIntervalRef.current) {
-        clearInterval(pingIntervalRef.current);
-      }
+      if (socketref.current) socketref.current.close();
+      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+      if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
     };
   }, [userDetails?._id]);
 
-  // loading status
+  // On chat list update, also fetch unseen immediately once
+  useEffect(() => {
+    if (userDetails._id && allChat.length > 0 && socketref.current?.readyState === WebSocket.OPEN) {
+      console.log("🚀 Calling getUnseenMessages after chat list updated...");
+      getUnseenMessages();
+    }
+  }, [allChat, userDetails._id]);
+
   if (status === "loading") {
     return (
       <div className="flex justify-center items-center py-6">
@@ -168,11 +173,9 @@ const Layout = ({ children }: { children: any }) => {
     );
   }
 
-  // unauthenticated
   if (status === "unauthenticated") {
     return redirect("/login");
   }
-
 
   return (
     <div className="bg-gray-100 backdrop-blur-sm flex justify-center items-center w-full max-w-full overflow-y-hidden">
