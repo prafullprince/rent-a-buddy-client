@@ -17,12 +17,12 @@ const ChatSidebar = ({
   userDetails,
   numOfUnseenMessages
 }: any) => {
-
+  console.log("chiallChat: ", allChat)
   // hooks
   const router = useRouter();
   const dispatch = useDispatch();
   const { openChatMobile } = useSelector((state: any) => state.chat);
-
+  console.log("allChat:as ", allChat)
   // state
   const [currentChatId, setCurrentChatId] = useState<string>("");
 

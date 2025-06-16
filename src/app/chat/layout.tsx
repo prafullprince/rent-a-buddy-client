@@ -73,6 +73,7 @@ const Layout = ({ children }: { children: any }) => {
     fetchUserDetails();
   }, [status]);
 
+  // socket connection
   useEffect(() => {
     if (!userDetails?._id) return;
 
