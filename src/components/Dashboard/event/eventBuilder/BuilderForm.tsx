@@ -164,28 +164,28 @@ const BuilderForm = () => {
           {editService ? (
             <div className="flex justify-end mt-8 w-full">
               <div className="flex items-center gap-2">
-                {/* edit */}
-                <div className="flex items-center gap-4">
-                  <motion.button
-                    onClick={editServiceHandler}
-                    className="px-4 py-2 text-sm bg-black text-white rounded-md cursor-pointer flex items-center gap-1"
-                    layoutId="editService"
-                  >
-                    Edit
-                    {serviceLoading && <PlanetSpinner />}
-                  </motion.button>
-                </div>
-
                 {/* next */}
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => {
                       dispatch(setStep(3));
                     }}
-                    className="px-3 py-2 rounded-md bg-yellow-400 text-black text-sm cursor-pointer font-semibold"
+                    className="px-3 py-2 rounded-md bg-black text-white text-sm cursor-pointer font-semibold"
                   >
                     Next
                   </button>
+                </div>
+
+                {/* edit */}
+                <div className="flex items-center gap-4">
+                  <motion.button
+                    onClick={editServiceHandler}
+                    className="px-4 py-2 text-sm font-semibold bg-yellow-500 text-black rounded-md cursor-pointer flex items-center gap-1"
+                    layoutId="editService"
+                  >
+                    Save
+                    {serviceLoading && <PlanetSpinner />}
+                  </motion.button>
                 </div>
               </div>
             </div>

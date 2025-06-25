@@ -112,7 +112,7 @@ const EventForm = () => {
     try {
       const result = await createEvent(formdata, session?.serverToken);
       dispatch(setStep(2));
-      dispatch(setEditService(true));
+      dispatch(setEditService(false));
       dispatch(setEvent(result));
     } catch (error) {
       console.log("error in createEvent", error);
@@ -261,12 +261,6 @@ const EventForm = () => {
             <div className="w-full flex justify-end">
               <div className="flex items-center gap-2">
                 <button
-                  type="submit"
-                  className="px-3 py-2 rounded-md bg-black text-white text-sm cursor-pointer font-semibold"
-                >
-                  Save
-                </button>
-                <button
                   onClick={() => {
                     dispatch(setEditService(true));
                     dispatch(setStep(2));
@@ -274,6 +268,13 @@ const EventForm = () => {
                   className="px-3 py-2 rounded-md bg-yellow-400 text-black text-sm cursor-pointer font-semibold"
                 >
                   Next
+                </button>
+
+                <button
+                  type="submit"
+                  className="px-3 py-2 rounded-md bg-black text-white text-sm cursor-pointer font-semibold"
+                >
+                  Save
                 </button>
               </div>
             </div>

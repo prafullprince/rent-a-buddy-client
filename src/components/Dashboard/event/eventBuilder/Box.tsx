@@ -19,49 +19,56 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
 
   // Handle tick click (Select / Deselect Subcategory)
   const handleSelect = (categoryId: string, subCategory: any) => {
-    setSelectedData((prev: any) => {
-      let updatedServiceData = prev.serviceData.map((service: any) => {
-        if (service.id === categoryId) {
-          const exists = service.subCategories.some(
-            (sub: any) => sub.id === subCategory._id
-          );
+  setSelectedData((prev: any) => {
+    let updatedServiceData = Array.isArray(prev?.serviceData)
+      ? prev.serviceData.map((service: any) => {
+          if (service.id === categoryId) {
+            const exists = service.subCategories.some(
+              (sub: any) => sub.id === subCategory._id
+            );
 
-          const updatedSubCategories = exists
-            ? service.subCategories.filter(
-                (sub: any) => sub.id !== subCategory._id
-              )
-            : [
-                ...service.subCategories,
-                { id: subCategory._id, about: "", price: 0 },
-              ];
+            const updatedSubCategories = exists
+              ? service.subCategories.filter(
+                  (sub: any) => sub.id !== subCategory._id
+                )
+              : [
+                  ...service.subCategories,
+                  { id: subCategory._id, about: "", price: 0 },
+                ];
 
-          return {
-            ...service,
-            subCategories: updatedSubCategories,
-          };
-        }
-        return service;
+            return {
+              ...service,
+              subCategories: updatedSubCategories,
+            };
+          }
+          return service;
+        })
+      : [];
+
+    // Remove categories with no subcategories
+    updatedServiceData = updatedServiceData.filter(
+      (service: any) => service.subCategories.length > 0
+    );
+
+    // If category does not exist at all, add it
+    const alreadyExists = updatedServiceData.some(
+      (service: any) => service.id === categoryId
+    );
+
+    if (!alreadyExists) {
+      updatedServiceData.push({
+        id: categoryId,
+        subCategories: [{ id: subCategory?._id, about: "", price: 0 }],
       });
+    }
 
-      // Remove categories with no subcategories
-      updatedServiceData = updatedServiceData.filter(
-        (service: any) => service.subCategories.length > 0
-      );
+    return {
+      ...prev,
+      serviceData: updatedServiceData,
+    };
+  });
+};
 
-      // If category does not exist, add it
-      if (
-        !updatedServiceData.some((service: any) => service.id === categoryId) &&
-        !prev.serviceData.some((service: any) => service.id === categoryId)
-      ) {
-        updatedServiceData.push({
-          id: categoryId,
-          subCategories: [{ id: subCategory._id, about: "", price: 0 }],
-        });
-      }
-
-      return { ...prev, serviceData: updatedServiceData };
-    });
-  };
 
   // Handle input change for both price & description
   const handleInputChange = (
@@ -72,11 +79,11 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
   ) => {
     setSelectedData((prev: any) => ({
       ...prev,
-      serviceData: prev.serviceData.map((service: any) =>
+      serviceData: prev?.serviceData?.map((service: any) =>
         service.id === categoryId
-          ? {
+          ? {                         
               ...service,
-              subCategories: service.subCategories.map((sub: any) =>
+              subCategories: service.subCategories?.map((sub: any) =>
                 sub.id === subCategoryId ? { ...sub, [field]: value } : sub
               ),
             }
@@ -88,7 +95,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
       {selectedCategory?.subCategories?.map((subCategory: any) => {
-        const isChecked = isSelected(subCategory._id);
+        const isChecked = isSelected(subCategory?._id);
 
         return (
           <motion.div
@@ -125,7 +132,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                 {/* Tick */}
                 <div
                   onClick={() =>
-                    handleSelect(selectedCategory._id, subCategory)
+                    handleSelect(selectedCategory?._id, subCategory)
                   }
                   className={`flex items-center justify-center min-w-7 min-h-7 max-w-7 max-h-7 border-1 border-slate-400 cursor-pointer rounded-sm ${
                     isChecked ? "bg-black text-white font-semibold" : "bg-white"
@@ -161,10 +168,10 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                     placeholder="Set price"
                     className="py-2 outline-none w-full text-xs md:text-sm"
                     value={
-                      selectedData.serviceData
-                        ?.find((s: any) => s.id === selectedCategory._id)
+                      selectedData?.serviceData
+                        ?.find((s: any) => s.id === selectedCategory?._id)
                         ?.subCategories?.find(
-                          (sub: any) => sub.id === subCategory._id
+                          (sub: any) => sub.id === subCategory?._id
                         )?.price || ""
                     }
                     onChange={(e) =>
@@ -189,7 +196,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                     placeholder="Edit description"
                     className="py-2 outline-none w-full text-xs md:text-sm"
                     value={
-                      selectedData.serviceData
+                      selectedData?.serviceData
                         ?.find((s: any) => s.id === selectedCategory?._id)
                         ?.subCategories?.find(
                           (sub: any) => sub.id === subCategory?._id
@@ -197,8 +204,8 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                     }
                     onChange={(e) =>
                       handleInputChange(
-                        selectedCategory._id,
-                        subCategory._id,
+                        selectedCategory?._id,
+                        subCategory?._id,
                         "about",
                         e.target.value
                       )
