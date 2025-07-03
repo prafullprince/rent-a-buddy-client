@@ -15,7 +15,7 @@ import { fetchUserDetailsById } from "@/service/apiCall/user.api";
 import { useDispatch, useSelector } from "react-redux";
 import { setTotalUnseenMessages } from "@/redux/slice/chat.slice";
 import { RiDashboardHorizontalFill, RiLogoutBoxFill } from "react-icons/ri";
-
+import Information from "./Information";
 
 const Navbar = () => {
   // session
@@ -141,7 +141,6 @@ const Navbar = () => {
           console.log("unseenMessages", data.payload);
           dispatch(setTotalUnseenMessages(data.payload.totalMessages));
         }
-
       };
 
       // on error
@@ -165,7 +164,6 @@ const Navbar = () => {
     };
   }, [session, userDetails?._id]);
 
-
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -176,22 +174,24 @@ const Navbar = () => {
       {/* content div */}
       <div className="flex items-center justify-between w-[95%] lg:w-[80%] px-1 py-2 mx-auto">
         {/* logo */}
-        <Link href="/">
-          <Image
-            src={Logo}
-            alt="Logo"
-            width={50}
-            height={50}
-            priority
-            className="bg-transparent"
-          />
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link href="/">
+            <Image
+              src={Logo}
+              alt="Logo"
+              width={50}
+              height={50}
+              priority
+              className="bg-transparent"
+            />
+          </Link>
 
-        {/* links */}
+          {/* links */}
+          <Information />
+        </div>
 
         {/* buttons */}
         <div className="flex items-center gap-4 sm:gap-6">
-
           {/* loading */}
           <div className="pr-6">
             {!session && status === "loading" && (
