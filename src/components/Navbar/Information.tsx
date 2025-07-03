@@ -1,54 +1,81 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { IoIosArrowDown } from "react-icons/io";
 
 const Information = () => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Reusable nav links
+  const navLinks = [
+    { href: "/faq", label: "Faq" },
+    { href: "/terms", label: "Terms" },
+    { href: "/contact", label: "Contact" },
+  ];
+
   return (
     <>
-      <div className="text-sm font-medium hidden md:block">
-        <div className="flex items-center gap-2">
-          {/* faq */}
-          <Link href={"/faq"}>
-            <div className="hover:text-green-800 cursor-pointer">Faq</div>
+      {/* Desktop Links */}
+      <div className="text-sm font-medium hidden md:flex items-center gap-4">
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="hover:text-green-800 transition-colors duration-200"
+          >
+            {link.label}
           </Link>
-          {/* terms */}
-
-          <Link href={"/terms"}>
-            <div className="hover:text-green-800 cursor-pointer">Terms</div>
-          </Link>
-
-          {/* contact */}
-          <Link href={"/contact"}>
-            <div className="hover:text-green-800 cursor-pointer">Contact</div>
-          </Link>
-        </div>
+        ))}
       </div>
 
-      {/* for mobile */}
-      <div className="md:hidden cursor-pointer group">
-        <IoIosArrowDown className="text-xl text-black font-bold" />
-        <div className="invisible opacity-0 absolute top-16 left-[25%] -translate-x-[50%] shadow-xl rounded-lg p-2 w-fit z-[1000] bg-slate-100 text-slate-700 duration-300 transition-all text-sm font-semibold group-hover:opacity-100 group-hover:visible">
-          <div className="flex flex-col gap-3 items-start px-2 py-[6px]">
-            <Link
-              href={"/faq"}
-              className="cursor-pointer flex items-center gap-1 hover:text-green-800"
-            >
-              <div>Faq</div>
-            </Link>
-            <Link
-              href={"/terms"}
-              className="cursor-pointer flex items-center gap-1 hover:text-green-800"
-            >
-              <div>Terms</div>
-            </Link>
-            <Link
-              href={"/contact"}
-              className="cursor-pointer flex items-center gap-1 hover:text-green-800"
-            >
-              <div>Contact</div>
-            </Link>
+      {/* Mobile Dropdown */}
+      <div className="md:hidden relative" ref={dropdownRef}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+          className="cursor-pointer group"
+        >
+          <IoIosArrowDown className="text-xl text-black font-bold" />
+        </button>
+
+        {isOpen && (
+          <div className="absolute top-10 left-1/2 -translate-x-1/2 shadow-xl rounded-lg p-3 bg-slate-100 text-slate-700 z-[1000] w-fit transition-all duration-200 ease-in-out">
+            <div className="flex flex-col gap-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => {
+                    // Delay closing to allow Next.js to navigate
+                    setTimeout(() => setIsOpen(false), 100);
+                  }}
+                  className="hover:text-green-800 text-sm font-semibold"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
