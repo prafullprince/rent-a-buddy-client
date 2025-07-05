@@ -11,9 +11,12 @@ import { CiStopwatch } from "react-icons/ci";
 const Receiver = ({
   msg,
   userDetails,
-  socketRef,
+  socket,
   setAcceptLoading,
   acceptLoading,
+  chatId,
+  current,
+  other,
 }: any) => {
   return (
     <>
@@ -213,15 +216,13 @@ const Receiver = ({
                         <button
                           onClick={() => {
                             setAcceptLoading(true);
-                            socketRef?.current?.send(
-                              JSON.stringify({
-                                type: "acceptOrder",
-                                payload: {
-                                  msgId: msg?._id,
-                                  mark: "accepted",
-                                },
-                              })
-                            );
+                            socket?.emit("acceptOrder", {
+                              msgId: msg?._id,
+                              mark: "accepted",
+                              chatId,
+                              current,
+                              other,
+                            });
                           }}
                           className="bg-yellow-300 text-black px-3 py-2 rounded-md text-sm font-semibold cursor-pointer flex items-center gap-1"
                         >
@@ -233,15 +234,13 @@ const Receiver = ({
                         {/* reject */}
                         <button
                           onClick={() => {
-                            socketRef?.current?.send(
-                              JSON.stringify({
-                                type: "acceptOrder",
-                                payload: {
-                                  msgId: msg?._id,
-                                  mark: "rejected",
-                                },
-                              })
-                            );
+                            socket?.emit("acceptOrder", {
+                              msgId: msg?._id,
+                              mark: "rejected",
+                              chatId,
+                              current,
+                              other,
+                            });
                           }}
                           className="bg-red-500 text-white rounded-md text-sm font-semibold ml-2 cursor-pointer flex items-center gap-1 px-3 py-2"
                         >

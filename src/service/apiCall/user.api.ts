@@ -11,7 +11,6 @@ export const fetchUserDetailsById = async (token:any) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     });
-    console.log("rrrrrrrrrrrrrrrrrrrrr",response);
     return response.data.data;
   } catch (error:any) {
     console.log(error);

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { memo, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { PiCurrencyInrBold } from "react-icons/pi";
 import Image from "next/image";
@@ -10,7 +10,7 @@ import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setOpenChatMobile } from "@/redux/slice/chat.slice";
-
+import socket from "@/utills/socket";
 
 const location = ["Delhi", "Mumbai", "Banglore", "Pune", "Hyderabad"];
 const prices = [50, 100, 150, 200, 250];
@@ -36,16 +36,12 @@ const OrderModal = ({
   router,
   session,
 }: any) => {
+
   // hook
   const btnRef = useRef<HTMLDivElement | null>(null);
-  const PING_INTERVAL = 25000; // 25 seconds
-  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const RECONNECT_INTERVAL = 3000;
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const socketref = useRef<WebSocket | null>(null);
   const dispatch = useDispatch();
 
-  // state  
+  // state
   const [formData, setFormData] = useState<IFormData>({
     location: location[0],
     date: "",
@@ -87,7 +83,7 @@ const OrderModal = ({
     return () => {
       document.removeEventListener("mousedown", clickOutsideHandler);
     };
-  }, []); 
+  }, []);
 
   // sideEffect -> totalPrice
   useEffect(() => {
@@ -113,99 +109,30 @@ const OrderModal = ({
     setMaxDate(maxDateString);
   }, [formData.date]);
 
-  // socket
+
+  // socket handling
   useEffect(() => {
+    if (!session || !modalData) return;
+    if (!socket.connected) socket.connect();
 
-    if(!session || !modalData) return;
+    // handle orderStatus
+    socket.on("orderStatus", (data: any) => {
+      console.log("orderStatus", data);
+      if (data.success) {
+        toast.success(data.message);
+        router.push(
+          `/chat/${data?.data?.chatId}/user/${data?.data?.receiver}`
+        );
+        setLoading(false);
+        setModalData(null);
+        dispatch(setOpenChatMobile(true));
+      }
+    });
 
-    let socket: WebSocket;
-
-    const connectWebSocket = () => {
-      socket = new WebSocket("wss://rent-a-buddy-server-1.onrender.com");
-      socketref.current = socket;
-
-      // on open
-      socket.onopen = () => {
-        console.log("socket open");
-
-        // Start pinging
-        pingIntervalRef.current = setInterval(() => {
-          if (socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ type: "ping" }));
-          }
-        }, PING_INTERVAL);
-
-        // reconnect
-        if (reconnectTimeoutRef.current) {
-          clearTimeout(reconnectTimeoutRef.current);
-          reconnectTimeoutRef.current = null;
-        }
-      };
-
-      // on close
-      socket.onclose = (event) => {
-        console.log("❌ WebSocket closed", event.reason || event.code);
-
-        // Schedule reconnection
-        if (!reconnectTimeoutRef.current) {
-          reconnectTimeoutRef.current = setTimeout(() => {
-            console.log("🔁 Attempting to reconnect...from order modal");
-            connectWebSocket();
-          }, RECONNECT_INTERVAL);
-        }
-
-        // Stop pinging
-        if (pingIntervalRef.current) {
-          clearInterval(pingIntervalRef.current);
-          pingIntervalRef.current = null;
-        }
-
-      };
-
-      // on error
-      socket.onerror = (error) => {
-        console.log("socket error", error);
-      };
-
-      // on message
-      socket.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-
-          if (data.type === "orderStatus") {
-            console.log("orderStatus", data.payload);
-    
-            if (data?.payload?.success) {
-              toast.success(data?.payload?.message);
-              router.push(
-                `/chat/${data?.payload?.data?.chatId}/user/${data?.payload?.data?.receiver}`
-              );
-              setLoading(false);
-              setModalData(null);
-              dispatch(setOpenChatMobile(true));
-            } else {
-              toast.error(data.payload.message);
-              setModalData(null);
-              setLoading(false);
-            }
-          }
-        } catch (err) {
-          console.error("Invalid JSON received via WebSocket:", event.data);
-        }
-      };
-    };
-    connectWebSocket();
-
-    // memory cleanup
+    // cleanup
     return () => {
-      if (socketref.current) {
-        socketref.current.close();
-      }
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-      }
+      socket.off("orderStatus");
     };
-    
   }, [session, modalData]);
 
   return (
@@ -447,7 +374,7 @@ const OrderModal = ({
                   return;
                 }
 
-                if(!formData.date || !formData.time) {
+                if (!formData.date || !formData.time) {
                   toast.error("Please select date and time");
                   return;
                 }
@@ -468,19 +395,9 @@ const OrderModal = ({
                   return;
                 }
 
-                if(socketref?.current?.readyState === WebSocket.OPEN) {
-                  console.log("sending order request", socketref?.current?.readyState);
+                if (socket) {
                   setLoading(true);
-                  socketref.current.send(
-                    JSON.stringify({
-                      type: "requestOrder",
-                      payload: {
-                        formData
-                      },
-                    })
-                  );
-                } else {
-                  toast.error("Socket not found");
+                  socket.emit("requestOrder", formData);
                 }
               }}
               disabled={loading}

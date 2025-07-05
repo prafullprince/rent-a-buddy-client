@@ -1,20 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
 import Image from "next/image";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { IoMdDoneAll } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
 import { RiCoinsLine } from "react-icons/ri";
+import toast from "react-hot-toast";
 
 const Sender = ({
   msg,
   userDetails,
-  socketRef,
+  socket,
   setModalData,
   session,
   seenMessage,
+  chatId,
+  current,
+  other,
 }: any) => {
+
+
+  // socket handling
+  useEffect(() => {
+    if(!socket.connected) socket.connect();
+
+    // orderAcceptedHandler
+    socket.on("orderAccepted", (data: any) => {
+      if (data.success) {
+        toast.success(data.message);
+      }
+    });
+
+    // cleanup
+    return () => {
+      socket.off("orderAccepted");
+    };
+  }, []);
+
   return (
     <>
       {msg?.sender === userDetails?._id && (
@@ -227,15 +251,13 @@ const Sender = ({
                     <div className="flex items-center gap-1 mt-1 justify-start">
                       <button
                         onClick={() => {
-                          socketRef.current?.send(
-                            JSON.stringify({
-                              type: "acceptOrder",
-                              payload: {
-                                msgId: msg?._id,
-                                mark: "rejected",
-                              },
-                            })
-                          );
+                          socket?.emit("acceptOrder", {
+                            msgId: msg?._id,
+                            mark: "rejected",
+                            chatId,
+                            current,
+                            other,
+                          });
                         }}
                         className="bg-red-500 text-white rounded-md text-sm font-semibold ml-2 cursor-pointer flex items-center gap-1 px-3 py-2 mr-3"
                       >

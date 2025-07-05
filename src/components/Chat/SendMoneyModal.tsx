@@ -8,8 +8,8 @@ const SendMoneyModal = ({
   modalData,
   setModalData,
   setRefreshButton,
-  socketRef,
-  chatId
+  socket,
+  chatId,
 }: any) => {
   // hook
   const btnRef = useRef<HTMLDivElement | null>(null);
@@ -23,13 +23,11 @@ const SendMoneyModal = ({
         modalData.token,
         modalData.orderId
       );
-      if (socketRef.current) {
-        socketRef.current.send(
-          JSON.stringify({
-            type: "reloadChatPage",
-            payload: { receiverId: modalData.receiverId, chatId: chatId },
-          })
-        );
+      if (socket) {
+        socket.emit("reloadChatPage", {
+          receiverId: modalData.receiverId,
+          chatId: chatId,
+        });
       }
       setRefreshButton((prev: any) => !prev);
       setModalData(null);

@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar/Navbar";
+import RegisterUser from "../Socket/RegisterUser";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -16,6 +17,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   return (
     <>
       {!hideNavbar && <Navbar />}
+      <RegisterUser />
       <main>{children}</main>
     </>
   );
