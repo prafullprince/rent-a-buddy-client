@@ -6,7 +6,7 @@ const socket = io("https://rent-a-buddy-server-djqg.onrender.com", {
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
     timeout: 10000,
-    // secure: true,
+    secure: true,
 });
 
 export default socket;
