@@ -29,10 +29,11 @@ import Sender from "@/components/Chat/Message/Sender";
 import { useDispatch } from "react-redux";
 import { setOpenChatMobile } from "@/redux/slice/chat.slice";
 import { AnimatePresence, motion } from "framer-motion";
-import { FaVideo } from "react-icons/fa";
+import { FaVideo, FaVideoSlash } from "react-icons/fa";
 import { SlCallEnd } from "react-icons/sl";
 import socket from "@/utills/socket";
 import { MicIcon } from "lucide-react";
+import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai";
 
 // Define types for better maintainability
 interface Message {
@@ -87,6 +88,10 @@ const Page = () => {
   const [isRemote, setIsRemote] = useState(true);
   const [isAudioCall, setIsAudioCall] = useState(false);
   const [seenMessage, setSeenMessage] = useState(false);
+  const [mute, setMute] = useState(false);
+  const [peerMute, setPeerMute] = useState(false);
+  const [cameraMute, setCameraMute] = useState(false);
+  const [peerCameraMute, setPeerCameraMute] = useState(false);
 
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
@@ -350,6 +355,30 @@ const Page = () => {
     toast.success("Call ended");
   };
 
+  // toggleMic
+  const toggleMic = (isMuted: boolean) => {
+    if (!socket.connected) socket.connect();
+
+    // 1. Mute or unmute
+    localStreamRef.current?.getAudioTracks().forEach((track) => {
+      track.enabled = !isMuted;
+    });
+
+    socket.emit("toggleMic", { isMuted, chatId, userId: userId });
+  };
+
+  // toggleCamera
+  const toggleCamera = (isMuted: boolean) => {
+    if (!socket.connected) socket.connect();
+
+    // 1. Mute or unmute
+    localStreamRef.current?.getVideoTracks().forEach((track) => {
+      track.enabled = !isMuted;
+    });
+
+    socket.emit("toggleCamera", { isMuted, chatId, userId: userId });
+  };
+
   // Fetch Messages
   const fetchMessages = async () => {
     setLoading(true);
@@ -534,6 +563,20 @@ const Page = () => {
       toast.success("Call ended");
     };
 
+    // handleToggleMic
+    const handleToggleMic = ({ isMuted }: any) => {
+      console.log("handleToggleMic");
+
+      setPeerMute(isMuted);
+    };
+
+    // handleToggleCamera
+    const handleToggleCamera = ({ isMuted }: any) => {
+      console.log("handleToggleCamera");
+
+      setPeerCameraMute(isMuted);
+    };
+
     // socket handlers
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
@@ -546,6 +589,8 @@ const Page = () => {
     socket.on("acceptAnswer", handleAcceptAnswer);
     socket.on("rejectCall", handleRejectCall);
     socket.on("endCall", handleCallEnd);
+    socket.on("toggleMic", handleToggleMic);
+    socket.on("toggleCamera", handleToggleCamera);
 
     // socket connection
     if (!socket.connected) {
@@ -571,6 +616,7 @@ const Page = () => {
       socket.off("acceptAnswer", handleAcceptAnswer);
       socket.off("rejectCall", handleRejectCall);
       socket.off("endCall", handleCallEnd);
+      socket.off("toggleMic", handleToggleMic);
     };
   }, [chatId, userDetails]);
 
@@ -768,6 +814,14 @@ const Page = () => {
             className="w-screen h-full object-cover z-30 bg-slate-200"
           ></video>
 
+          {peerMute && (
+            <div className="absolute top-1/2 right-1/2 left-1/2 bottom-1/2 z-40">
+              <div className="text-xl bg-gray-800 w-12 h-12 flex items-center justify-center rounded-full">
+                <AiOutlineAudioMuted className="text-white" />
+              </div>
+            </div>
+          )}
+
           {/* Local Video (small overlay) */}
           <video
             onClick={() => setIsRemote((prev: any) => !prev)}
@@ -786,13 +840,43 @@ const Page = () => {
             >
               <SlCallEnd />
             </button>
-            <button className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer">
-              <MicIcon />
-            </button>
+            {mute ? (
+              <button
+                onClick={() => {
+                  toggleMic(false);
+                  setMute(false);
+                }}
+                className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer"
+              >
+                <AiOutlineAudioMuted />
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  toggleMic(true);
+                  setMute(true);
+                }}
+                className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer"
+              >
+                <AiOutlineAudio />
+              </button>
+            )}
 
-            <button className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer">
-              <FaVideo />
-            </button>
+            {cameraMute ? (
+              <button onClick={()=>{
+                toggleCamera(false);
+                setCameraMute(false);
+              }} className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer">
+                <FaVideoSlash />
+              </button>
+            ) : (
+              <button onClick={()=>{
+                toggleCamera(true);
+                setCameraMute(true);
+              }} className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer">
+                <FaVideo />
+              </button>
+            )}
           </div>
         </div>
       )}
