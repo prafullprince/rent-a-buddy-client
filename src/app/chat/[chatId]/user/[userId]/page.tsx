@@ -32,6 +32,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FaVideo } from "react-icons/fa";
 import { SlCallEnd } from "react-icons/sl";
 import socket from "@/utills/socket";
+import { MicIcon } from "lucide-react";
 
 // Define types for better maintainability
 interface Message {
@@ -764,7 +765,7 @@ const Page = () => {
             ref={remoteVideoRef}
             autoPlay
             playsInline
-            className="w-full h-full object-cover z-30"
+            className="w-screen h-full object-cover z-30 bg-slate-200"
           ></video>
 
           {/* Local Video (small overlay) */}
@@ -778,16 +779,20 @@ const Page = () => {
           ></video>
 
           {/* call managing */}
-          <div className="absolute top-4 z-50 left-1/2 transform -translate-x-1/2 flex gap-4">
+          <div className="absolute bottom-4 z-50 left-2 flex gap-4 bg-gray-700 px-3 py-2 rounded-md items-center">
             <button
               onClick={handleCallEnd}
-              className="bg-red-600 text-xl text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 px-4 py-[10px]"
+              className="bg-red-600 text-base text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-all duration-300 w-9 h-9 cursor-pointer"
             >
               <SlCallEnd />
             </button>
-            {/* <button className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-700">
+            <button className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer">
               <MicIcon />
-            </button> */}
+            </button>
+
+            <button className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer">
+              <FaVideo />
+            </button>
           </div>
         </div>
       )}
@@ -824,7 +829,7 @@ const Page = () => {
           <motion.div
             className="flex items-center gap-3 bg-slate-200 z-50 px-4 py-3 rounded-md absolute top-12 shadow-xl left-[50%] right-[50%] -translate-x-[50%] w-fit"
             initial={{ y: -20 }}
-            animate={{ y: 48 }}
+            animate={{ y: 28 }}
             exit={{ y: -20 }}
             transition={{ duration: 0.3 }}
           >
