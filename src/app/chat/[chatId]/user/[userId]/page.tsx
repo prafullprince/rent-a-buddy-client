@@ -57,7 +57,6 @@ const Page = () => {
   const { chatId, userId } = useParams();
   const { data: session } = useSession();
   const divRef = useRef<HTMLDivElement>(null);
-  const socketRef = useRef<WebSocket | null>(null);
 
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -90,22 +89,20 @@ const Page = () => {
 
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
+    if (!socket.connected) socket.connect();
+
+    // createPeerConnection
     const pc = new RTCPeerConnection();
     pcRef.current = pc;
 
     // add-ice-candidate
     pc.onicecandidate = (event) => {
-      if (event.candidate && socketRef.current?.readyState === WebSocket.OPEN) {
-        socketRef.current.send(
-          JSON.stringify({
-            type: "add-ice-candidate",
-            payload: {
-              chatId,
-              userId: userId,
-              candidate: event.candidate,
-            },
-          })
-        );
+      if (event.candidate && socket) {
+        socket.emit("add-ice-candidate", {
+          chatId,
+          userId: userId,
+          candidate: event.candidate,
+        });
       }
     };
 
@@ -129,8 +126,9 @@ const Page = () => {
 
   // handleVideoCall
   const handleVideoCall = async () => {
-    if (!chatId || !userDetails?._id || !socketRef.current || isAudioCall)
-      return;
+    if (!chatId || !userDetails?._id) return;
+
+    if (!socket.connected) socket.connect();
 
     // createPeerConnection
     const pc = setupPeerConnection();
@@ -168,18 +166,15 @@ const Page = () => {
         await pc.setLocalDescription(offer);
 
         // send offer to server for receiver
-        if (socketRef.current?.readyState === WebSocket.OPEN) {
-          socketRef.current.send(
-            JSON.stringify({
-              type: "createOffer",
-              payload: {
-                chatId,
-                userId: userId,
-                offer: pc.localDescription,
-              },
-            })
-          );
+        if (socket) {
+          socket.emit("createOffer", {
+            chatId,
+            userId: userId,
+            offer: pc.localDescription,
+          });
         }
+
+        return;
       } catch (err) {
         console.error("Error during negotiation:", err);
       }
@@ -188,8 +183,7 @@ const Page = () => {
 
   // handleAudioCall
   const handleAudioCall = async () => {
-    if (!chatId || !userDetails?._id || !socketRef.current || !isAudioCall)
-      return;
+    if (!chatId || !userDetails?._id || !socket || !isAudioCall) return;
     setIsAudioCall(true);
 
     // Create PeerConnection
@@ -222,7 +216,7 @@ const Page = () => {
       try {
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
-        socketRef.current?.send(
+        socket?.send(
           JSON.stringify({
             type: "createOffer",
             payload: {
@@ -240,9 +234,10 @@ const Page = () => {
 
   // handleAccept
   const handleAccept = async () => {
-    if (!socketRef.current || !incomingOffer || !chatId || !userDetails?._id)
+    if (!isIncomingCall || !chatId || !userDetails?._id || !incomingOffer)
       return;
 
+    if (!socket.connected) socket.connect();
     setIsCallAccepted(true);
 
     // 1. Create PeerConnection
@@ -271,8 +266,8 @@ const Page = () => {
       return;
     }
 
-    // 3. Set remote description with caller's offer
-    await pc.setRemoteDescription(new RTCSessionDescription(incomingOffer));
+    // set offer in remoteDescription
+    await pc.setRemoteDescription(incomingOffer);
 
     // 4. Create answer
     const answer = await pc.createAnswer();
@@ -281,20 +276,20 @@ const Page = () => {
     await pc.setLocalDescription(answer);
 
     // 5. Send answer back to caller
-    socketRef.current.send(
-      JSON.stringify({
-        type: "createAnswer",
-        payload: {
-          chatId,
-          userId: userId,
-          sdp: pc.localDescription,
-        },
-      })
-    );
+    if (socket) {
+      socket.emit("createAnswer", {
+        chatId,
+        userId: userId,
+        answer: pc.localDescription,
+      });
+      setIncomingCall(false);
+    }
   };
 
   // handleReject
   const handleReject = () => {
+    if (!socket.connected) socket.connect();
+
     // Cleanup peer connection and streams
     pcRef.current?.close();
     pcRef.current = null;
@@ -309,10 +304,17 @@ const Page = () => {
     setIncomingCall(false);
     setIsCallAccepted(false);
     setIsCallModal(false);
+
+    // notify other user
+    socket.emit("rejectCall", { chatId, userId: userId });
+
+    toast.error("Call rejected");
   };
 
   // handleCallEnd
   const handleCallEnd = () => {
+    if (!socket.connected) socket.connect();
+
     // 1. Stop local media tracks
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach((track) => track.stop());
@@ -334,13 +336,8 @@ const Page = () => {
     }
 
     // 5. end from other user too
-    if (socketRef.current?.readyState === WebSocket.OPEN) {
-      socketRef.current.send(
-        JSON.stringify({
-          type: "endCall",
-          payload: { chatId, userId: userId },
-        })
-      );
+    if (socket) {
+      socket.emit("endCall", { chatId, userId: userId });
     }
 
     // 6. Reset UI states
@@ -348,6 +345,8 @@ const Page = () => {
     setIsCallAccepted(false);
     setIncomingOffer(null);
     setIsCallModal(false);
+
+    toast.success("Call ended");
   };
 
   // Fetch Messages
@@ -365,7 +364,6 @@ const Page = () => {
 
   // sendMessage
   const sendMessage = () => {
-
     // validation
     const message = chatRef.current.trim();
     if (!socket || !message) return;
@@ -461,6 +459,80 @@ const Page = () => {
       fetchMessages();
     };
 
+    // handleAcceptIceCandidate
+    const handleAcceptIceCandidate = ({ candidate }: any) => {
+      console.log("handleAcceptIceCandidate");
+      pcRef.current?.addIceCandidate(new RTCIceCandidate(candidate));
+    };
+
+    // handleAcceptOffer
+    const handleAcceptOffer = async ({ offer }: any) => {
+      console.log("handleAcceptOffer");
+      setIncomingCall(true);
+      setIsCallModal(true);
+      setIncomingOffer(offer);
+    };
+
+    // handleAcceptAnswer
+    const handleAcceptAnswer = ({ answer }: any) => {
+      console.log("handleAcceptAnswer");
+      pcRef.current?.setRemoteDescription(new RTCSessionDescription(answer));
+      setIncomingCall(false);
+      setIsCallAccepted(true);
+    };
+
+    // handleRejectCall
+    const handleRejectCall = () => {
+      console.log("handleRejectCall");
+      pcRef.current?.close();
+      pcRef.current = null;
+
+      localStreamRef.current?.getTracks().forEach((track) => track.stop());
+      localStreamRef.current = null;
+
+      if (localVideoRef.current) localVideoRef.current.srcObject = null;
+      if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+
+      setIsCallStart(false);
+      setIncomingCall(false);
+      setIsCallAccepted(false);
+      setIsCallModal(false);
+
+      toast.error("Call rejected");
+    };
+
+    // handleCallEnd
+    const handleCallEnd = () => {
+      console.log("handleCallEnd");
+      // 1. Stop local media tracks
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach((track) => track.stop());
+        localStreamRef.current = null;
+      }
+
+      // 2. Close the PeerConnection
+      if (pcRef.current) {
+        pcRef.current.close();
+        pcRef.current = null;
+      }
+
+      // 3. Reset video refs
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = null;
+      }
+      if (remoteVideoRef.current) {
+        remoteVideoRef.current.srcObject = null;
+      }
+
+      // 6. Reset UI states
+      setIsCallStart(false);
+      setIsCallAccepted(false);
+      setIncomingOffer(null);
+      setIsCallModal(false);
+
+      toast.success("Call ended");
+    };
+
     // socket handlers
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
@@ -468,6 +540,11 @@ const Page = () => {
     socket.on("Connected", handleConnected);
     socket.on("receiveMessage", handleReceiveMessage);
     socket.on("reloadChat", handleReloadChat);
+    socket.on("accept-ice-candidate", handleAcceptIceCandidate);
+    socket.on("acceptOffer", handleAcceptOffer);
+    socket.on("acceptAnswer", handleAcceptAnswer);
+    socket.on("rejectCall", handleRejectCall);
+    socket.on("endCall", handleCallEnd);
 
     // socket connection
     if (!socket.connected) {
@@ -488,6 +565,11 @@ const Page = () => {
       socket.emit("closeChat", { chatId, userId: userDetails._id });
       socket.off("receiveMessage", handleReceiveMessage);
       socket.off("reloadChat", handleReloadChat);
+      socket.off("accept-ice-candidate", handleAcceptIceCandidate);
+      socket.off("acceptOffer", handleAcceptOffer);
+      socket.off("acceptAnswer", handleAcceptAnswer);
+      socket.off("rejectCall", handleRejectCall);
+      socket.off("endCall", handleCallEnd);
     };
   }, [chatId, userDetails]);
 
