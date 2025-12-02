@@ -37,7 +37,7 @@ const ChatSidebar = ({
     >
       <div
         className={`flex flex-col gap-4 sm:border-r sm:border-l sm:border-t sm:border-b border-gray-800 sm:max-h-[calc(100vh-59px)] sm:min-h-[calc(100vh-59px)] bg-black/80 overflow-y-auto slider sm:max-w-[300px] sm:min-w-[300px] min-w-full max-w-full"
-        } rounded-tl-xl rounded-bl-xl`}
+        } lg:rounded-tl-xl lg:rounded-bl-xl`}
       >
         {/* topbar */}
         <div className={`flex items-center gap-5 border-b-2 px-6 pt-2 pb-4 border-b-gray-700`}>
