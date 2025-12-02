@@ -10,7 +10,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import IntergalacticSpinner from "@/loading/Loading1";
-import "swiper/css";
+// import "swiper/css";
 import { IoFilterSharp } from "react-icons/io5";
 import Toggle from "@/components/Common/Toggle";
 import AllAvailableEventsLive from "@/components/HomePage/AllAvailableEventsLive";
@@ -150,10 +150,10 @@ export default function Home() {
           <AllAvailableEventsLive />
 
           {/* heading */}
-          <h2 className="font-semibold text-xl mt-5">Find your match</h2>
+          {/* <h2 className="font-semibold text-xl mt-5">Find your match</h2> */}
 
           {/* content */}
-          <div className="flex flex-col items-start gap-2 mt-2">
+          <div className="flex flex-col items-start gap-2 mt-8">
             {/* filters */}
             <div className="hidden lg:block w-full">
               <div className="flex flex-wrap items-center justify-between w-full">
@@ -162,7 +162,7 @@ export default function Home() {
                   <div className="flex flex-col gap-2 cursor-pointer">
                     <select
                       id="location"
-                      className="w-44 px-2 py-[6px] appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
+                      className="w-44 px-4 py-[6px] appearance-none border-2 border-gray-900 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
                       value={formData.location}
                       onChange={changeHandler}
                       name="location"
@@ -183,7 +183,7 @@ export default function Home() {
                     <input
                       type="text"
                       placeholder="username"
-                      className="px-2 py-[6px] appearance-none border border-gray-300 rounded-full outline-none w-44 bg-white text-slate-600 font-medium text-sm placeholder:text-sm"
+                      className="px-4 py-[6px] appearance-none border-2 border-gray-900 rounded-full outline-none w-44 bg text-slate-600 font-medium text-sm placeholder:text-sm"
                       value={formData.username}
                       onChange={changeHandler}
                       name="username"
@@ -194,7 +194,7 @@ export default function Home() {
                   <div>
                     <select
                       id="rating"
-                      className="w-44 px-2 py-[6px] appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
+                      className="w-44 px-4 py-[6px] appearance-none border-2 border-gray-900 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
                       value={formData.rating}
                       onChange={changeHandler}
                       name="rating"
@@ -212,7 +212,7 @@ export default function Home() {
                   <div>
                     <select
                       id="gender"
-                      className="w-44 px-2 py-[6px] appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
+                      className="w-44 px-4 py-[6px] appearance-none border border-gray-900 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm"
                       value={formData.gender}
                       onChange={changeHandler}
                       name="gender"
@@ -239,7 +239,7 @@ export default function Home() {
                   <motion.div layoutId="button">
                     <button
                       onClick={submitHandler}
-                      className="px-4 py-[6px] bg-black font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
+                      className="px-4 py-[6px] bg-gray-900 font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
                     >
                       Apply
                       {loading && <IntergalacticSpinner />}
@@ -256,7 +256,7 @@ export default function Home() {
                   title: "Filters",
                 });
               }}
-              className="flex items-center gap-2 tracking-normal cursor-pointer bg-gray-500 text-white font-semibold text-sm px-3 py-2 rounded-lg lg:hidden mt-1"
+              className="flex items-center gap-2 tracking-normal cursor-pointer bg-gray-800 text-white font-semibold text-sm px-3 py-2 rounded-lg lg:hidden"
             >
               <div>Filters</div>
               <IoFilterSharp className="font-bold text-sm" />
@@ -270,8 +270,8 @@ export default function Home() {
                 ))}
               </AnimatePresence>
 
-              {events?.length === 0 && (
-                <div className="h-10 flex items-center justify-center">
+              {events?.length === 0 && !loading && (
+                <div className="flex items-center justify-center">
                   <div className="text-black bg-white">
                     <p className="text-center text-xl font-bold">
                       No events found
@@ -288,7 +288,7 @@ export default function Home() {
                 >
                   {loading ? (
                     <div className="flex justify-center items-center py-6">
-                      <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+                      <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-white/80 border-t-transparent"></div>
                     </div>
                   ) : (
                     ""

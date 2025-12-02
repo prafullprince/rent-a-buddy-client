@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import "@/styles/globals.css";
+// import "@/styles/globals.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setEditService, setEvent, setStep } from "@/redux/slice/event.slice";
 import Image from "next/image";
@@ -170,7 +170,7 @@ const EventForm = () => {
           <div className="flex flex-col gap-1 cursor-pointer">
             <Label labelname="Location" />
             <select
-              className="w-full h-12 rounded-sm px-2 shadow-sm border border-gray-300 outline-none bg-white"
+              className="w-full h-12 rounded-sm px-2 shadow-sm border border-gray-700 outline-none bg-neutral-900 text-white/90"
               {...register("location", {
                 required: "Please select a location",
               })}
@@ -224,7 +224,7 @@ const EventForm = () => {
                 className="w-full h-[300px] object-cover bg-center bg-cover rounded-md shadow-xl transition-all duration-300"
               />
             ) : (
-              <div className="shadow-lg transition-all duration-300 w-full h-[300px] border border-[#2C333F] border-dashed rounded-lg flex flex-col gap-8 items-center justify-center py-8 bg-white">
+              <div className="shadow-lg transition-all duration-300 w-full h-[300px] border border-[#2C333F] border-dashed rounded-lg flex flex-col gap-8 items-center justify-center py-8 bg-neutral-900 text-white/90">
                 {/* icon */}
                 <div className="">
                   <div className="h-16 w-16 rounded-full bg-[#ced8d9] flex justify-center items-center shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">

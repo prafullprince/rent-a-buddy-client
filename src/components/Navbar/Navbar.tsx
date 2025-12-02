@@ -4,7 +4,7 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import Logo from "@/assets/logoHomeIcon.png";
+import Logo3 from "@/assets/logo3a.png";
 import { FaStar } from "react-icons/fa";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
@@ -169,18 +169,19 @@ const Navbar = () => {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
-      className="bg-slate-50 text-black h-14 sm:h-[60px] flex items-center justify-center shadow-md"
+      className="bg-white/10 text-black h-14 lg:h-[60px] flex items-center justify-center shadow-lg rounded-full mt-4 mb-4 w-[90%] lg:w-[82%] mx-auto backdrop-blur-md border border-white/20 backdrop-saturate-150 bg-gradient-to-br from-gray-900 via-black/25 to-black/10 z-50"
     >
       {/* content div */}
-      <div className="flex items-center justify-between w-[95%] lg:w-[80%] px-1 py-2 mx-auto">
+      <div className="flex items-center justify-between w-[98%] px-1 py-2 mx-auto">
         {/* logo */}
         <div className="flex items-center gap-6">
           <Link href="/">
             <Image
-              src={Logo}
+              src={Logo3
+              }
               alt="Logo"
-              width={50}
-              height={50}
+              width={40}
+              height={40}
               priority
               className="bg-transparent"
             />
@@ -214,7 +215,7 @@ const Navbar = () => {
           {/* chat */}
           {session && status === "authenticated" && (
             <Link href={`/chat`} className="relative">
-              <LuMessageCircleMore className="text-3xl font-bold cursor-pointer" />
+              <LuMessageCircleMore className="text-3xl font-semibold cursor-pointer text-white/70" />
               {totalUnseenMessages > 0 && (
                 <div className="absolute top-0 right-0 translate-x-1.5 text-white -translate-y-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-sm">
                   {totalUnseenMessages}
@@ -226,14 +227,14 @@ const Navbar = () => {
           {/* notification */}
           {session && status === "authenticated" && (
             <div>
-              <IoMdNotificationsOutline className="text-3xl font-bold cursor-pointer" />
+              <IoMdNotificationsOutline className="text-3xl font-bold cursor-pointer text-white/70" />
             </div>
           )}
 
           {/* Auth Link */}
           {session && status === "authenticated" && (
             <div
-              className="rounded-full border-2 p-[2px] cursor-pointer relative"
+              className="rounded-full border-2 p-[2px] cursor-pointer relative border-white/10"
               onClick={() => {
                 setIsOpen(!isOpen);
               }}
@@ -241,16 +242,16 @@ const Navbar = () => {
               <Image
                 src={session?.user?.image}
                 alt="user"
-                width={40}
-                height={40}
+                width={30}
+                height={30}
                 priority
-                className="rounded-full min-w-10 min-h-10"
+                className="rounded-full min-w-8 min-h-8"
               />
 
               <AnimatePresence>
                 {isOpen && (
                   <motion.div
-                    className="absolute top-16 right-0 shadow-xl rounded-lg p-2 w-fit z-[1000] bg-slate-100 text-slate-700 hover:text-slate-900 duration-300 transition-all text-sm font-semibold"
+                    className="absolute top-0 right-0 shadow-xl rounded-lg p-2 w-fit z-[1000] bg-slate-100 text-slate-700 hover:text-slate-900 duration-300 transition-all text-sm font-semibold"
                     initial={{ opacity: 0, y: -30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.1 }}
@@ -259,7 +260,7 @@ const Navbar = () => {
                   >
                     <div
                       ref={dropdownRef}
-                      className="flex flex-col gap-3 items-start px-2 py-[6px]"
+                      className="flex flex-col gap-3 items-start px-2 py-[6px] z-[1000]"
                     >
                       <Link
                         href={"/dashboard/my-profile"}
@@ -285,7 +286,7 @@ const Navbar = () => {
           {!session && status === "unauthenticated" && (
             <Link
               href="/login"
-              className={`px-4 py-[8px] hover:shadow-md hover:shadow-black font-semibold text-sm cursor-pointer hover:border-amber-50 transition-all duration-300 bg-black text-white rounded-md`}
+              className={`px-6 py-[10px] hover:shadow-lg shadow-black font-semibold text-sm cursor-pointer hover:border-amber-50 transition-all duration-300 bg-gray-900 text-white rounded-full hover:bg-gray-800 shadow-lg`}
             >
               Login
             </Link>

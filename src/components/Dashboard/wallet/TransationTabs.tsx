@@ -24,8 +24,8 @@ const TransationTabs = () => {
           <button
             key={index}
             onClick={() => handleTabClick(tab.id)}
-            className={`bg-white text-black text-start px-5 font-semibold flex items-center gap-2 py-3 rounded-lg cursor-pointer relative ${
-              tab.id === activeTab ? "border-b" : ""
+            className={`bg-neutral-800 text-white/90 text-start px-5 font-semibold flex items-center gap-2 py-3 rounded-lg cursor-pointer relative ${
+              tab.id === activeTab ? "" : ""
             }`}
           >
             <p>{tab.name}</p>
@@ -34,7 +34,7 @@ const TransationTabs = () => {
                     <motion.div
                         layout
                         layoutId="tab-active"
-                        className="bg-gray-700 w-full h-[2px] rounded-full absolute bottom-0 left-0"
+                        className="bg-gradient-to-r from-green-400 via-amber-500 to-violet-400 w-full h-[2px] rounded-full absolute bottom-0 left-0"
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                 )

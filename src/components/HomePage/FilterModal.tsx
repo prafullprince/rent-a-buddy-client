@@ -30,29 +30,29 @@ const FilterModal = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
-          className="flex flex-col gap-2 bg-gray-100 p-6 relative border-black/40 rounded-lg w-[300px] sm:w-[400px] md:w-[450px] lg:w-[500px] sm:max-w-xl mx-auto shadow-lg"
+          className="flex flex-col gap-2 bg-gray-900 p-6 relative border-black/40 rounded-lg w-[300px] sm:w-[400px] md:w-[450px] lg:w-[500px] sm:max-w-xl mx-auto shadow-lg"
         >
           {/* heading */}
-          <div className="bg-slate-200 font-semibold text-black rounded-t-lg text-xl absolute top-0 w-full right-0 left-0 h-10 flex items-center justify-between px-6">
+          <div className="bg-gray-900 font-semibold text-white/40 rounded-t-lg text-xl absolute top-2 w-full right-0 left-0 h-10 flex items-center justify-between px-6">
             Filters
             <button
               onClick={() => {
                 setFilterData(null);
               }}
-              className="text-xl text-slate-800 font-semibold"
+              className="text-xl text-gray-500 font-bold"
             >
               X
             </button>
           </div>
 
           {/* body */}
-          <div className="flex flex-col lg:flex-row lg:flex-wrap lg:items-center lg:justify-between w-full gap-2 mt-8">
+          <div className="flex flex-col lg:flex-row lg:flex-wrap lg:items-center lg:justify-between w-full gap-2 mt-12">
             <div className="flex flex-col w-full lg:flex-row lg:items-center lg:flex-wrap gap-4">
               {/* location */}
               <div className="flex flex-col gap-2 cursor-pointer">
                 <select
                   id="location"
-                  className="lg:w-44 px-4 py-2 appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-white"
+                  className="lg:w-44 px-4 py-2 appearance-none border border-gray-700 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-black"
                   value={formData.location}
                   onChange={changeHandler}
                   name="location"
@@ -73,7 +73,7 @@ const FilterModal = ({
                 <input
                   type="text"
                   placeholder="username"
-                  className="px-4 py-2 appearance-none border border-gray-300 rounded-full outline-none w-full lg:w-44 bg-white text-slate-600 font-medium text-sm placeholder:text-sm"
+                  className="px-4 py-2 appearance-none border border-gray-700 rounded-full outline-none w-full lg:w-44 bg-black text-slate-600 font-medium text-sm placeholder:text-sm"
                   value={formData.username}
                   onChange={changeHandler}
                   name="username"
@@ -87,7 +87,7 @@ const FilterModal = ({
                   <div>
                     <select
                       id="rating"
-                      className="lg:w-44 px-2 py-2 appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-white"
+                      className="lg:w-44 px-4 py-2 flex justify-center appearance-none border border-gray-700 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-black"
                       value={formData.rating}
                       onChange={changeHandler}
                       name="rating"
@@ -105,7 +105,7 @@ const FilterModal = ({
                   <div>
                     <select
                       id="gender"
-                      className="lg:w-44 px-2 py-2 appearance-none border border-gray-300 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-white"
+                      className="lg:w-44 px-4 py-2 flex justify-center appearance-none border border-gray-700 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-black"
                       value={formData.gender}
                       onChange={changeHandler}
                       name="gender"
@@ -129,13 +129,13 @@ const FilterModal = ({
             </div>
 
             {/* button */}
-            <div className="flex items-center justify-end gap-3 mt-4 lg:mt-0">
+            <div className="flex items-center justify-end gap-3 mt-8 lg:mt-0">
               {/* cancel */}
               <button
                 onClick={() => {
                   setFilterData(null);
                 }}
-                className="lg:hidden block border-slate-400 px-4 py-[6px] bg-slate-200 rounded-full"
+                className="lg:hidden block border-slate-400 px-6 py-2 bg-black text-white/80 rounded-full"
               >
                 Cancel
               </button>
@@ -144,7 +144,7 @@ const FilterModal = ({
               <motion.div layoutId="button">
                 <button
                   onClick={submitHandler}
-                  className="px-4 py-[6px] bg-black font-medium text-white rounded-full cursor-pointer flex items-center gap-2"
+                  className="px-6 py-2 bg-yellow-500 font-medium text-black rounded-full cursor-pointer flex items-center gap-2"
                 >
                   Apply
                   {loading && <IntergalacticSpinner />}

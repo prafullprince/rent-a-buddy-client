@@ -121,7 +121,7 @@ const BuilderForm = () => {
       {!loading ? (
         <div className="flex flex-col w-full items-start">
           {/* categories */}
-          <div className="w-fit flex justify-start gap-2 border-b border-gray-300">
+          <div className="w-fit flex justify-start gap-2 border-b-2 border-gray-700">
             {categorys?.map((category: any) => (
               <div
                 key={category?._id}
@@ -131,8 +131,8 @@ const BuilderForm = () => {
                 <div
                   className={`p-2 text-lg ${
                     selectedCategory?._id === category?._id
-                      ? "text-gray-950 font-semibold"
-                      : " text-gray-500 font-semibold"
+                      ? "text-white/90 font-semibold"
+                      : " text-gray-500 font-medium"
                   }`}
                 >
                   {category.name}
@@ -142,7 +142,7 @@ const BuilderForm = () => {
                   <motion.div
                     layout
                     layoutId="underline"
-                    className="absolute left-0 bottom-0 w-full h-[2px] bg-black"
+                    className="absolute left-0 bottom-0 w-full h-[2px] bg-gradient-to-r from-green-500 via-amber-600 to-violet-500"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
@@ -151,7 +151,7 @@ const BuilderForm = () => {
           </div>
 
           {/* box */}
-          <div className="border md:p-4 rounded-lg border-gray-200 w-full mt-12 max-w-2xl">
+          <div className="border md:p-4 rounded-lg border-gray-700 w-full mt-12 max-w-2xl">
             {/* card */}
             <Box
               selectedCategory={selectedCategory}
@@ -170,7 +170,7 @@ const BuilderForm = () => {
                     onClick={() => {
                       dispatch(setStep(3));
                     }}
-                    className="px-3 py-2 rounded-md bg-black text-white text-sm cursor-pointer font-semibold"
+                    className="px-3 py-2 rounded-md bg-neutral-800 text-white/80 text-sm cursor-pointer font-semibold"
                   >
                     Next
                   </button>
@@ -195,7 +195,7 @@ const BuilderForm = () => {
               <div className="flex items-center gap-4">
                 <motion.button
                   onClick={createService}
-                  className="px-4 py-2 text-sm bg-black text-white rounded-md cursor-pointer flex items-center gap-1"
+                  className="px-5 py-3 text-sm bg-neutral-900 text-white/80 rounded-md cursor-pointer flex items-center gap-1 font-semibold"
                   layoutId="createService"
                 >
                   Create

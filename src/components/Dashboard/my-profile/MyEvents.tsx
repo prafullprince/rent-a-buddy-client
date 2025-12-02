@@ -41,6 +41,7 @@ const MyEvents = () => {
     }
   };
 
+  // online/offline switch
   async function onlineOffline() {
     try {
       await markAsActiveInactive(
@@ -62,10 +63,10 @@ const MyEvents = () => {
 
   return (
     <div className="">
-      <h2 className="text-xl mt-8 font-semibold text-black">My Events</h2>
+      <h2 className="text-xl mt-8 font-semibold text-white/80">My Events</h2>
       {loading ? (
         <div className="flex justify-center items-center py-6">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-white/70 border-t-transparent"></div>
         </div>
       ) : (
         <div className="mt-4 bg-black/10 rounded-lg shadow-lg p-4 w-full max-w-[300px]">

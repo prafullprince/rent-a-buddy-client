@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import "@/styles/globals.css";
+// import "@/styles/globals.css";
 import Image from "next/image";
 import { createPostApiCall } from "@/service/apiCall/user.api";
 
@@ -75,7 +75,7 @@ const PostForm = () => {
           >
             <Label labelname="Thumbnail" />
             <input
-              className="text-slate-100 bg-slate-800 hidden"
+              className="text-slate-100 bg-neutral-800 hidden"
               type="file"
               {...register("imageUrl", {
                 required: "Upload a thumbnail",
@@ -103,7 +103,7 @@ const PostForm = () => {
                 className="w-full h-[300px] object-cover bg-center bg-cover rounded-md shadow-xl transition-all duration-300"
               />
             ) : (
-              <div className="shadow-lg transition-all duration-300 w-full h-[300px] border border-[#2C333F] border-dashed rounded-lg flex flex-col gap-8 items-center justify-center py-8 bg-white">
+              <div className="shadow-lg transition-all duration-300 w-full h-[300px] border border-[#2C333F] border-dashed rounded-lg flex flex-col gap-8 items-center justify-center py-8 bg-neutral-800">
                 {/* icon */}
                 <div className="">
                   <div className="h-16 w-16 rounded-full bg-[#ced8d9] flex justify-center items-center shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">

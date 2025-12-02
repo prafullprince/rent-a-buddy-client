@@ -39,7 +39,6 @@ const AllAvailableEventsLive = () => {
     setAvailableLoading(true);
     try {
       const result = await allAvailableEvents();
-      console.log(" allAvailableEvent result is: ", result);
       setAvailableEvent(result);
     } catch (error) {
       console.log("allAvailableEvent error: ", error);
@@ -54,10 +53,12 @@ const AllAvailableEventsLive = () => {
   }, []);
 
   return (
-    <div className="relative w-full">
-      <h2 className="font-semibold text-xl">
+    <div className="relative w-full z-50 text-white/30 mt-4">
+      <h2 className="font-semibold text-lg pl-4 flex items-center gap-2 text-red-500">
         {" "}
-        {availableEvent?.length} profiles are available today
+        <p className="">Live</p>{" "}
+        <div className="bg-red-800 w-4 h-4 rounded-full"></div>
+        {/* {availableEvent?.length} */}
       </h2>
 
       <div
@@ -75,7 +76,7 @@ const AllAvailableEventsLive = () => {
         <div className="flex items-center gap-3">
           {availableLoading ? (
             <div className="flex justify-center items-center py-6">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-white/80 border-t-transparent"></div>
             </div>
           ) : (
             <>
@@ -83,22 +84,26 @@ const AllAvailableEventsLive = () => {
                 <Link
                   href={`/event/${story?._id}`}
                   key={story?._id}
-                  className="relative snap-start"
+                  className="relative snap-start flex flex-col items-center"
                 >
-                  {/* Image */}
-                  <Image
-                    key={story?._id}
-                    src={story?.imageUrl}
-                    alt="profile"
-                    width={40}
-                    height={40}
-                    className="min-w-20 min-h-20 max-w-20 max-h-20 rounded-full bg-center bg-cover border-3 px-[2px] py-[2px] border-t-red-700 border-r-red-800 border-b-yellow-600 border-l-green-950"
-                  />
+                  {/* Outer gradient ring (Instagram-style) */}
+                  <div className="p-[3px] rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
+                    {/* White inner padding (like Instagram) */}
+                    <div className="p-[4px] bg-black rounded-full">
+                      {/* Image */}
+                      <Image
+                        key={story?._id}
+                        src={story?.imageUrl}
+                        alt="profile"
+                        width={40}
+                        height={40}
+                        className="rounded-full min-w-16 min-h-16 max-w-16 max-h-16"
+                      />
+                    </div>
+                  </div>
 
-                  {/* service */}
-
-                  {/* userName */}
-                  <div className="text-[10px] font-medium">
+                  {/* Username */}
+                  <div className="text-[10px] font-medium mt-1 text-center w-[60px] truncate text-white">
                     {story?.user?.username?.substring(0, 15)}
                   </div>
                 </Link>

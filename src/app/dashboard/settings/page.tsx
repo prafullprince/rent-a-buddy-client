@@ -142,7 +142,7 @@ const Page = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="">
-          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-200"></div>
         </div>
       </div>
     );
@@ -151,16 +151,16 @@ const Page = () => {
     <div className="">
       {/* route */}
       <div className="p-4 mt-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-12 lg:ml-0 mt-1 lg:mt-0">
           <div
             onClick={() => router.push("/")}
-            className="text-sm text-[#838894] cursor-pointer"
+            className="text-sm text-[#d5d6da] cursor-pointer"
           >
             Home <span>/</span>
           </div>
           <div
             onClick={() => router.push("/dashboard/my-profile")}
-            className="text-sm text-[#838894] cursor-pointer"
+            className="text-sm text-[#d5d6da] cursor-pointer"
           >
             Dashboard <span>/</span>
           </div>
@@ -174,7 +174,7 @@ const Page = () => {
       {userLoading ? (
         <div className="min-h-screen flex items-center justify-center">
           <div className="">
-            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-100"></div>
           </div>
         </div>
       ) : (
@@ -182,12 +182,12 @@ const Page = () => {
           {/* Box */}
           <div className="flex flex-col gap-4">
             {/* heading */}
-            <h2 className="text-xl mt-4 font-semibold text-black">
+            <h2 className="text-xl mt-4 font-semibold text-gray-200">
               Edit Profile
             </h2>
 
             {/* change profilePictire */}
-            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between bg-black/5 px-4 py-4 rounded-lg sm:min-w-lg sm:max-w-lg w-full shadow-md">
+            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between bg-neutral-800 px-4 py-4 rounded-lg sm:min-w-lg sm:max-w-lg w-full shadow-md">
               <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 {/* pp */}
                 <div
@@ -232,7 +232,7 @@ const Page = () => {
 
                 {/* buttons */}
                 <div className="flex flex-col items-start gap-2">
-                  <h3 className="text-sm font-semibold">
+                  <h3 className="text-sm font-semibold text-white/80">
                     Change Profile Picture
                   </h3>
                   <div className="flex items-center gap-2 mt-2">
@@ -274,17 +274,17 @@ const Page = () => {
             </div>
 
             {/* change details */}
-            <div className="shadow-md px-6 py-4 rounded-lg bg-black/5 sm:min-w-lg sm:max-w-lg w-full">
+            <div className="shadow-md px-6 py-4 rounded-lg bg-neutral-800 sm:min-w-lg sm:max-w-lg w-full">
               <form
                 onSubmit={handleSubmit(onsubmit)}
-                className="flex flex-col gap-10"
+                className="flex flex-col gap-4"
               >
                 <div className="flex flex-col gap-4">
                   {/* username */}
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Username" />
                     <input
-                      className="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-sm bg-white text-sm"
+                      className="w-full p-2 border border-gray-700 rounded-lg outline-none shadow-sm bg-neutral-900 text-sm text-white/80"
                       {...register("username")}
                       placeholder="change username"
                       type="text"
@@ -295,7 +295,7 @@ const Page = () => {
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Phone Number" />
                     <input
-                      className="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-sm bg-white text-sm"
+                      className="w-full p-2 border border-gray-700 rounded-lg outline-none shadow-sm bg-neutral-900 text-sm text-white/80"
                       {...register("phoneNumber")}
                       placeholder="change phone number"
                       type="text"
@@ -308,7 +308,7 @@ const Page = () => {
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Bio" />
                     <textarea
-                      className="w-full p-2 border shadow-sm border-gray-300 rounded-lg outline-none bg-white text-sm"
+                      className="w-full p-2 border shadow-sm border-gray-700 rounded-lg outline-none bg-neutral-900 text-sm text-white/80"
                       {...register("about")}
                       placeholder="change bio"
                       rows={5}

@@ -39,7 +39,7 @@ const Information = () => {
           <Link
             key={link.href}
             href={link.href}
-            className="hover:text-green-800 transition-colors duration-200"
+            className="hover:text-green-800 transition-colors duration-200 text-white/40"
           >
             {link.label}
           </Link>

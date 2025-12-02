@@ -6,7 +6,7 @@ const Transaction = () => {
     <div className='p-6'>
         {/* heading */}
         <div>
-            <h1 className='text-xl text-gray-700 font-semibold tracking-wider'>Transaction History</h1>
+            <h1 className='text-xl text-white/90 font-semibold tracking-wider'>Transaction History</h1>
         </div>
 
         {/* tabs */}

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, memo } from 'react';
 
 
-export default function SubSectionSlider({
+const SubSectionSlider = ({
   subSectionDetails,
   currentSubSection,
   setCurrentSubSection,
-}: any) {
+}: any) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
@@ -87,3 +87,5 @@ export default function SubSectionSlider({
     </div>
   );
 }
+
+export default memo(SubSectionSlider)

@@ -2,7 +2,7 @@
 // /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from 'react';
 import { motion } from "framer-motion";
 import { PiCurrencyInrBold } from "react-icons/pi";
 import Image from "next/image";
@@ -36,7 +36,6 @@ const OrderModal = ({
   router,
   session,
 }: any) => {
-
   // hook
   const btnRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
@@ -109,8 +108,7 @@ const OrderModal = ({
     setMaxDate(maxDateString);
   }, [formData.date]);
 
-
-  // socket handling
+  // socket handling -> order status
   useEffect(() => {
     if (!session || !modalData) return;
     if (!socket.connected) socket.connect();
@@ -120,9 +118,7 @@ const OrderModal = ({
       console.log("orderStatus", data);
       if (data.success) {
         toast.success(data.message);
-        router.push(
-          `/chat/${data?.data?.chatId}/user/${data?.data?.receiver}`
-        );
+        router.push(`/chat/${data?.data?.chatId}/user/${data?.data?.receiver}`);
         setLoading(false);
         setModalData(null);
         dispatch(setOpenChatMobile(true));
@@ -141,28 +137,28 @@ const OrderModal = ({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-[1000] bg-black/50 backdrop-blur-sm overflow-auto"
+      className="fixed inset-0 z-[1000] bg-black/10 backdrop-blur-sm overflow-auto shadow-2xl"
     >
-      <div className="h-fit mx-auto my-4 w-[95%] sm:w-[90%] lg:w-[80%]">
+      <div className="mx-auto my-4 w-[95%] sm:w-[90%] lg:w-[80%]">
         <motion.div
           ref={btnRef}
-          className="flex flex-col gap-2 bg-gray-100 p-6 relative border-black/40 rounded-lg w-[300px] sm:w-[400px] md:w-[450px] lg:w-[500px] sm:max-w-xl mx-auto shadow-lg"
+          className="flex flex-col gap-2 bg-gray-900 p-6 relative border-black/40 rounded-lg w-[300px] sm:w-[400px] md:w-[450px] lg:w-[500px] sm:max-w-xl mx-auto shadow-lg"
         >
           {/* heading */}
-          <div className="bg-gray-700 font-semibold text-pink-100 rounded-t-lg text-sm absolute top-0 w-full right-0 left-0 h-10 flex items-center justify-between px-6">
+          <div className="bg-gray-950 font-semibold text-pink-50 rounded-t-lg text-base absolute top-0 w-full right-0 left-0 h-12 flex items-center justify-between px-6">
             {modalData.heading}
             <button
               onClick={() => {
                 setModalData(null);
               }}
-              className="text-lg text-pink-300"
+              className="text-lg text-pink-100 cursor-pointer"
             >
               X
             </button>
           </div>
 
           {/* body */}
-          <div className="flex flex-col gap-2 mt-4">
+          <div className="flex flex-col gap-2 mt-5">
             {/* currentSubSection */}
             <motion.div
               layoutId={`subsection`}
@@ -176,13 +172,13 @@ const OrderModal = ({
                     fallbackImage
                   }
                   alt="subSectionImage"
-                  width={60}
-                  height={40}
+                  width={50}
+                  height={50}
                   className="rounded-lg aspect-square"
                 />
                 <div className="flex flex-col gap-1">
                   {/* name */}
-                  <div className="text-gray-700 text-sm font-semibold">
+                  <div className="text-gray-400 text-sm font-semibold">
                     {modalData?.currentSubSection?.subCategoryId?.name}
                   </div>
 
@@ -202,7 +198,7 @@ const OrderModal = ({
                 <input
                   type="number"
                   id="unit"
-                  className="w-[60px] sm:w-[80px] p-2 border border-gray-300 rounded-lg outline-none bg-white"
+                  className="w-[60px] sm:w-[80px] p-2 border border-gray-700 rounded-lg outline-none bg-gray-800 text-white"
                   value={formData.unit}
                   onChange={formHandler}
                   name="unit"
@@ -221,13 +217,13 @@ const OrderModal = ({
             <div className="flex flex-col gap-2 mt-2">
               <label
                 htmlFor="location"
-                className="text-xs font-semibold text-gray-800"
+                className="text-xs font-semibold text-gray-300"
               >
                 Location:
               </label>
               <select
                 id="location"
-                className="w-full p-2 border border-gray-300 rounded-lg outline-none text-sm bg-white"
+                className="w-full p-2 border border-gray-700 rounded-lg outline-none text-sm bg-gray-900 text-gray-50"
                 value={formData.location}
                 onChange={formHandler}
                 name="location"
@@ -247,9 +243,9 @@ const OrderModal = ({
                 {/* date */}
                 <label
                   htmlFor="date"
-                  className="text-xs font-semibold text-gray-800"
+                  className="text-xs font-semibold text-gray-300"
                 >
-                  Date
+                  Date:
                 </label>
                 <input
                   type="date"
@@ -258,7 +254,7 @@ const OrderModal = ({
                   max={maxDate}
                   placeholder="dd/mm/yyyy"
                   required
-                  className="w-full p-2 border border-gray-300 rounded-lg outline-none bg-white text-xs"
+                  className="w-full p-2 border border-gray-700 rounded-lg outline-none bg-gray-900 text-gray-50 text-xs"
                   value={formData.date}
                   onChange={formHandler}
                   name="date"
@@ -269,14 +265,14 @@ const OrderModal = ({
                 {/* time */}
                 <label
                   htmlFor="time"
-                  className="text-xs font-semibold text-gray-800"
+                  className="text-xs font-semibold text-gray-300"
                 >
-                  Time
+                  Time:
                 </label>
                 <input
                   type="time"
                   id="time"
-                  className="w-full p-2 border border-gray-300 rounded-lg outline-none text-xs bg-white"
+                  className="w-full p-2 border border-gray-700 rounded-lg outline-none text-xs bg-gray-900 text-gray-50"
                   value={formData.time}
                   onChange={formHandler}
                   name="time"
@@ -288,13 +284,13 @@ const OrderModal = ({
             <div className="flex flex-col gap-2 mt-2">
               <label
                 htmlFor="additionalInfo"
-                className="text-xs font-semibold text-gray-800"
+                className="text-xs font-semibold text-gray-300"
               >
                 Additional Info:
               </label>
               <textarea
                 id="additionalInfo"
-                className="w-full p-2 border border-gray-300 rounded-lg outline-none placeholder:text-gray-400 placeholder:text-xs text-xs bg-white"
+                className="w-full p-2 border border-gray-700 rounded-lg outline-none placeholder:text-gray-400 placeholder:text-xs text-xs bg-gray-900 text-gray-50"
                 value={formData.additionalInfo}
                 onChange={formHandler}
                 name="additionalInfo"
@@ -307,13 +303,13 @@ const OrderModal = ({
             <div className="flex flex-col gap-2 mt-2">
               <label
                 htmlFor="cabFare"
-                className="text-xs font-semibold text-gray-800"
+                className="text-xs font-semibold text-gray-300"
               >
-                Cab Fare (in rupees)
+                Cab Fare (in rupees):
               </label>
               <select
                 id="cabFare"
-                className="w-full p-2 border border-gray-300 rounded-lg outline-none text-xs bg-white"
+                className="w-full p-2 border border-gray-700 rounded-lg outline-none text-xs bg-gray-900 text-gray-50"
                 value={formData.cabFare}
                 onChange={formHandler}
                 name="cabFare"
@@ -325,7 +321,7 @@ const OrderModal = ({
                 ))}
               </select>
               <p className="text-sm text-gray-500 flex items-center gap-1">
-                <span className="text-sm font-semibold text-gray-800 flex items-center gap-1">
+                <span className="text-sm font-semibold text-gray-300 flex items-center gap-1">
                   Cab Fare:
                 </span>{" "}
                 <PiCurrencyInrBold className="text-yellow-600 text-base" />
@@ -338,7 +334,7 @@ const OrderModal = ({
               <div className="flex flex-col gap-1">
                 <div>
                   <p className="text-sm text-gray-500 flex items-center">
-                    <span className="text-sm font-semibold text-gray-800 flex items-center gap-1">
+                    <span className="text-sm font-semibold text-gray-300 flex items-center gap-1">
                       Total Price:
                     </span>{" "}
                     <PiCurrencyInrBold className="text-yellow-600 text-sm" />
@@ -402,7 +398,7 @@ const OrderModal = ({
               }}
               disabled={loading}
               aria-disabled={loading}
-              className="px-3 py-2 text-sm bg-black text-white rounded-lg cursor-pointer flex items-center gap-1"
+              className="px-3 py-2 text-sm bg-yellow-500 text-black rounded-lg cursor-pointer flex items-center gap-1 font-medium"
             >
               {modalData.btn1Text}
               {loading && (
@@ -426,4 +422,4 @@ const OrderModal = ({
   );
 };
 
-export default OrderModal;
+export default memo(OrderModal);

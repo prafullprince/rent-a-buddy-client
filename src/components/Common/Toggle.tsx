@@ -15,7 +15,7 @@ const Toggle = ({ isToggleOpen, setIsToggleOpen, setFormData }: any) => {
     }}>
       <div
         className={`w-14 h-7 relative rounded-full flex items-center justify-center transition-all duration-300 ${
-          isToggleOpen ? "bg-green-600" : "bg-gray-400"
+          isToggleOpen ? "bg-gray-600" : "bg-gray-800"
         }`}
       >
         <div

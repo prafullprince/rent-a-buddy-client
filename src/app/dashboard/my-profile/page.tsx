@@ -11,7 +11,7 @@ const page = async () => {
   if (!session)
     return (
       <div className="flex justify-center items-center py-6">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-white/90 border-t-transparent"></div>
       </div>
     );
 
@@ -20,13 +20,13 @@ const page = async () => {
       {/* topbar */}
       <div className="flex flex-col gap-4 mt-2">
         {/* route */}
-        <div className={`flex items-center gap-2`}>
-          <Link href={"/"} className="text-sm text-[#838894]">
+        <div className={`flex items-center gap-2 ml-12 mt-1 lg:mt-0 lg:ml-0`}>
+          <Link href={"/"} className="text-sm text-[#d5d6da]">
             Home <span>/</span>
           </Link>
           <Link
             href={"/dashboard/my-profile"}
-            className="text-sm text-[#838894]"
+            className="text-sm text-[#d5d6da]"
           >
             Dashboard <span>/</span>
           </Link>
@@ -36,7 +36,7 @@ const page = async () => {
         </div>
 
         {/* title */}
-        <h2 className="text-xl mt-3 font-semibold text-black">My Profile</h2>
+        <h2 className="text-xl mt-3 font-semibold text-white/80">My Profile</h2>
 
         {/* profile */}
         <div className="flex flex-col gap-4 max-w-lg sm:min-w-lg">

@@ -8,9 +8,9 @@ const Balance = ({wallet}:any) => {
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8'>
         {/* balance */}
-        <div className='p-4 bg-white rounded-xl shadow-lg flex flex-col gap-4'>
+        <div className='p-4 bg-neutral-900 text-white/70 rounded-xl shadow-lg flex flex-col gap-4'>
             <div className='flex items-center gap-3'>
-                <h1 className='text-base font-medium text-black/65'>Available Balance</h1>
+                <h1 className='text-base font-medium text-white/90'>Available Balance</h1>
                 <FcAbout className='text-lg' />
             </div>
             <div className='flex items-center gap-1'>
@@ -20,9 +20,9 @@ const Balance = ({wallet}:any) => {
         </div>
 
         {/* income */}
-        <div className='p-4 bg-white rounded-xl shadow-lg flex flex-col gap-4'>
+        <div className='p-4 bg-neutral-900 text-white/70 rounded-xl shadow-lg flex flex-col gap-4'>
             <div className='flex items-center gap-3'>
-                <h1 className='text-base font-medium text-black/65'>Total Income</h1>
+                <h1 className='text-base font-medium text-white/90'>Total Income</h1>
                 <FcAbout className='text-lg' />
             </div>
             <div className='flex items-center gap-1'>
@@ -32,9 +32,9 @@ const Balance = ({wallet}:any) => {
         </div>
 
         {/* expense */}
-        <div className='p-4 bg-white rounded-xl shadow-lg flex flex-col gap-4'>
+        <div className='p-4 bg-neutral-900 text-white/70 rounded-xl shadow-lg flex flex-col gap-4'>
             <div className='flex items-center gap-3'>
-                <h1 className='text-base font-medium text-black/65'>Total Expense</h1>
+                <h1 className='text-base font-medium text-white/90'>Total Expense</h1>
                 <FcAbout className='text-lg' />
             </div>
             <div className='flex items-center gap-1'>
@@ -44,9 +44,9 @@ const Balance = ({wallet}:any) => {
         </div>
 
         {/* pending income */}
-        <div className='p-4 bg-white rounded-xl shadow-lg flex flex-col gap-4'>
+        <div className='p-4 bg-neutral-900 text-white/70 rounded-xl shadow-lg flex flex-col gap-4'>
             <div className='flex items-center gap-3'>
-                <h1 className='text-base font-medium text-black/65'>Pending Income</h1>
+                <h1 className='text-base font-medium text-white/90'>Pending Income</h1>
                 <FcAbout className='text-lg' />
             </div>
             <div className='flex items-center gap-1'>
@@ -56,9 +56,9 @@ const Balance = ({wallet}:any) => {
         </div>
 
         {/* referalls */}
-        <div className='p-4 bg-white rounded-xl shadow-lg flex flex-col gap-4'>
+        <div className='p-4 bg-neutral-900 text-white/70 rounded-xl shadow-lg flex flex-col gap-4'>
             <div className='flex items-center gap-3'>
-                <h1 className='text-base font-medium text-black/65'>Referall Balance</h1>
+                <h1 className='text-base font-medium text-white/90'>Referall Balance</h1>
                 <FcAbout className='text-lg' />
             </div>
             <div className='flex items-center gap-1'>

@@ -14,7 +14,7 @@ const UserDetails = async () => {
   if (!session) return null;
 
   return (
-    <div className="shadow-md px-3 py-4 rounded-lg bg-black/5 lg:min-w-[600px] w-full">
+    <div className="shadow-md px-3 py-4 rounded-lg bg-neutral-800 lg:min-w-[600px] w-full">
       <div className="flex sm:flex-row flex-col sm:items-start sm:justify-between gap-3">
         {/* left */}
         <div className="flex sm:flex-row flex-col sm:items-start gap-4">
@@ -29,15 +29,15 @@ const UserDetails = async () => {
 
           <div className="flex flex-col items-start gap-1 text-wrap break-words">
             {/* name */}
-            <p className="text-lg font-semibold">{session?.user?.name}</p>
+            <p className="text-lg font-semibold text-white/80">{session?.user?.name}</p>
 
             {/* username */}
-            <p className="text-xs text-[#838894] text-wrap break-words max-w-[150px] sm:max-w-[200px] lg:max-w-[300px]">
+            <p className="text-xs text-[#b8bcc7] text-wrap break-words max-w-[150px] sm:max-w-[200px] lg:max-w-[300px]">
               {/* {session?.user?.email?.split("@")[0]} */}
               {userDetails?.username || session?.user?.email?.split("@")[0]}
             </p>
 
-            <p className="text-sm font-semibold text-[#838894] mt-2">
+            <p className="text-sm font-semibold text-[#a9adb5] mt-2">
               {/* {session?.user?.email?.split("@")[0]} */}
               {session?.user?.email}
             </p>

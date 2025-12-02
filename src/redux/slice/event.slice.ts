@@ -13,7 +13,7 @@ interface eventState {
 
 // initial state
 const initialState: eventState = {
-  step: 1,
+  step: 2,
   event: null,
   editEvent: false,
   isOpen: false,

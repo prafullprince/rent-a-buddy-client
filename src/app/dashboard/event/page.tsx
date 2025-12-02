@@ -17,16 +17,16 @@ const Page = () => {
     <div className="w-full mx-auto flex flex-col px-6">
       {/* route */}
       <div className="mt-2 pt-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-12 lg:ml-0">
           <div
             onClick={() => router.push("/")}
-            className="text-sm text-[#838894] cursor-pointer"
+            className="text-sm text-[#d5d6da] cursor-pointer"
           >
             Home <span>/</span>
           </div>
           <div
             onClick={() => router.push("/dashboard/my-profile")}
-            className="text-sm text-[#838894] cursor-pointer"
+            className="text-sm text-[#d5d6da] cursor-pointer"
           >
             Dashboard <span>/</span>
           </div>
@@ -37,7 +37,7 @@ const Page = () => {
       </div>
 
       {/* eventCard */}
-      <div className="sm:p-6 p-4 mt-8 bg-black/5 shadow-md w-full sm:min-w-lg rounded-lg">
+      <div className="sm:p-6 p-4 mt-8 bg-neutral-950 shadow-md w-fit sm:min-w-lg rounded-lg">
         <div className="flex flex-col gap-4">
           {/* step */}
 

@@ -31,7 +31,7 @@ const GradientInput: React.FC<GradientInputProps> = ({
         {...register(name,{
           required: `Please enter ${name}`,
         })}
-        className="shadow-sm w-full p-3 h-12 rounded-md border border-gray-300 focus:outline-none bg-white relative z-10"
+        className="shadow-sm w-full p-3 h-12 rounded-md border border-gray-700 focus:outline-none bg-neutral-900 text-white/90 relative z-10"
       />
       {errors?.name && (
         <p className="text-sm text-green-700 mt-2">{errors?.name?.message as string}</p>

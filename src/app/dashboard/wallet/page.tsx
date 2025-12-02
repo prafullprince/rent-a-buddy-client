@@ -28,14 +28,14 @@ const WalletPage = () => {
   return (
     <div className="w-full">
       {/* route */}
-      <div className="p-4 mt-4">
-        <div className="flex items-center gap-2">
-          <Link href={"/"} className="text-sm text-[#838894]">
+      <div className="p-4">
+        <div className="flex items-center gap-2 ml-12 mt-2 lg:mt-0 lg:ml-0">
+          <Link href={"/"} className="text-sm text-[#d5d6da]">
             Home <span>/</span>
           </Link>
           <Link
             href={"/dashboard/my-profile"}
-            className="text-sm text-[#838894]"
+            className="text-sm text-[#d5d6da]"
           >
             Dashboard <span>/</span>
           </Link>
@@ -46,7 +46,7 @@ const WalletPage = () => {
       </div>
 
       {/* Wallet */}
-      <div className="bg-gray-100/80 mx-4 mt-4 rounded-xl">
+      <div className="bg-neutral-800 mx-4 mt-4 rounded-xl">
         <Wallet wallet={wallet} />
       </div>
 
