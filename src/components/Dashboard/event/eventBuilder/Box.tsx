@@ -19,56 +19,60 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
 
   // Handle tick click (Select / Deselect Subcategory)
   const handleSelect = (categoryId: string, subCategory: any) => {
-  setSelectedData((prev: any) => {
-    let updatedServiceData = Array.isArray(prev?.serviceData)
-      ? prev.serviceData.map((service: any) => {
-          if (service.id === categoryId) {
-            const exists = service.subCategories.some(
-              (sub: any) => sub.id === subCategory._id
-            );
+    setSelectedData((prev: any) => {
+      let updatedServiceData = Array.isArray(prev?.serviceData)
+        ? prev.serviceData.map((service: any) => {
+            // if service is matched with categoryID
+            if (service.id === categoryId) {
+              // check is currentSubCategory is found or not in selected service subcategories
+              const exists = service.subCategories.some(
+                (sub: any) => sub.id === subCategory._id
+              );
 
-            const updatedSubCategories = exists
-              ? service.subCategories.filter(
-                  (sub: any) => sub.id !== subCategory._id
-                )
-              : [
-                  ...service.subCategories,
-                  { id: subCategory._id, about: "", price: 0 },
-                ];
+              // if found then remove and if not then add one more subcategory
+              const updatedSubCategories = exists
+                ? service.subCategories.filter(
+                    (sub: any) => sub.id !== subCategory._id
+                  )
+                : [
+                    ...service.subCategories,
+                    { id: subCategory._id, about: "", price: 0 },
+                  ];
 
-            return {
-              ...service,
-              subCategories: updatedSubCategories,
-            };
-          }
-          return service;
-        })
-      : [];
+              // return updated service
+              return {
+                ...service,
+                subCategories: updatedSubCategories,
+              };
+            }
+            // return service
+            return service;
+          })
+        : [];
 
-    // Remove categories with no subcategories
-    updatedServiceData = updatedServiceData.filter(
-      (service: any) => service.subCategories.length > 0
-    );
+      // Remove categories with no subcategories
+      updatedServiceData = updatedServiceData.filter(
+        (service: any) => service.subCategories.length > 0
+      );
 
-    // If category does not exist at all, add it
-    const alreadyExists = updatedServiceData.some(
-      (service: any) => service.id === categoryId
-    );
+      // If category does not exist at all, add it -> mostly at first time
+      const alreadyExists = updatedServiceData.some(
+        (service: any) => service.id === categoryId
+      );
+      if (!alreadyExists) {
+        updatedServiceData.push({
+          id: categoryId,
+          subCategories: [{ id: subCategory?._id, about: "", price: 0 }],
+        });
+      }
 
-    if (!alreadyExists) {
-      updatedServiceData.push({
-        id: categoryId,
-        subCategories: [{ id: subCategory?._id, about: "", price: 0 }],
-      });
-    }
-
-    return {
-      ...prev,
-      serviceData: updatedServiceData,
-    };
-  });
-};
-
+      // return updated selectedData
+      return {
+        ...prev,
+        serviceData: updatedServiceData,
+      };
+    });
+  };
 
   // Handle input change for both price & description
   const handleInputChange = (
@@ -81,7 +85,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
       ...prev,
       serviceData: prev?.serviceData?.map((service: any) =>
         service.id === categoryId
-          ? {                         
+          ? {
               ...service,
               subCategories: service.subCategories?.map((sub: any) =>
                 sub.id === subCategoryId ? { ...sub, [field]: value } : sub
@@ -135,7 +139,9 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                     handleSelect(selectedCategory?._id, subCategory)
                   }
                   className={`flex items-center justify-center min-w-7 min-h-7 max-w-7 max-h-7 border-1 border-slate-400 cursor-pointer rounded-sm ${
-                    isChecked ? "bg-black text-white font-semibold" : "bg-white/60"
+                    isChecked
+                      ? "bg-black text-white font-semibold"
+                      : "bg-white/60"
                   }`}
                 >
                   <AnimatePresence>
@@ -166,7 +172,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                   <input
                     type="number"
                     placeholder="Set price"
-                    className="py-2 outline-none w-full text-xs md:text-sm placeholder:text-gray-300"
+                    className="py-2 outline-none w-full text-xs md:text-sm placeholder:text-gray-400 text-white/80"
                     value={
                       selectedData?.serviceData
                         ?.find((s: any) => s.id === selectedCategory?._id)
@@ -194,7 +200,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                   <input
                     type="text"
                     placeholder="Edit description"
-                    className="py-2 outline-none w-full text-xs md:text-sm placeholder:text-gray-300"
+                    className="py-2 outline-none w-full text-xs md:text-sm placeholder:text-gray-400 text-white/80"
                     value={
                       selectedData?.serviceData
                         ?.find((s: any) => s.id === selectedCategory?._id)

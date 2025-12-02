@@ -45,19 +45,19 @@ const Sender = ({
       {msg?.sender === userDetails?._id && (
         <div className="flex justify-end">
           <div
-            className={`max-w-[65%] relative text-black rounded-lg rounded-tr-none ${
+            className={`max-w-[65%] relative text-[#E9EDEF] rounded-lg rounded-tr-none ${
               msg?.type === "text"
-                ? "bg-green-200 px-3 pt-1"
-                : "bg-white min-w-[270px] max-w-sm"
+                ? "bg-[#075E54] px-3 pt-1"
+                : "bg-[#075E54] min-w-[270px] max-w-sm"
             }`}
           >
             <div
               className={`absolute right-0 top-0 border-t-[10px] border-t-transparent border-l-[10px] ${
-                msg.type !== "text" ? "border-l-gray-400" : "border-l-green-200"
+                msg.type !== "text" ? "border-l-gray-900" : "border-l-[#075E54]"
               } w-0 h-0 rotate-90 translate-x-2 translate-y-0`}
             ></div>
             {msg?.type === "text" ? (
-              <div className="pr-13 pb-2 break-words text-wrap text-sm">
+              <div className="pr-13 pb-2 break-words text-wrap">
                 {msg.text}
               </div>
             ) : (
@@ -68,7 +68,7 @@ const Sender = ({
               >
                 <div className="flex flex-col gap-2">
                   {/* topbar */}
-                  <div className="flex items-center justify-between bg-gray-400 h-14 px-2 rounded-tl-lg">
+                  <div className="flex items-center justify-between bg-gray-900 h-14 px-2 rounded-tl-lg">
                     {/* left */}
                     <div className="flex items-start gap-2">
                       <Image
@@ -83,13 +83,13 @@ const Sender = ({
                       />
                       <div className="flex flex-col gap-1">
                         {/* name */}
-                        <div className="text-black text-xs font-semibold">
+                        <div className="text-white/80 text-xs font-semibold">
                           {msg?.text?.subId?.subCategoryId?.name}
                         </div>
 
                         {/* price */}
                         <div className="flex items-center gap-1">
-                          <p className="text-xs font-medium text-gray-600">
+                          <p className="text-xs font-medium text-gray-500">
                             {msg?.text?.subId?.price}
                             /hr
                           </p>
@@ -272,7 +272,7 @@ const Sender = ({
             )}
 
             {/* dateTime */}
-            <span className="text-right text-[10px] text-gray-500 text-richblack-25 font-bold absolute bottom-1 right-6">
+            <span className="text-right text-[10px] text-[#A5B3B8] font-bold absolute bottom-1 right-6">
               {new Date(msg?.createdAt).toLocaleString("en-us", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -301,7 +301,7 @@ const Sender = ({
               <>
                 <span className="absolute right-1 bottom-1">
                   <IoMdDoneAll
-                    className={msg.isSeen ? "text-blue-500" : "text-gray-500"}
+                    className={msg.isSeen ? "text-blue-500" : "text-gray-300"}
                   />
                 </span>
               </>

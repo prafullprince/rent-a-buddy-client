@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 
 // BuilderForm
 const BuilderForm = () => {
-  // event
+  // hook
   const { event, editService } = useSelector((state: any) => state.event);
   const { data: session } = useSession();
   const dispatch = useDispatch();
@@ -207,13 +207,7 @@ const BuilderForm = () => {
         </div>
       ) : (
         <div className="w-full h-full flex justify-center items-center">
-          <>
-            <div className="w-full flex justify-end">
-              <div className="flex items-center px-6 py-3 rounded-lg justify-center w-fit h-12 text-zinc-800 bg-black/50">
-                <div className="loader1"></div>
-              </div>
-            </div>
-          </>
+          <div className="animate-spin border-2 border-t-0 border-white/80 w-12 h-12 rounded-full"></div>
         </div>
       )}
     </div>

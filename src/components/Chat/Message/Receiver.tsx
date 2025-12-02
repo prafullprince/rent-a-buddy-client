@@ -23,26 +23,26 @@ const Receiver = ({
       {msg?.receiver === userDetails?._id && (
         <div className="flex justify-start">
           <div
-            className={`max-w-[65%] text-wrap break-words relative text-black rounded-lg rounded-tl-none ${
+            className={`max-w-[65%] text-wrap break-words relative text-white/70 rounded-lg rounded-tl-none ${
               msg.type === "text"
-                ? "bg-white px-3 pt-1"
-                : "bg-white min-w-[270px] max-w-sm"
+                ? "bg-[#1F2C34] px-3 pt-1"
+                : "bg-[#1F2C34] min-w-[270px] max-w-sm"
             }`}
           >
             <div
               className={`absolute left-0 top-0 border-t-[10px] border-t-transparent border-l-[10px] ${
-                msg.type === "text" ? "border-white" : "border-l-gray-400"
+                msg.type === "text" ? "border-[#1F2C34]" : "border-l-gray-900"
               } w-0 h-0 rotate-180 -translate-x-2 translate-y-0`}
             ></div>
             {msg.type === "text" ? (
-              <div className="pr-9 pb-2 break-words text-wrap text-sm">{msg.text}</div>
+              <div className="pr-9 pb-2 break-words text-wrap">{msg.text}</div>
             ) : (
               <div
                 className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6`}
               >
                 <div className="flex flex-col gap-2">
                   {/* topbar */}
-                  <div className="flex items-center justify-between bg-gray-400 h-14 px-2 rounded-tr-lg">
+                  <div className="flex items-center justify-between bg-gray-900 h-14 px-2 rounded-tr-lg">
                     {/* left */}
                     <div className="flex items-start gap-2">
                       <Image
@@ -57,13 +57,13 @@ const Receiver = ({
                       />
                       <div className="flex flex-col gap-1">
                         {/* name */}
-                        <div className="text-black text-xs font-semibold">
+                        <div className="text-white/80 text-xs font-semibold">
                           {msg?.text?.subId?.subCategoryId?.name}
                         </div>
 
                         {/* price */}
                         <div className="flex items-center gap-1">
-                          <p className="text-xs font-medium text-gray-600">
+                          <p className="text-xs font-medium text-gray-400">
                             {msg?.text?.subId?.price}
                             /hr
                           </p>

@@ -82,7 +82,7 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
         }
 
         {/* Gradient Top */}
-        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-gray-700 to-transparent"></div>
+        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-gray-800 to-transparent"></div>
 
         {/* Content (Empty space in the middle) */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -153,7 +153,7 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
         </div>
 
         {/* Gradient Bottom */}
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-gray-700 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-gray-800 to-transparent"></div>
       </div>
     </motion.div>
   );

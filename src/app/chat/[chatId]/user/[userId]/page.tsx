@@ -14,7 +14,7 @@ import Image from "next/image";
 import { redirect, useParams, usePathname, useRouter } from "next/navigation";
 import React, { memo, useEffect, useRef, useState } from "react";
 import fallbackImage from "@/assets/Screenshot 2025-02-03 at 23.53.50.png";
-import wspLogo from "../../../../../../public/assets/wssupLogo.png";
+import wspLogo from "../../../../../assets/ws.jpg";
 import {
   IoArrowBackSharp,
   IoCallOutline,
@@ -687,7 +687,7 @@ const Page = () => {
       transition={{ duration: 0.5 }}
     >
       {/* Top Bar */}
-      <div className="h-16 px-1 py-2 flex items-center justify-between bg-slate-50 w-full sm:rounded-tr-xl">
+      <div className="h-16 px-1 py-2 flex items-center justify-between bg-black/90 w-full sm:rounded-tr-xl">
         {/* left */}
         <div className="flex items-center gap-1">
           <button
@@ -697,19 +697,19 @@ const Page = () => {
             }}
             className="px-2 py-2 block sm:hidden"
           >
-            <IoArrowBackSharp className="text-2xl text-slate-500" />
+            <IoArrowBackSharp className="text-2xl text-slate-200" />
           </button>
 
           <div className="flex items-start gap-2 lg:gap-4">
             <Image
-              className="rounded-full min-w-8 min-h-8 max-h-8 max-w-8"
+              className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10"
               alt="dp"
               src={otherUser?.image || fallbackImage}
-              width={40}
-              height={40}
+              width={50}
+              height={50}
               priority
             />
-            <div className="text-base font-medium text-black">
+            <div className="text-base font-medium text-white/90">
               {otherUser?.username}
             </div>
           </div>
@@ -718,11 +718,11 @@ const Page = () => {
         {/* icon */}
         <div className="flex items-center gap-6 mr-4">
           <button onClick={handleAudioCall} className="cursor-pointer">
-            <IoCallOutline className="text-2xl text-slate-950" />
+            <IoCallOutline className="text-2xl text-slate-100" />
           </button>
 
           <button onClick={handleVideoCall} className="cursor-pointer">
-            <IoVideocamOutline className="text-3xl text-slate-900" />
+            <IoVideocamOutline className="text-3xl text-slate-100" />
           </button>
         </div>
       </div>
@@ -735,7 +735,7 @@ const Page = () => {
             style={{ backgroundImage: `url(${wspLogo.src})` }}
           >
             <div className="flex justify-center items-center py-6">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-white/80 border-t-transparent"></div>
             </div>
           </div>
         ) : (
@@ -785,19 +785,22 @@ const Page = () => {
       </div>
 
       {/* Send Message */}
-      <div className="w-full bg-gray-300 px-4 py-2 flex items-center gap-2 rounded-br-xl">
+      <div
+        className="max-h-[58px] min-h-[58px] sm:max-h-[58px] sm:min-h-[58px] p-4 overflow-y-auto bg-gray-800 w-full px-4 py-2 flex items-center gap-2 rounded-br-xl"
+        style={{ backgroundImage: `url(${wspLogo.src})` }}
+      >
         <input
           type="text"
           defaultValue=""
           onChange={(e) => (chatRef.current = e.target.value)}
           placeholder="Type a message and press enter"
           onKeyDown={handleKeyDown}
-          className="bg-white w-full h-10 px-4 rounded-lg outline-none"
+          className="bg-gray-800 w-full h-10 px-4 rounded-lg outline-none placeholder:text-white/80 text-white/90 py-6"
         />
 
         <button
           onClick={sendMessage}
-          className="bg-black text-white px-4 py-2 rounded-lg text-xl cursor-pointer"
+          className="bg-gray-800 text-white px-4 py-3 rounded-lg text-xl cursor-pointer"
         >
           <IoSendSharp />
         </button>
@@ -863,17 +866,23 @@ const Page = () => {
             )}
 
             {cameraMute ? (
-              <button onClick={()=>{
-                toggleCamera(false);
-                setCameraMute(false);
-              }} className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer">
+              <button
+                onClick={() => {
+                  toggleCamera(false);
+                  setCameraMute(false);
+                }}
+                className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer"
+              >
                 <FaVideoSlash />
               </button>
             ) : (
-              <button onClick={()=>{
-                toggleCamera(true);
-                setCameraMute(true);
-              }} className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer">
+              <button
+                onClick={() => {
+                  toggleCamera(true);
+                  setCameraMute(true);
+                }}
+                className="w-10 h-10 bg-gray-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-900 text-base cursor-pointer"
+              >
                 <FaVideo />
               </button>
             )}

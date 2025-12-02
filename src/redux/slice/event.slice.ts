@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define a type for the slice state
@@ -13,7 +12,7 @@ interface eventState {
 
 // initial state
 const initialState: eventState = {
-  step: 2,
+  step: 1,
   event: null,
   editEvent: false,
   isOpen: false,

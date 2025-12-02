@@ -12,11 +12,11 @@ const ChatPage = () => {
   // }
 
   return (
-    <div className="flex flex-col items-start rounded-xl max-w-full border border-r">
+    <div className="flex flex-col items-start rounded-xl max-w-full border border-r bg-neutral-800 border-neutral-800">
       {/* Message Box */}
       <div className="w-full">
         <div
-          className="max-h-[calc(100dvh-120px)] min-h-[calc(100dvh-120px)] sm:max-h-[calc(100dvh-60px)] sm:min-h-[calc(100dvh-60px)] p-4 overflow-y-auto overflow-hidden relative bg-white flex justify-center items-center"
+          className="max-h-[calc(100dvh-120px)] min-h-[calc(100dvh-120px)] sm:max-h-[calc(100dvh-60px)] sm:min-h-[calc(100dvh-60px)] p-4 overflow-y-auto overflow-hidden relative flex justify-center items-center bg-neutral-950"
           // style={{ backgroundImage: `url(${whatsappImg.src})` }}
         >
           <div className="flex flex-col gap-3 items-center bg-slate-300 p-6 rounded-xl">
