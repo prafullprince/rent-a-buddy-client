@@ -144,7 +144,7 @@ const EventForm = () => {
       {/* form */}
       <form
         onSubmit={handleSubmit(onsubmit)}
-        className="flex flex-col gap-4 sm:max-w-lg sm:min-w-lg w-full"
+        className="flex w-full max-w-3xl flex-col gap-5"
       >
         <div className="flex flex-col gap-4">
           {/* availability */}
@@ -170,7 +170,7 @@ const EventForm = () => {
           <div className="flex flex-col gap-1 cursor-pointer">
             <Label labelname="Location" />
             <select
-              className="w-full h-12 rounded-sm px-2 shadow-sm border border-gray-700 outline-none bg-neutral-900 text-white/90"
+              className="h-12 w-full rounded-xl border border-white/10 bg-black/25 px-3 text-white/90 outline-none transition-colors focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20"
               {...register("location", {
                 required: "Please select a location",
               })}
@@ -221,26 +221,26 @@ const EventForm = () => {
                 priority
                 width={500}
                 height={500}
-                className="w-full h-[300px] object-cover bg-center bg-cover rounded-md shadow-xl transition-all duration-300"
+                className="h-56 w-full rounded-2xl object-cover shadow-xl transition-all duration-300 sm:h-72"
               />
             ) : (
-              <div className="shadow-lg transition-all duration-300 w-full h-[300px] border border-[#2C333F] border-dashed rounded-lg flex flex-col gap-8 items-center justify-center py-8 bg-neutral-900 text-white/90">
+              <div className="flex h-56 w-full flex-col items-center justify-center gap-6 rounded-2xl border border-dashed border-white/15 bg-black/25 py-8 text-white/90 shadow-lg transition-all duration-300 hover:border-amber-300/50 sm:h-72">
                 {/* icon */}
                 <div className="">
-                  <div className="h-16 w-16 rounded-full bg-[#ced8d9] flex justify-center items-center shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
-                    <IoCloudUploadOutline className="text-[#373110] text-4xl" />
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-300 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
+                    <IoCloudUploadOutline className="text-4xl text-black" />
                   </div>
                 </div>
                 {/* text */}
                 <div className="max-w-[220px] text-[#999DAA] text-center text-xs">
                   Drag and drop an image, or{" "}
-                  <span className="text-[#FFD60A] text-sm font-semibold">
+                    <span className="text-sm font-semibold text-amber-300">
                     Browse{" "}
                   </span>
                   Max 1MB each (only image)
                 </div>
                 {/* size */}
-                <div className="flex items-center px-4 gap-6 text-xs max-w-[380px] text-[#6E727F]">
+                <div className="flex max-w-[380px] flex-wrap items-center justify-center gap-3 px-4 text-center text-xs text-white/35 sm:gap-6">
                   <div>Aspect ratio 16:9</div>
                   <div>Recommended size 1024x576</div>
                 </div>
@@ -265,14 +265,14 @@ const EventForm = () => {
                     dispatch(setEditService(true));
                     dispatch(setStep(2));
                   }}
-                  className="px-3 py-2 rounded-md bg-yellow-400 text-black text-sm cursor-pointer font-semibold"
+                  className="cursor-pointer rounded-xl bg-amber-300 px-4 py-2 text-sm font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200"
                 >
                   Next
                 </button>
 
                 <button
                   type="submit"
-                  className="px-3 py-2 rounded-md bg-black text-white text-sm cursor-pointer font-semibold"
+                  className="cursor-pointer rounded-xl border border-white/10 bg-black/30 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-black/50"
                 >
                   Save
                 </button>
@@ -294,7 +294,7 @@ const EventForm = () => {
                 <div className="w-full flex justify-end">
                   <button
                     type="submit"
-                    className="px-3 py-[6px] rounded-lg bg-yellow-300 text-black text-base cursor-pointer font-semibold"
+                    className="cursor-pointer rounded-xl bg-amber-300 px-5 py-2 text-base font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200"
                   >
                     Submit
                   </button>

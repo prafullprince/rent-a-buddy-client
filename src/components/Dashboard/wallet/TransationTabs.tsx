@@ -17,15 +17,15 @@ const TransationTabs = () => {
   };
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
+    <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
       {/* tabs */}
       {tabs.map((tab, index) => {
         return (
           <button
             key={index}
             onClick={() => handleTabClick(tab.id)}
-            className={`bg-neutral-800 text-white/90 text-start px-5 font-semibold flex items-center gap-2 py-3 rounded-lg cursor-pointer relative ${
-              tab.id === activeTab ? "" : ""
+            className={`relative flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border px-3 py-3 text-left text-sm font-semibold transition-all sm:px-4 ${
+              tab.id === activeTab ? "border-amber-300/30 bg-amber-300/10 text-amber-100" : "border-white/10 bg-black/20 text-white/65 hover:bg-white/[0.08]"
             }`}
           >
             <p>{tab.name}</p>
@@ -34,7 +34,7 @@ const TransationTabs = () => {
                     <motion.div
                         layout
                         layoutId="tab-active"
-                        className="bg-gradient-to-r from-green-400 via-amber-500 to-violet-400 w-full h-[2px] rounded-full absolute bottom-0 left-0"
+                        className="absolute bottom-0 left-3 h-[2px] w-[calc(100%-1.5rem)] rounded-full bg-gradient-to-r from-amber-300 to-teal-300 sm:left-4 sm:w-[calc(100%-2rem)]"
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                 )

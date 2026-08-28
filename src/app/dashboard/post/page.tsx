@@ -6,25 +6,23 @@ import React from 'react'
 const Page = () => {
     const router = useRouter();
   return (
-    <div className='w-full mx-auto flex flex-col px-6'>
+    <div className='min-h-screen w-full bg-[#090b10] bg-[linear-gradient(135deg,rgba(245,158,11,0.08)_0%,transparent_30%,transparent_70%,rgba(20,184,166,0.06)_100%)] px-4 py-5 text-white sm:px-6 lg:px-10'>
         {/* route */}
-      <div className="mt-1 pt-4">
-        <div className="flex items-center gap-2 ml-12 mt-2 lg:mt-0 lg:ml-0">
+      <div className="mx-auto flex w-full max-w-7xl flex-col">
+        <div className="flex items-center gap-2 text-sm">
           <div
             onClick={() => router.push("/")}
-            className="text-sm font-semibold text-[#d5d6da] cursor-pointer"
+            className="cursor-pointer font-semibold text-white/45 transition-colors hover:text-amber-200"
           >
             Home <span>/</span>
           </div>
           <div
             onClick={() => router.push("/dashboard/my-profile")}
-            className="text-sm text-[#d5d6da] cursor-pointer"
+            className="cursor-pointer text-white/45 transition-colors hover:text-amber-200"
           >
             Dashboard <span>/</span>
           </div>
-          <span className="text-sm font-semibold text-yellow-600">
-            Create Post 
-          </span>
+          <span className="font-semibold text-amber-300">Create post</span>
         </div>
       </div>
 

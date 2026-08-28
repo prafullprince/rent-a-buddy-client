@@ -31,23 +31,23 @@ const ChatSidebar = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className={`rounded-xl sm:block ${
+      className={`h-full rounded-xl sm:block ${
         openChatMobile ? "hidden" : "block"
       } min-w-full max-w-full sm:max-w-[300px] sm:min-w-[300px]`}
     >
       <div
-        className={`flex flex-col gap-4 sm:border-r sm:border-l sm:border-t sm:border-b border-gray-800 sm:max-h-[calc(100vh-59px)] sm:min-h-[calc(100vh-59px)] bg-black/80 overflow-y-auto slider sm:max-w-[300px] sm:min-w-[300px] min-w-full max-w-full"
+        className={`flex h-full flex-col gap-4 overflow-y-auto bg-black/70 slider sm:max-w-[300px] sm:min-w-[300px] min-w-full max-w-full sm:border-r sm:border-white/10"
         } lg:rounded-tl-xl lg:rounded-bl-xl`}
       >
         {/* topbar */}
-        <div className={`flex items-center gap-5 border-b-2 px-6 pt-2 pb-4 border-b-gray-700`}>
+          <div className={`flex items-center gap-5 border-b border-white/10 px-6 pb-4 pt-4`}>
           <Link
             href={`/`}
-            className="h-8 w-8 cursor-pointer rounded-full border flex items-center justify-center mt-2 border-gray-700"
+            className="mt-0 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/10 transition-colors hover:bg-white/10"
           >
             <IoChevronBack className="text-xl text-white/90" />
           </Link>
-          <div className="text-white/90 font-bold text-xl mt-2">Chat</div>
+          <div className="text-xl font-semibold text-white/90">Messages</div>
         </div>
 
         {/* allChat */}
@@ -58,7 +58,7 @@ const ChatSidebar = ({
             </div>
           )}
           {!chatLoading && sockty && allChat?.length === 0 && (
-            <div className="px-2">No chat available, go and  request order</div>
+            <div className="px-6 text-sm leading-6 text-white/45">No chats yet. Request an order to start a conversation.</div>
           )}
           {!chatLoading && allChat?.length > 0 && sockty && (
             <div className="flex flex-col">
@@ -91,9 +91,9 @@ const ChatSidebar = ({
                     }
                   }}
                   key={chit?._id}
-                  className={`flex justify-between relative cursor-pointer hover:bg-gray-800 transition-all duration-200 px-6 py-3
-                  border-b border-b-gray-700 ${
-                    currentChatId === chit?._id ? "bg-gray-800" : ""
+                  className={`relative flex cursor-pointer justify-between border-b border-white/10 px-6 py-4 transition-all duration-200 hover:bg-white/[0.08]
+                  ${
+                    currentChatId === chit?._id ? "bg-amber-300/10" : ""
                   }`}
                 >
                   {/* image, details */}

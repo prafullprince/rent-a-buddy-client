@@ -50,14 +50,14 @@ const SendMoneyModal = ({
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black/20 z-[1000] backdrop-blur-sm">
-      <div className="flex items-center justify-center h-screen mx-auto">
+    <div className="fixed inset-0 z-[1000] flex min-h-full items-center justify-center overflow-y-auto bg-black/65 p-3 backdrop-blur-md sm:p-6">
+      <div className="my-auto w-full max-w-lg">
         <div
           ref={btnRef}
-          className="flex flex-col gap-2 bg-gray-800 p-6 relative border-gray-400 rounded-lg w-[350px] md:max-w-[500px] md:min-w-[450px]"
+          className="relative flex w-full flex-col gap-2 rounded-2xl border border-white/10 bg-[#11151c] p-4 shadow-2xl shadow-black/50 sm:p-6"
         >
           {/* heading */}
-          <div className="bg-gray-700 font-semibold text-pink-50 rounded-t-lg text-xl absolute top-0 w-full right-0 left-0 h-12 flex items-center justify-between px-6">
+          <div className="-mx-4 -mt-4 flex h-14 items-center justify-between border-b border-white/10 bg-[#11151c] px-4 text-lg font-semibold text-white sm:-mx-6 sm:-mt-6 sm:px-6">
             <div className="">
               {modalData.heading}
               <span className="text-yellow-400 font-semibold">
@@ -66,27 +66,29 @@ const SendMoneyModal = ({
             </div>
             <button
               onClick={modalData.btn2Handler}
-              className="text-2xl text-pink-300"
+              type="button"
+              aria-label="Close payment modal"
+              className="rounded-full px-2 text-xl text-white/50 transition-colors hover:bg-white/10 hover:text-white"
             >
-              X
+              &#10005;
             </button>
           </div>
           {/* text */}
           <div className="py-2 mt-2">
-            <p className="text-white mt-8 text-xl">{modalData.text1}</p>
-            <p className="text-gray-400 text-sm mt-2">{modalData.text2}</p>
+            <p className="mt-8 text-xl font-semibold text-white">{modalData.text1}</p>
+            <p className="mt-2 text-sm text-white/50">{modalData.text2}</p>
           </div>
           {/* buttons */}
-          <div className="flex w-full justify-start gap-4 mt-4">
+          <div className="mt-4 grid w-full grid-cols-2 gap-3">
             <button
               onClick={sendMoneyHandler}
-              className="px-4 py-1 bg-yellow-300 text-black font-medium rounded-lg cursor-pointer"
+              className="cursor-pointer rounded-xl bg-amber-300 px-4 py-3 font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200"
             >
               {modalData.btn1Text}
             </button>
             <button
               onClick={modalData.btn2Handler}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg font-medium"
+              className="rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3 font-medium text-white/75 transition-colors hover:bg-white/10"
             >
               {modalData.btn2Text}
             </button>

@@ -14,30 +14,28 @@ const Page = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full mx-auto flex flex-col px-6">
+    <div className="min-h-screen w-full bg-[#090b10] bg-[linear-gradient(135deg,rgba(245,158,11,0.08)_0%,transparent_30%,transparent_70%,rgba(20,184,166,0.06)_100%)] px-4 py-5 text-white sm:px-6 lg:px-10">
       {/* route */}
-      <div className="mt-2 pt-4">
-        <div className="flex items-center gap-2 ml-12 lg:ml-0">
+      <div className="mx-auto flex w-full max-w-7xl flex-col">
+        <div className="flex items-center gap-2 text-sm">
           <div
             onClick={() => router.push("/")}
-            className="text-sm text-[#d5d6da] cursor-pointer"
+            className="cursor-pointer text-white/45 transition-colors hover:text-amber-200"
           >
             Home <span>/</span>
           </div>
           <div
             onClick={() => router.push("/dashboard/my-profile")}
-            className="text-sm text-[#d5d6da] cursor-pointer"
+            className="cursor-pointer text-white/45 transition-colors hover:text-amber-200"
           >
             Dashboard <span>/</span>
           </div>
-          <span className="text-base font-semibold text-yellow-600">
-            event 
-          </span>
+          <span className="font-semibold text-amber-300">Create event</span>
         </div>
       </div>
 
       {/* eventCard */}
-      <div className="sm:p-6 p-4 mt-8 bg-neutral-950 shadow-md w-fit sm:min-w-lg rounded-lg">
+      <div className="mt-8 w-full rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-6 lg:p-8">
         <div className="flex flex-col gap-4">
           {/* step */}
 

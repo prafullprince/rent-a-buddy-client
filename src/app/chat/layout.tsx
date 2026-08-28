@@ -106,8 +106,8 @@ const Layout = ({ children }: { children: any }) => {
   }
 
   return (
-    <div className="bg-neutral-800 backdrop-blur-sm flex justify-center items-center w-full max-w-full overflow-y-hidden">
-      <div className="w-full sm:w-[90%] lg:w-[80%] mx-auto sm:pt-4 flex rounded-xl">
+    <div className="flex min-h-[calc(100dvh-1rem)] w-full max-w-full items-center justify-center overflow-hidden bg-[#090b10] px-0 sm:px-4 lg:px-6">
+      <div className="mx-auto flex h-[calc(100dvh-1rem)] w-full max-w-7xl rounded-2xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/30 sm:h-[calc(100dvh-2rem)]">
         <ChatSidebar
           allChat={allChat}
           chatLoading={chatLoading}
@@ -116,7 +116,7 @@ const Layout = ({ children }: { children: any }) => {
           numOfUnseenMessages={numOfUnseenMessages}
         />
         <div
-          className={`sm:h-screen max-h-[100dvh] min-h-[100dvh] flex-1 max-w-full rounded-xl sm:block ${
+          className={`h-full min-h-0 max-w-full flex-1 rounded-xl sm:block ${
             openChatMobile ? "block" : "hidden"
           } sm:max-w-[calc(100%-300px)]`}
         >

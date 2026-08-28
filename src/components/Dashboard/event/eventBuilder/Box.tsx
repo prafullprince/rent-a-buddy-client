@@ -97,7 +97,7 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {selectedCategory?.subCategories?.map((subCategory: any) => {
         const isChecked = isSelected(subCategory?._id);
 
@@ -107,8 +107,8 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
             key={subCategory?._id}
-            className={`bg-neutral-700 px-4 pt-1 pb-4 rounded-md shadow-black/30 ${
-              isChecked ? "border-0 border-black shadow-lg" : "shadow-sm"
+            className={`rounded-2xl border px-4 pb-4 pt-1 shadow-black/30 transition-all ${
+              isChecked ? "border-amber-300/40 bg-amber-300/[0.08] shadow-lg" : "border-white/10 bg-white/[0.04] shadow-sm"
             }`}
           >
             <div className="flex flex-col gap-2">
@@ -140,8 +140,8 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                   }
                   className={`flex items-center justify-center min-w-7 min-h-7 max-w-7 max-h-7 border-1 border-slate-400 cursor-pointer rounded-sm ${
                     isChecked
-                      ? "bg-black text-white font-semibold"
-                      : "bg-white/60"
+                      ? "border-amber-300 bg-amber-300 text-black font-semibold"
+                      : "bg-white/10"
                   }`}
                 >
                   <AnimatePresence>
@@ -167,12 +167,12 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
               {/* Data input */}
               <div className="flex flex-col gap-2 mt-4">
                 {/* Price Input */}
-                <div className="max-w-xl flex items-center border border-gray-900 rounded-lg w-full">
+                <div className="flex w-full items-center rounded-xl border border-white/10 bg-black/20">
                   <PiCurrencyInr className="sm:mx-4 mx-2 text-xl md:text-2xl text-yellow-600 font-extrabold" />
                   <input
                     type="number"
                     placeholder="Set price"
-                    className="py-2 outline-none w-full text-xs md:text-sm placeholder:text-gray-400 text-white/80"
+                    className="w-full bg-transparent py-3 text-xs text-white/80 outline-none placeholder:text-white/35 md:text-sm"
                     value={
                       selectedData?.serviceData
                         ?.find((s: any) => s.id === selectedCategory?._id)
@@ -195,12 +195,12 @@ const Box = ({ selectedCategory, selectedData, setSelectedData }: any) => {
                 </div>
 
                 {/* Description Input */}
-                <div className="max-w-xl flex items-center border border-gray-900 rounded-lg w-full pr-2">
+                <div className="flex w-full items-center rounded-xl border border-white/10 bg-black/20 pr-2">
                   <MdDescription className="mx-2 sm:mx-4 text-xl md:text-2xl text-gray-500" />
                   <input
                     type="text"
                     placeholder="Edit description"
-                    className="py-2 outline-none w-full text-xs md:text-sm placeholder:text-gray-400 text-white/80"
+                    className="w-full bg-transparent py-3 text-xs text-white/80 outline-none placeholder:text-white/35 md:text-sm"
                     value={
                       selectedData?.serviceData
                         ?.find((s: any) => s.id === selectedCategory?._id)

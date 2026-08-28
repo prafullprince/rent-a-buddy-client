@@ -44,7 +44,7 @@ interface Message {
   type: string;
   createdAt: string;
   isSeen: boolean;
-  order?: string;
+  order?: any;
 }
 
 interface User {
@@ -93,6 +93,23 @@ const Page = () => {
   const [cameraMute, setCameraMute] = useState(false);
   const [peerCameraMute, setPeerCameraMute] = useState(false);
 
+  const acceptedOrderMessage = [...messages]
+    .reverse()
+    .find(
+      (message) =>
+        message?.order?.status === "accepted" &&
+        message?.order?.isCompleted === false
+    );
+  const isOrderLive = acceptedOrderMessage?.order?.isActive === true;
+  const orderRequesterId = acceptedOrderMessage?.order?.sender?.toString();
+  const eventOwnerId = acceptedOrderMessage?.order?.receiver?.toString();
+  const isEventOwner = eventOwnerId === userDetails?._id?.toString();
+  const canInteract =
+    acceptedOrderMessage?.order?.status === "accepted" &&
+    acceptedOrderMessage?.order?.isCompleted === false &&
+    (isEventOwner ||
+      (isOrderLive && orderRequesterId === userDetails?._id?.toString()));
+
   // --- WebRTC Setup ---
   const setupPeerConnection = () => {
     if (!socket.connected) socket.connect();
@@ -132,7 +149,7 @@ const Page = () => {
 
   // handleVideoCall
   const handleVideoCall = async () => {
-    if (!chatId || !userDetails?._id) return;
+    if (!canInteract || !chatId || !userDetails?._id) return;
 
     if (!socket.connected) socket.connect();
 
@@ -189,7 +206,7 @@ const Page = () => {
 
   // handleAudioCall
   const handleAudioCall = async () => {
-    if (!chatId || !userDetails?._id || !socket || !isAudioCall) return;
+    if (!canInteract || !chatId || !userDetails?._id || !socket) return;
     setIsAudioCall(true);
 
     // Create PeerConnection
@@ -396,7 +413,7 @@ const Page = () => {
   const sendMessage = () => {
     // validation
     const message = chatRef.current.trim();
-    if (!socket || !message) return;
+    if (!canInteract || !socket || !message) return;
 
     // msg payload
     const messagePayload = {
@@ -681,13 +698,13 @@ const Page = () => {
 
   return (
     <motion.div
-      className="flex flex-col items-start rounded-xl max-w-full relative"
+      className="relative flex h-full max-w-full flex-col items-start overflow-hidden rounded-xl bg-[#efeae2]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       {/* Top Bar */}
-      <div className="h-16 px-1 py-2 flex items-center justify-between bg-black/90 w-full sm:rounded-tr-xl">
+      <div className="flex h-[64px] w-full items-center justify-between bg-[#075e54] px-2 py-2 text-white shadow-sm sm:rounded-tr-xl sm:px-4">
         {/* left */}
         <div className="flex items-center gap-1">
           <button
@@ -695,44 +712,48 @@ const Page = () => {
               dispatch(setOpenChatMobile(false));
               router.push("/chat");
             }}
-            className="px-2 py-2 block sm:hidden"
+            aria-label="Back to chats"
+            className="block rounded-full p-2 transition-colors hover:bg-white/10 sm:hidden"
           >
             <IoArrowBackSharp className="text-2xl text-slate-200" />
           </button>
 
-          <div className="flex items-start gap-2 lg:gap-4">
+          <div className="flex min-w-0 items-center gap-2 lg:gap-3">
             <Image
-              className="rounded-full min-w-10 min-h-10 max-h-10 max-w-10"
+              className="h-10 w-10 rounded-full border border-white/20 object-cover"
               alt="dp"
               src={otherUser?.image || fallbackImage}
               width={50}
               height={50}
               priority
             />
-            <div className="text-base font-medium text-white/90">
-              {otherUser?.username}
+            <div className="min-w-0">
+              <div className="truncate text-base font-medium text-white">
+                {otherUser?.username || "Chat"}
+              </div>
+              <div className="text-[11px] text-white/65">online</div>
             </div>
           </div>
         </div>
 
         {/* icon */}
-        <div className="flex items-center gap-6 mr-4">
-          <button onClick={handleAudioCall} className="cursor-pointer">
-            <IoCallOutline className="text-2xl text-slate-100" />
+        <div className="mr-1 flex items-center gap-1 sm:mr-2 sm:gap-2">
+          <button aria-label="Start audio call" disabled={!canInteract} onClick={handleAudioCall} className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35">
+            <IoCallOutline className="text-2xl" />
           </button>
 
-          <button onClick={handleVideoCall} className="cursor-pointer">
-            <IoVideocamOutline className="text-3xl text-slate-100" />
+          <button aria-label="Start video call" disabled={!canInteract} onClick={handleVideoCall} className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35">
+            <IoVideocamOutline className="text-3xl" />
           </button>
         </div>
       </div>
 
       {/* Message Box */}
-      <div className="w-full relative">
+      <div className="relative flex min-h-0 w-full flex-1 flex-col">
         {loading ? (
           <div
-            className="max-h-[calc(100dvh-115px)] min-h-[calc(100dvh-115px)] sm:max-h-[calc(100dvh-180px)] sm:min-h-[calc(100dvh-180px)] p-4 overflow-auto bg-gray-800 bg-center bg-cover"
-            style={{ backgroundImage: `url(${wspLogo.src})` }}
+            className="flex min-h-0 flex-1 items-center justify-center overflow-auto bg-[#efeae2] bg-center bg-cover p-4"
+            style={{ backgroundImage: `linear-gradient(rgba(239,234,226,0.82), rgba(239,234,226,0.82)), url(${wspLogo.src})` }}
           >
             <div className="flex justify-center items-center py-6">
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-white/80 border-t-transparent"></div>
@@ -740,15 +761,15 @@ const Page = () => {
           </div>
         ) : (
           <div
-            className="max-h-[calc(100dvh-120px)] min-h-[calc(100dvh-120px)] sm:max-h-[calc(100dvh-180px)] sm:min-h-[calc(100dvh-180px)] p-4 overflow-y-auto bg-gray-800"
-            style={{ backgroundImage: `url(${wspLogo.src})` }}
+            className="min-h-0 flex-1 overflow-y-auto bg-[#efeae2] bg-center bg-cover p-3 sm:p-5"
+            style={{ backgroundImage: `linear-gradient(rgba(239,234,226,0.82), rgba(239,234,226,0.82)), url(${wspLogo.src})` }}
           >
             {messages.length === 0 ? (
               <div className="flex items-center justify-center">
                 No message found. Let's chat
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
+              <div className="mx-auto flex w-full max-w-4xl flex-col gap-2">
                 {messages.map((msg) => (
                   <div key={msg._id} className="flex flex-col gap-1">
                     {/* Receiver */}
@@ -786,25 +807,34 @@ const Page = () => {
 
       {/* Send Message */}
       <div
-        className="max-h-[58px] min-h-[58px] sm:max-h-[58px] sm:min-h-[58px] p-4 overflow-y-auto bg-gray-800 w-full px-4 py-2 flex items-center gap-2 rounded-br-xl"
-        style={{ backgroundImage: `url(${wspLogo.src})` }}
+        className="flex min-h-[66px] w-full items-center gap-2 overflow-y-auto rounded-br-xl border-t border-black/5 bg-[#f0f2f5] px-3 py-2 sm:px-4"
       >
         <input
           type="text"
           defaultValue=""
           onChange={(e) => (chatRef.current = e.target.value)}
-          placeholder="Type a message and press enter"
+          disabled={!canInteract}
+          placeholder={canInteract ? "Type a message and press enter" : "Payment is required before chatting"}
           onKeyDown={handleKeyDown}
-          className="bg-gray-800 w-full h-10 px-4 rounded-lg outline-none placeholder:text-white/80 text-white/90 py-6"
+          className="h-11 w-full rounded-full border-0 bg-white px-4 text-[#111b21] outline-none placeholder:text-[#667781] shadow-sm focus:ring-2 focus:ring-[#25d366]/30 disabled:cursor-not-allowed disabled:bg-white/70"
         />
 
         <button
           onClick={sendMessage}
-          className="bg-gray-800 text-white px-4 py-3 rounded-lg text-xl cursor-pointer"
+          aria-label="Send message"
+          disabled={!canInteract}
+          className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#25d366] text-xl text-white shadow-sm transition-colors hover:bg-[#20bd5a] disabled:cursor-not-allowed disabled:bg-[#9fc9b0]"
         >
           <IoSendSharp />
         </button>
       </div>
+      {!canInteract && (
+        <div className="absolute bottom-[72px] left-1/2 z-10 -translate-x-1/2 rounded-full bg-[#202c33]/95 px-4 py-2 text-center text-[11px] font-medium text-white/85 shadow-lg">
+          {isOrderLive
+            ? "Only the order requester can chat and call"
+            : "Confirm payment to unlock chat and calls"}
+        </div>
+      )}
 
       {/* video */}
       {(isCallStart || isCallAccepted) && !isAudioCall && (

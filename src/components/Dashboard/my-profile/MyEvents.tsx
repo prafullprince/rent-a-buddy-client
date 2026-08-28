@@ -62,20 +62,20 @@ const MyEvents = () => {
   }, [session, refresh]);
 
   return (
-    <div className="">
-      <h2 className="text-xl mt-8 font-semibold text-white/80">My Events</h2>
+    <div className="w-full">
+      <h2 className="text-xl font-semibold text-white/85">My Events</h2>
       {loading ? (
         <div className="flex justify-center items-center py-6">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-white/70 border-t-transparent"></div>
         </div>
       ) : (
-        <div className="mt-4 bg-black/10 rounded-lg shadow-lg p-4 w-full max-w-[300px]">
+        <div className="mt-4 w-full rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-5">
           <div className="flex flex-col gap-1">
             {/* event card */}
             <EventOverlayCard event={eventDetails} type="myEvent" />
 
             {/* buttons */}
-            <div className="flex justify-between w-full gap-4">
+            <div className="flex w-full justify-between gap-3">
               {/* Edit button */}
               <button
                 onClick={() => {
@@ -84,14 +84,14 @@ const MyEvents = () => {
                   dispatch(setStep(1));
                   router.push(`/dashboard/event`);
                 }}
-                className="px-3 cursor-pointer py-2 text-sm bg-black text-white rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-black/50"
               >
                 <FiEdit className="text-lg font-extrabold" />
                 Edit
               </button>
 
               {/* delete button */}
-              <button className="px-3 text-sm cursor-pointer py-2 bg-[#ee4266] text-white rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full">
+              <button className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-rose-500 px-3 py-2 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-rose-400">
                 <MdDelete className="text-xl text-red-100" />
                 Delete
               </button>
@@ -99,7 +99,7 @@ const MyEvents = () => {
 
             <button
               onClick={onlineOffline}
-              className="px-3 text-sm cursor-pointer py-2 bg-yellow-500 text-black rounded-lg font-semibold flex items-center gap-2 hover:scale-95 transition-all duration-200 w-full mt-2"
+              className="mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-amber-300 px-3 py-2 text-sm font-semibold text-black transition-all duration-200 hover:-translate-y-0.5 hover:bg-amber-200"
             >
               {!eventDetails?.isActive ? (
                 <MdOnlinePrediction className="text-xl text-black" />

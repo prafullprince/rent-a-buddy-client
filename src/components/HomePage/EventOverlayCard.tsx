@@ -38,13 +38,22 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
 
   return (
     <motion.div
-     initial={{ opacity: 0, y: -30 }}
+    initial={{ opacity: 0, y: 18 }}
      animate={{ opacity: 1, y: 0 }}
-     exit={{ opacity: 0, y: -10 }}
-     transition={{ duration: 0.3 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     className="pb-4 w-full">
       <div
-        className="relative w-full sm:min-w-full min-h-[350px] max-h-[350px] sm:max-w-full sm:max-h-[400px] bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:border-0 hover:scale-[1.03] transition-all duration-300"
+        role="link"
+        tabIndex={0}
+        aria-label={`View ${event?.userData?.username || "buddy"}'s event`}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            router.push(`/event/${event?._id}`);
+          }
+        }}
+        className="group relative w-full min-h-[350px] max-h-[400px] overflow-hidden rounded-2xl border border-white/20 bg-slate-900 shadow-xl shadow-black/20 cursor-pointer transition duration-500 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/40 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-slate-950"
         onClick={() => router.push(`/event/${event?._id}`)}
       >
         {/* Background Image */}
@@ -52,69 +61,68 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
           src={event?.imageUrl || fallbackImage}
           width={400}
           height={400}
-          alt="Background"
+          alt={event?.userData?.username ? `${event.userData.username}'s event` : "Event"}
           priority
-          className="absolute inset-0 w-full h-full object-cover bg-center"
+          className="absolute inset-0 h-full w-full object-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
         />
 
-        {/* topbar */}
-        <div className="absolute z-50 top-2 left-2 w-full text-white flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            <div className="text-white text-base font-bold">
-              {event?.userData?.username?.substring(0, 15)}..
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/80 via-transparent to-slate-950/95" />
+
+        {/* Profile and availability */}
+        <div className="absolute left-4 right-4 top-4 z-20 flex items-start justify-between text-white">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/30 bg-amber-300 font-bold text-slate-950">
+              {event?.userData?.username?.charAt(0)?.toUpperCase() || "R"}
             </div>
-            <MdVerified className="text-blue-500 text-lg" />
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <p className="truncate text-sm font-bold">{event?.userData?.username || "Rent a buddy"}</p>
+                <MdVerified className="shrink-0 text-lg text-sky-300" />
+              </div>
+              <p className="text-[11px] text-white/65">Verified member</p>
+            </div>
           </div>
 
           {event?.isActive && (
-            <div className="flex items-center bg-black/20 rounded-full w-fit px-2 py-1">
-              <AiOutlineThunderbolt className="text-xs text-green-400" />
-              <p className="text-xs leading-0.5 font-medium">Available</p>
+            <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-200/20 bg-emerald-950/50 px-2.5 py-1.5 backdrop-blur-md">
+              <AiOutlineThunderbolt className="text-sm text-emerald-300" />
+              <p className="text-[11px] font-semibold text-emerald-100">Available</p>
             </div>
           )}
         </div>
 
         {/* fav */}
         {
-          !type && <div className="absolute top-1 right-2 w-8 h-8 bg-black/30 rounded-full flex items-center justify-center z-50">
-          <FcLike className="text-xl" />
+          !type && <div className="absolute right-4 top-20 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-slate-950/35 backdrop-blur-md transition group-hover:bg-slate-950/60">
+          <FcLike className="text-lg" />
         </div>
         }
 
-        {/* Gradient Top */}
-        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-gray-800 to-transparent"></div>
-
-        {/* Content (Empty space in the middle) */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          {/* Content can be placed here if needed */}
-        </div>
-
-        {/* bottom Content */}
-        <div className="absolute z-50 bottom-2 left-2 right-2 w-full flex flex-col items-start gap-2">
-          {/* location */}
-          <div className="bg-black/40 rounded-lg rounded-bl-none px-2 py-1 flex items-center gap-1">
-            <GrLocation className="text-sm text-yellow-400" />
-            <p className="text-white font-medium text-sm">
+        {/* Event details */}
+        <div className="absolute bottom-4 left-4 right-4 z-20 flex flex-col items-start gap-3">
+          <div className="flex items-center gap-1.5 rounded-full border border-white/15 bg-slate-950/45 px-3 py-1.5 backdrop-blur-md">
+            <GrLocation className="text-sm text-amber-300" />
+            <p className="max-w-[220px] truncate text-xs font-medium text-white/90">
               {event?.location?.substring(0, 30)}
             </p>
           </div>
 
           {/* category */}
           <div className="mt-1 flex items-center gap-2">
-            <div className="flex items-center gap-1 bg-white/90 px-2 py-1 rounded-full">
+            <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/95 px-2.5 py-1.5 text-slate-900 shadow-lg">
               <Image
                 src={event?.subCategoryData?.[0]?.imageUrl || fallbackImage}
                 alt="event"
                 width={24}
                 height={24}
-                className="rounded-full w-5 h-5"
+                className="h-5 w-5 rounded-full"
               />
-              <p className="text-xs font-semibold">
+              <p className="max-w-[130px] truncate text-xs font-semibold">
                 {event?.subCategoryData?.[0]?.name}
               </p>
             </div>
 
-            <div className="relative w-7 h-7 rounded-full border border-cyan-700">
+            <div className="relative h-8 w-8 rounded-full border border-white/40 bg-slate-950/60">
               {/* top radient shadow */}
               <div className="absolute top-0 h-2 bg-black/10 blur-sm"></div>
 
@@ -122,7 +130,7 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
               <div className="absolute bottom-0 h-2 bg-black/10 blur-sm"></div>
 
               {/* content */}
-              <p className="absolute inset-0 text-white flex items-center justify-center font-semibold text-sm">
+              <p className="absolute inset-0 z-10 flex items-center justify-center text-sm font-semibold text-white">
                 {"+"}
                 {event?.subCategoryData?.length > 1
                   ? event?.subCategoryData?.length - 1
@@ -133,27 +141,24 @@ const EventOverlayCard = ({ event, type }: { event: any, type?: any }) => {
                 alt="event"
                 width={28}
                 height={28}
-                className="rounded-full w-full h-full bg-black/5"
+                className="h-full w-full rounded-full bg-black/5"
               />
             </div>
           </div>
 
           {/* rating and price */}
-          <div className="flex items-center justify-between gap-8 w-full px-2">
+          <div className="flex w-full items-center justify-between gap-4 border-t border-white/15 pt-3">
             <RatingStars rating={4} totalRating={8} className="text-sm" />
-            <div className="flex items-center gap-1">
-              <MdOutlineCurrencyRupee className="text-yellow-300 text-base" />
-              <div className="flex items-center gap-1 pr-4">
-                <p className="text-white/90 font-semibold text-xs">{minimumPrice}</p>
-                <p className="text-white/90 font-semibold text-sm">~</p>
-                <p className="text-white/90 font-semibold text-xs">{maximumPrice}</p>
+            <div className="flex items-baseline gap-1 text-white">
+              <MdOutlineCurrencyRupee className="text-amber-300 text-base" />
+              <div className="flex items-center gap-1">
+                <p className="text-sm font-bold">{minimumPrice}</p>
+                <p className="text-xs text-white/55">-</p>
+                <p className="text-sm font-bold">{maximumPrice}</p>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Gradient Bottom */}
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-gray-800 to-transparent"></div>
       </div>
     </motion.div>
   );

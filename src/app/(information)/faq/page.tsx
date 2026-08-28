@@ -14,16 +14,18 @@ const FAQItem = ({
 
   return (
     <div
-      className={`border-b py-4 ${
-        isOpen ? "bg-gray-300 rounded-lg px-4 py-2" : ""
+      className={`rounded-2xl border transition-colors ${
+        isOpen ? "border-amber-300/30 bg-white/[0.07]" : "border-white/10 bg-white/[0.03]"
       }`}
     >
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center text-left text-lg font-medium text-gray-900 hover:text-gray-950 transition cursor-pointer"
+        aria-expanded={isOpen}
+        className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left text-base font-medium text-white transition hover:text-amber-300 cursor-pointer"
       >
         {title}
-        <span className="text-black text-2xl">{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}</span>
+        <span className="shrink-0 rounded-full bg-white/10 p-1 text-amber-300 text-xl">{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}</span>
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -32,7 +34,7 @@ const FAQItem = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="mt-4 text-black space-y-4 text-sm"
+            className="space-y-4 px-5 pb-6 text-sm leading-7 text-slate-400"
           >
             {children}
           </motion.div>
@@ -43,12 +45,14 @@ const FAQItem = ({
 };
 const Faq = () => {
   return (
-    <main className="">
-      <h1 className="text-2xl font-semibold mb-12 text-start text-black bg-slate-200 px-4 py-8">
-        <p className="max-w-4xl mx-auto">Refunds & Disputes – FAQ</p>
-      </h1>
+    <main className="mx-auto max-w-5xl px-5 py-12 text-slate-100 sm:px-8 lg:py-20">
+      <div className="mb-12 max-w-2xl">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-teal-300">Help centre</p>
+        <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Refunds &amp; disputes, made clear.</h1>
+        <p className="mt-4 text-slate-400">The essentials on cancellations, meet-ups, and how we review a dispute.</p>
+      </div>
 
-      <section className="max-w-4xl mx-auto px-6">
+      <section className="space-y-3">
         <FAQItem title="Request Order in Dispute">
           <p>
             When a client makes a secure upfront payment, the credits are held

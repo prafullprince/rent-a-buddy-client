@@ -52,9 +52,9 @@ const Information = () => {
           onClick={() => setIsOpen(!isOpen)}
           aria-haspopup="true"
           aria-expanded={isOpen}
-          className="cursor-pointer group"
+          className="group cursor-pointer rounded-full p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
         >
-          <IoIosArrowDown className="text-xl text-black font-bold" />
+          <IoIosArrowDown className="text-xl font-bold text-white/70 transition-transform group-hover:text-white" />
         </button>
 
         {isOpen && (

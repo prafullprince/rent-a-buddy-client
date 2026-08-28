@@ -121,7 +121,7 @@ const BuilderForm = () => {
       {!loading ? (
         <div className="flex flex-col w-full items-start">
           {/* categories */}
-          <div className="w-fit flex justify-start gap-2 border-b-2 border-gray-700">
+          <div className="flex max-w-full justify-start gap-2 overflow-x-auto border-b border-white/10">
             {categorys?.map((category: any) => (
               <div
                 key={category?._id}
@@ -129,7 +129,7 @@ const BuilderForm = () => {
                 onClick={() => setSelectedCategory(category)}
               >
                 <div
-                  className={`p-2 text-lg ${
+                    className={`whitespace-nowrap px-3 py-2 text-sm transition-colors sm:text-base ${
                     selectedCategory?._id === category?._id
                       ? "text-white/90 font-semibold"
                       : " text-gray-500 font-medium"
@@ -142,7 +142,7 @@ const BuilderForm = () => {
                   <motion.div
                     layout
                     layoutId="underline"
-                    className="absolute left-0 bottom-0 w-full h-[2px] bg-gradient-to-r from-green-500 via-amber-600 to-violet-500"
+                    className="absolute bottom-0 left-0 h-[2px] w-full bg-gradient-to-r from-amber-300 to-teal-300"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
@@ -151,7 +151,7 @@ const BuilderForm = () => {
           </div>
 
           {/* box */}
-          <div className="border md:p-4 rounded-lg border-gray-700 w-full mt-12 max-w-2xl">
+          <div className="mt-8 w-full rounded-2xl border border-white/10 bg-black/20 p-3 sm:p-5">
             {/* card */}
             <Box
               selectedCategory={selectedCategory}
@@ -170,7 +170,7 @@ const BuilderForm = () => {
                     onClick={() => {
                       dispatch(setStep(3));
                     }}
-                    className="px-3 py-2 rounded-md bg-neutral-800 text-white/80 text-sm cursor-pointer font-semibold"
+                    className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/80 transition-colors hover:bg-white/10"
                   >
                     Next
                   </button>
@@ -180,7 +180,7 @@ const BuilderForm = () => {
                 <div className="flex items-center gap-4">
                   <motion.button
                     onClick={editServiceHandler}
-                    className="px-4 py-2 text-sm font-semibold bg-yellow-500 text-black rounded-md cursor-pointer flex items-center gap-1"
+                    className="flex cursor-pointer items-center gap-1 rounded-xl bg-amber-300 px-4 py-2 text-sm font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200"
                     layoutId="editService"
                   >
                     Save
@@ -195,7 +195,7 @@ const BuilderForm = () => {
               <div className="flex items-center gap-4">
                 <motion.button
                   onClick={createService}
-                  className="px-5 py-3 text-sm bg-neutral-900 text-white/80 rounded-md cursor-pointer flex items-center gap-1 font-semibold"
+                  className="flex cursor-pointer items-center gap-1 rounded-xl bg-amber-300 px-5 py-3 text-sm font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200"
                   layoutId="createService"
                 >
                   Create

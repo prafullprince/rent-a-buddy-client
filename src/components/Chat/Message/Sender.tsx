@@ -45,19 +45,19 @@ const Sender = ({
       {msg?.sender === userDetails?._id && (
         <div className="flex justify-end">
           <div
-            className={`max-w-[65%] relative text-[#E9EDEF] rounded-lg rounded-tr-none ${
+            className={`relative max-w-[88%] rounded-2xl rounded-tr-none text-[#111b21] shadow-sm sm:max-w-[65%] ${
               msg?.type === "text"
-                ? "bg-[#075E54] px-3 pt-1"
-                : "bg-[#075E54] min-w-[270px] max-w-sm"
+                ? "bg-[#d9fdd3] px-3 pt-1 text-[#111b21]"
+                : "w-full max-w-sm bg-[#d9fdd3] shadow-md"
             }`}
           >
             <div
               className={`absolute right-0 top-0 border-t-[10px] border-t-transparent border-l-[10px] ${
-                msg.type !== "text" ? "border-l-gray-900" : "border-l-[#075E54]"
+                msg.type !== "text" ? "border-l-gray-900" : "border-l-[#d9fdd3]"
               } w-0 h-0 rotate-90 translate-x-2 translate-y-0`}
             ></div>
             {msg?.type === "text" ? (
-              <div className="pr-13 pb-2 break-words text-wrap">
+              <div className="px-1 pb-2 pr-13 pt-1 text-sm leading-5 break-words text-wrap">
                 {msg.text}
               </div>
             ) : (
@@ -68,7 +68,7 @@ const Sender = ({
               >
                 <div className="flex flex-col gap-2">
                   {/* topbar */}
-                  <div className="flex items-center justify-between bg-gray-900 h-14 px-2 rounded-tl-lg">
+                  <div className="flex h-14 items-center justify-between rounded-tl-2xl bg-[#202c33] px-3">
                     {/* left */}
                     <div className="flex items-start gap-2">
                       <Image
@@ -83,13 +83,13 @@ const Sender = ({
                       />
                       <div className="flex flex-col gap-1">
                         {/* name */}
-                        <div className="text-white/80 text-xs font-semibold">
+                        <div className="text-xs font-semibold text-white/90">
                           {msg?.text?.subId?.subCategoryId?.name}
                         </div>
 
                         {/* price */}
                         <div className="flex items-center gap-1">
-                          <p className="text-xs font-medium text-gray-500">
+                          <p className="text-xs font-medium text-white/55">
                             {msg?.text?.subId?.price}
                             /hr
                           </p>
@@ -145,13 +145,13 @@ const Sender = ({
                   </div>
 
                   {/* Info */}
-                  <div className="flex flex-col gap-1 px-2 mt-1">
+                  <div className="mt-1 flex flex-col gap-1 px-3 text-[#54656f]">
                     {/* date */}
                     <div className="flex items-center gap-1">
-                      <div className="text-xs text-black font-semibold">
+                      <div className="text-xs font-semibold text-[#667781]">
                         Date:{" "}
                       </div>
-                      <p className="text-xs font-semibold text-gray-400">
+                      <p className="text-xs font-medium text-[#111b21]">
                         {msg?.text?.date}
                       </p>
                     </div>
@@ -213,7 +213,7 @@ const Sender = ({
                     msg?.order?.isCompleted === false && (
                       <div className="flex justify-start ml-2 mt-1">
                         <button
-                          className="bg-yellow-300 cursor-pointer text-black py-2 px-3 text-sm rounded-lg mr-3 flex items-center gap-1"
+                          className="mr-3 flex cursor-pointer items-center gap-1 rounded-xl bg-[#25d366] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#20bd5a]"
                           onClick={() => {
                             setModalData({
                               heading: `Send Money `,
@@ -260,7 +260,7 @@ const Sender = ({
                             other,
                           });
                         }}
-                        className="bg-red-500 text-white rounded-md text-sm font-semibold ml-2 cursor-pointer flex items-center gap-1 px-3 py-2 mr-3"
+                        className="ml-2 mr-3 flex cursor-pointer items-center gap-1 rounded-xl bg-[#ef4444] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#dc2626]"
                       >
                         <MdOutlineCancel className="text-white text-xl" />
                         Cancel

@@ -15,15 +15,16 @@ export const NextAuthOption: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user }) {
+      console.log("Google user:", user);
       try {
 
         // Call your backend API
-        const response = await fetch("https://rent-a-buddy-server-djqg.onrender.com/api/auth/login", {
+        const response = await fetch("http://localhost:8080/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user }),
         });
-
+        console.log(response);
         if (!response.ok) {
           throw new Error("Error signing in");
         }

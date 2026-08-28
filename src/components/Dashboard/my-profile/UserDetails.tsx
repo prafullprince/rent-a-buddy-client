@@ -14,30 +14,30 @@ const UserDetails = async () => {
   if (!session) return null;
 
   return (
-    <div className="shadow-md px-3 py-4 rounded-lg bg-neutral-800 lg:min-w-[600px] w-full">
-      <div className="flex sm:flex-row flex-col sm:items-start sm:justify-between gap-3">
+    <div className="w-full rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-6">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
         {/* left */}
-        <div className="flex sm:flex-row flex-col sm:items-start gap-4">
+        <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start">
           {/* pp */}
           <Image
             src={userDetails?.image}
             alt="profile"
             width={40}
             height={40}
-            className="rounded-full min-w-24 min-h-24 max-w-24 max-h-24"
+            className="h-24 w-24 rounded-full border-2 border-amber-300/30 object-cover shadow-lg shadow-black/20"
           />
 
-          <div className="flex flex-col items-start gap-1 text-wrap break-words">
+          <div className="flex min-w-0 flex-col items-start gap-1 break-words">
             {/* name */}
-            <p className="text-lg font-semibold text-white/80">{session?.user?.name}</p>
+            <p className="text-xl font-semibold text-white">{session?.user?.name}</p>
 
             {/* username */}
-            <p className="text-xs text-[#b8bcc7] text-wrap break-words max-w-[150px] sm:max-w-[200px] lg:max-w-[300px]">
+            <p className="max-w-full break-words text-sm text-amber-200/75 sm:max-w-[300px]">
               {/* {session?.user?.email?.split("@")[0]} */}
               {userDetails?.username || session?.user?.email?.split("@")[0]}
             </p>
 
-            <p className="text-sm font-semibold text-[#a9adb5] mt-2">
+            <p className="mt-2 max-w-full break-all text-sm font-semibold text-white/45">
               {/* {session?.user?.email?.split("@")[0]} */}
               {session?.user?.email}
             </p>
@@ -48,7 +48,7 @@ const UserDetails = async () => {
         </div>
 
         {/* right */}
-        <Link href={'/dashboard/settings'} className="flex items-center px-4 py-2 rounded-lg gap-1 bg-yellow-400 text-black cursor-pointer w-fit">
+        <Link href={'/dashboard/settings'} className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-amber-300 px-4 py-2 text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200">
           <FaEdit className="text-xl" />
           <div className="text-sm font-semibold">Edit</div>
         </Link>

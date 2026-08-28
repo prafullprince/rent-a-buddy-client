@@ -51,81 +51,84 @@ const RechargeModal = ({ modalData, setModalData }: any) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black/20 z-[1000] backdrop-blur-sm">
-      <div className="flex items-center justify-center h-screen mx-auto w-[90%]">
+    <div className="fixed inset-0 z-[1000] flex min-h-full items-center justify-center overflow-y-auto bg-black/65 p-3 backdrop-blur-md sm:p-6">
+      <div className="my-auto w-full max-w-lg">
         <div
           ref={btnRef}
-          className="flex flex-col gap-4 bg-gray-800 p-6 relative border-gray-400 rounded-lg min-w-[350px] max-w-lg"
+          className="relative flex max-h-[calc(100vh-1.5rem)] w-full flex-col gap-4 overflow-y-auto rounded-2xl border border-white/10 bg-[#11151c] p-4 shadow-2xl shadow-black/50 sm:max-h-[calc(100vh-3rem)] sm:p-6"
         >
           {/* heading */}
-          <div className="bg-gray-700 font-semibold text-pink-100 rounded-t-lg text-xl absolute top-0 w-full right-0 left-0 h-14 flex items-center justify-between px-6 py-4">
+          <div className="sticky top-0 z-10 -mx-4 -mt-4 flex h-14 shrink-0 items-center justify-between border-b border-white/10 bg-[#11151c]/95 px-4 text-lg font-semibold text-white backdrop-blur sm:-mx-6 sm:-mt-6 sm:px-6">
             {modalData.name}
             <button
+              type="button"
+              aria-label="Close recharge modal"
               onClick={() => setModalData(null)}
-              className="text-2xl text-pink-300 cursor-pointer"
+              className="rounded-full px-2 text-xl text-white/50 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
             >
-              X
+              &#10005;
             </button>
           </div>
 
           {/* body */}
-          <div className="flex flex-col gap-2 mt-14">
+          <div className="mt-2 flex flex-col gap-2">
             {/* input */}
             <div className="relative">
               <input
                 type="number"
                 placeholder="Enter amount"
-                className="bg-gray-700 text-white rounded-lg px-12 py-3 outline-none w-full"
+                className="w-full rounded-xl border border-white/10 bg-black/25 px-12 py-3 text-white outline-none transition-colors focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20"
                 onChange={(e: any) => setAmount(e.target.value)}
                 name="amount"
                 value={amount}
                 min={200}
                 required
               />
-              <PiCurrencyInrBold className="absolute top-3 left-3 text-2xl text-white" />
+              <PiCurrencyInrBold className="absolute left-3 top-3 text-2xl text-amber-300" />
             </div>
 
             {/* options */}
-            <div className="flex flex-wrap gap-2 items-center mt-6">
+            <div className="mt-6 flex flex-wrap items-center gap-2">
               <div
                 onClick={()=>setAmount(50)}
-                className="text-black bg-white px-3 py-2 rounded-lg font-semibold text-lg"
+                role="button" tabIndex={0} onKeyDown={(event) => event.key === "Enter" && setAmount(50)}
+                className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-lg font-semibold text-white transition-colors hover:border-amber-300/50 hover:bg-amber-300/10"
               >
                 50
               </div>
-              <div onClick={()=>setAmount(100)} className="text-black bg-white px-3 py-2 rounded-lg font-semibold text-lg">
+              <div onClick={()=>setAmount(100)} role="button" tabIndex={0} onKeyDown={(event) => event.key === "Enter" && setAmount(100)} className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-lg font-semibold text-white transition-colors hover:border-amber-300/50 hover:bg-amber-300/10">
                 100
               </div>
-              <div onClick={()=>setAmount(150)} className="text-black bg-white px-3 py-2 rounded-lg font-semibold text-lg">
+              <div onClick={()=>setAmount(150)} role="button" tabIndex={0} onKeyDown={(event) => event.key === "Enter" && setAmount(150)} className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-lg font-semibold text-white transition-colors hover:border-amber-300/50 hover:bg-amber-300/10">
                 150
               </div>
-              <div onClick={()=>setAmount(200)} className="text-black bg-white px-3 py-2 rounded-lg font-semibold text-lg">
+              <div onClick={()=>setAmount(200)} role="button" tabIndex={0} onKeyDown={(event) => event.key === "Enter" && setAmount(200)} className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-lg font-semibold text-white transition-colors hover:border-amber-300/50 hover:bg-amber-300/10">
                 200
               </div>
-              <div onClick={()=>setAmount(500)} className="text-black bg-white px-3 py-2 rounded-lg font-semibold text-lg">
+              <div onClick={()=>setAmount(500)} role="button" tabIndex={0} onKeyDown={(event) => event.key === "Enter" && setAmount(500)} className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-lg font-semibold text-white transition-colors hover:border-amber-300/50 hover:bg-amber-300/10">
                 500
               </div>
-              <div onClick={()=>setAmount(5000)} className="text-black bg-white px-3 py-2 rounded-lg font-semibold text-lg">
+              <div onClick={()=>setAmount(5000)} role="button" tabIndex={0} onKeyDown={(event) => event.key === "Enter" && setAmount(5000)} className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-lg font-semibold text-white transition-colors hover:border-amber-300/50 hover:bg-amber-300/10">
                 5000
               </div>
-              <div onClick={()=>setAmount(10000)} className="text-black bg-white px-3 py-2 rounded-lg font-semibold text-lg">
+              <div onClick={()=>setAmount(10000)} role="button" tabIndex={0} onKeyDown={(event) => event.key === "Enter" && setAmount(10000)} className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-lg font-semibold text-white transition-colors hover:border-amber-300/50 hover:bg-amber-300/10">
                 10000
               </div>
             </div>
           </div>
 
           {/* buttons */}
-          <div className="flex w-full justify-end gap-4 mt-6">
+          <div className="mt-4 grid w-full grid-cols-2 gap-3 sm:mt-6">
             <button
               onClick={() => setModalData(null)}
-              className="px-4 py-2 bg-red-100 text-richblack-900 rounded-lg flex items-center gap-2 font-semibold cursor-pointer"
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3 font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
               <MdCancel className="text-3xl" />
               Cancel
             </button>
             <button
               onClick={rechargeHandler}
-              className="bg-yellow-300 text-black px-4 font-semibold flex items-center gap-2 py-2 rounded-lg cursor-pointer"
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-amber-300 px-4 py-3 font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
             >
               <TbRecharging className="text-2xl" />
               Recharge

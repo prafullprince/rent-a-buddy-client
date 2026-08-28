@@ -3,10 +3,10 @@ import TransationTabs from './TransationTabs'
 
 const Transaction = () => {
   return (
-    <div className='p-6'>
+    <div className='p-4 sm:p-6 lg:p-8'>
         {/* heading */}
         <div>
-            <h1 className='text-xl text-white/90 font-semibold tracking-wider'>Transaction History</h1>
+            <h2 className='text-xl font-semibold tracking-tight text-white sm:text-2xl'>Transaction history</h2>
         </div>
 
         {/* tabs */}

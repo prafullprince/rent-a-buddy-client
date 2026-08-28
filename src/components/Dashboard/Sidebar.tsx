@@ -20,21 +20,29 @@ const Sidebar = () => {
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-neutral-950 min-h-screen relative rounded-xl text-gray-100"
+      className={`relative min-h-screen shrink-0 rounded-2xl border border-white/10 bg-[#0d1117] text-gray-100 shadow-xl shadow-black/20 transition-[width] duration-300 ${
+        isOpen ? "w-64" : "w-16 sm:w-20"
+      }`}
     >
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`absolute top-4 left-4 cursor-pointer px-2 py-2 rounded-lg transition-all duration-200 text-xl ${isOpen ? '' : ''}`}
+        aria-label={isOpen ? "Collapse dashboard navigation" : "Expand dashboard navigation"}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") setIsOpen(!isOpen);
+        }}
+        className="absolute left-3 top-4 z-10 cursor-pointer rounded-xl p-2 text-xl transition-all duration-200 hover:bg-white/10"
       >
         {!isOpen ? (
-          <BsLayoutSidebarInset className="text-3xl text-slate-400 hover:text-yellow-400 transition-all duration-300" />
+          <BsLayoutSidebarInset className="text-2xl text-slate-400 transition-all duration-300 hover:text-amber-300" />
         ) : (
-          <BsLayoutSidebarInsetReverse className="text-3xl text-yellow-600" />
+          <BsLayoutSidebarInsetReverse className="text-2xl text-amber-300" />
         )}
       </div>
 
       {/* sidebar content box */}
-      <div className={`flex flex-col gap-3 items-start ${isOpen ? "px-4 py-4 pt-28" : "sm:px-4 sm:py-4 sm:pt-28"}`}>
+      <div className="flex w-full flex-col items-start gap-2 px-2 py-4 pt-24 sm:px-3">
         {dashboardLinks?.map((link: any) => {
           if(link?.type && link?.type !== session?.accountType) return null;
           return (

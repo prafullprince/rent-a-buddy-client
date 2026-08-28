@@ -10,10 +10,12 @@ const EventInfo = () => {
   const { editEvent } = useSelector((state: any) => state.event);
 
   return (
-    <div className="flex flex-col gap-2 sm:w-full max-w-fit">
+    <div className="flex w-full flex-col gap-2">
       {/* heading */}
       <div className="">
-        <h2 className="text-2xl font-bold text-[#e11313]">{editEvent ? "Edit Event" : "Event Information"}</h2>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-300">Step 1</p>
+        <h2 className="mt-1 text-2xl font-semibold text-white">{editEvent ? "Edit Event" : "Event information"}</h2>
+        <p className="mt-1 text-sm text-white/50">Set the basic details and a memorable cover image.</p>
       </div>
 
       <EventForm />

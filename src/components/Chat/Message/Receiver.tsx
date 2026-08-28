@@ -23,26 +23,26 @@ const Receiver = ({
       {msg?.receiver === userDetails?._id && (
         <div className="flex justify-start">
           <div
-            className={`max-w-[65%] text-wrap break-words relative text-white/70 rounded-lg rounded-tl-none ${
+            className={`relative max-w-[88%] break-words rounded-2xl rounded-tl-none text-[#111b21] shadow-sm sm:max-w-[65%] ${
               msg.type === "text"
-                ? "bg-[#1F2C34] px-3 pt-1"
-                : "bg-[#1F2C34] min-w-[270px] max-w-sm"
+                ? "bg-white px-3 pt-1 text-[#111b21]"
+                : "w-full max-w-sm bg-white shadow-md"
             }`}
           >
             <div
               className={`absolute left-0 top-0 border-t-[10px] border-t-transparent border-l-[10px] ${
-                msg.type === "text" ? "border-[#1F2C34]" : "border-l-gray-900"
+                msg.type === "text" ? "border-white" : "border-l-gray-900"
               } w-0 h-0 rotate-180 -translate-x-2 translate-y-0`}
             ></div>
             {msg.type === "text" ? (
-              <div className="pr-9 pb-2 break-words text-wrap">{msg.text}</div>
+              <div className="px-1 pb-2 pr-9 pt-1 text-sm leading-5 break-words text-wrap">{msg.text}</div>
             ) : (
               <div
                 className={`${msg?.type === "text" ? "pr-14" : "pr-0"} pb-6`}
               >
                 <div className="flex flex-col gap-2">
                   {/* topbar */}
-                  <div className="flex items-center justify-between bg-gray-900 h-14 px-2 rounded-tr-lg">
+                  <div className="flex h-14 items-center justify-between rounded-tr-2xl bg-[#202c33] px-3">
                     {/* left */}
                     <div className="flex items-start gap-2">
                       <Image
@@ -57,13 +57,13 @@ const Receiver = ({
                       />
                       <div className="flex flex-col gap-1">
                         {/* name */}
-                        <div className="text-white/80 text-xs font-semibold">
+                        <div className="text-xs font-semibold text-white/90">
                           {msg?.text?.subId?.subCategoryId?.name}
                         </div>
 
                         {/* price */}
                         <div className="flex items-center gap-1">
-                          <p className="text-xs font-medium text-gray-400">
+                          <p className="text-xs font-medium text-white/55">
                             {msg?.text?.subId?.price}
                             /hr
                           </p>
@@ -118,13 +118,13 @@ const Receiver = ({
                   </div>
 
                   {/* Info */}
-                  <div className="flex flex-col gap-1 px-2 mt-1">
+                  <div className="mt-1 flex flex-col gap-1 px-3 text-[#54656f]">
                     {/* date */}
                     <div className="flex items-center gap-1">
-                      <div className="text-xs text-black font-semibold">
+                      <div className="text-xs font-semibold text-[#667781]">
                         Date:{" "}
                       </div>
-                      <p className="text-xs font-semibold text-gray-400">
+                      <p className="text-xs font-medium text-[#111b21]">
                         {msg?.text?.date}
                       </p>
                     </div>
@@ -224,7 +224,7 @@ const Receiver = ({
                               other,
                             });
                           }}
-                          className="bg-yellow-300 text-black px-3 py-2 rounded-md text-sm font-semibold cursor-pointer flex items-center gap-1"
+                          className="flex cursor-pointer items-center gap-1 rounded-xl bg-[#25d366] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#20bd5a]"
                         >
                           <FaHandsHelping className="text-black text-xl" />
                           Accept
@@ -242,7 +242,7 @@ const Receiver = ({
                               other,
                             });
                           }}
-                          className="bg-red-500 text-white rounded-md text-sm font-semibold ml-2 cursor-pointer flex items-center gap-1 px-3 py-2"
+                          className="ml-2 flex cursor-pointer items-center gap-1 rounded-xl bg-[#ef4444] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#dc2626]"
                         >
                           <MdOutlineCancel className="text-white text-xl" />
                           Reject

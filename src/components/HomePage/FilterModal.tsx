@@ -22,24 +22,30 @@ const FilterModal = ({
 }: any) => {
   console.log("child re-rendered")
   return (
-    <div className="inset-0 fixed z-[1000] bg-black/50 backdrop-blur-sm overflow-auto flex items-center lg:hidden">
+    <div
+      className="inset-0 fixed z-[1000] bg-black/50 backdrop-blur-sm overflow-auto flex items-center lg:hidden"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) setFilterData(null);
+      }}
+    >
       <div className="h-fit mx-auto my-4 w-[95%] sm:w-[90%] lg:w-[80%]">
         {/* filters */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
-          className="flex flex-col gap-2 bg-gray-900 p-6 relative border-black/40 rounded-lg w-[300px] sm:w-[400px] md:w-[450px] lg:w-[500px] sm:max-w-xl mx-auto shadow-lg"
+          transition={{ type: "spring", stiffness: 320, damping: 28 }}
+          className="flex flex-col gap-2 bg-gray-900 p-6 relative border-black/40 rounded-2xl w-[300px] sm:w-[400px] md:w-[450px] lg:w-[500px] sm:max-w-xl mx-auto shadow-2xl"
         >
           {/* heading */}
           <div className="bg-gray-900 font-semibold text-white/40 rounded-t-lg text-xl absolute top-2 w-full right-0 left-0 h-10 flex items-center justify-between px-6">
             Filters
             <button
+              aria-label="Close filters"
               onClick={() => {
                 setFilterData(null);
               }}
-              className="text-xl text-gray-500 font-bold"
+              className="text-xl text-gray-500 font-bold transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400 rounded-full px-2"
             >
               X
             </button>
@@ -52,7 +58,7 @@ const FilterModal = ({
               <div className="flex flex-col gap-2 cursor-pointer">
                 <select
                   id="location"
-                  className="lg:w-44 px-4 py-2 appearance-none border border-gray-700 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-black"
+                  className="lg:w-44 cursor-pointer appearance-none rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm font-medium text-white/70 outline-none transition-colors focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20"
                   value={formData.location}
                   onChange={changeHandler}
                   name="location"
@@ -73,7 +79,7 @@ const FilterModal = ({
                 <input
                   type="text"
                   placeholder="username"
-                  className="px-4 py-2 appearance-none border border-gray-700 rounded-full outline-none w-full lg:w-44 bg-black text-slate-600 font-medium text-sm placeholder:text-sm"
+                  className="w-full rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm font-medium text-white/70 outline-none transition-colors placeholder:text-white/35 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20 lg:w-44"
                   value={formData.username}
                   onChange={changeHandler}
                   name="username"
@@ -87,7 +93,7 @@ const FilterModal = ({
                   <div>
                     <select
                       id="rating"
-                      className="lg:w-44 px-4 py-2 flex justify-center appearance-none border border-gray-700 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-black"
+                      className="flex justify-center rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm font-medium text-white/70 outline-none transition-colors focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20 lg:w-44"
                       value={formData.rating}
                       onChange={changeHandler}
                       name="rating"
@@ -105,7 +111,7 @@ const FilterModal = ({
                   <div>
                     <select
                       id="gender"
-                      className="lg:w-44 px-4 py-2 flex justify-center appearance-none border border-gray-700 cursor-pointer rounded-full outline-none text-slate-600 font-medium text-sm bg-black"
+                      className="flex justify-center rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm font-medium text-white/70 outline-none transition-colors focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20 lg:w-44"
                       value={formData.gender}
                       onChange={changeHandler}
                       name="gender"

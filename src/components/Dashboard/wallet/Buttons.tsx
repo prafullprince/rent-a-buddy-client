@@ -19,12 +19,12 @@ const Buttons = () => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4 mt-6">
-      <button onClick={modalHandler} className="bg-yellow-300 text-black px-5 font-semibold flex items-center gap-2 py-3 rounded-lg cursor-pointer">
+    <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <button onClick={modalHandler} className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-amber-300 px-5 py-3 font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200">
         <TbRecharging className="text-2xl" />
         Recharge
       </button>
-      <button onClick={modalHandler} className="bg-red-700 text-white px-5 cursor-pointer py-3 rounded-lg flex items-center gap-2 font-semibold">
+      <button onClick={modalHandler} className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-rose-300/20 bg-rose-500/90 px-5 py-3 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300">
         <PiHandWithdraw className="text-2xl" />
         Withdraw
       </button>

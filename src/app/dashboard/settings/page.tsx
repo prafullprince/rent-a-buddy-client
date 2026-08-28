@@ -148,25 +148,23 @@ const Page = () => {
     );
 
   return (
-    <div className="">
+    <div className="min-h-screen overflow-hidden bg-[#090b10] bg-[linear-gradient(135deg,rgba(245,158,11,0.08)_0%,transparent_30%,transparent_70%,rgba(20,184,166,0.06)_100%)] px-4 py-5 text-white sm:px-6 lg:px-10">
       {/* route */}
-      <div className="p-4 mt-2">
-        <div className="flex items-center gap-2 ml-12 lg:ml-0 mt-1 lg:mt-0">
+      <div className="mx-auto flex w-full max-w-7xl flex-col">
+        <div className="flex items-center gap-2 text-sm">
           <div
             onClick={() => router.push("/")}
-            className="text-sm text-[#d5d6da] cursor-pointer"
+            className="cursor-pointer text-white/45 transition-colors hover:text-amber-200"
           >
             Home <span>/</span>
           </div>
           <div
             onClick={() => router.push("/dashboard/my-profile")}
-            className="text-sm text-[#d5d6da] cursor-pointer"
+            className="cursor-pointer text-white/45 transition-colors hover:text-amber-200"
           >
             Dashboard <span>/</span>
           </div>
-          <span className="text-base font-semibold text-yellow-600">
-            settings
-          </span>
+          <span className="font-semibold text-amber-300">Settings</span>
         </div>
       </div>
 
@@ -178,17 +176,19 @@ const Page = () => {
           </div>
         </div>
       ) : (
-        <div className="px-6 w-full">
+        <div className="mt-7 w-full">
           {/* Box */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6">
             {/* heading */}
-            <h2 className="text-xl mt-4 font-semibold text-gray-200">
-              Edit Profile
-            </h2>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-300">Account center</p>
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Edit profile</h1>
+              <p className="mt-2 text-sm text-white/50">Keep your public details current and recognizable.</p>
+            </div>
 
             {/* change profilePictire */}
-            <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between bg-neutral-800 px-4 py-4 rounded-lg sm:min-w-lg sm:max-w-lg w-full shadow-md">
-              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+            <div className="w-full rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-6">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
                 {/* pp */}
                 <div
                   className="cursor-pointer"
@@ -203,7 +203,7 @@ const Page = () => {
                       width={100}
                       height={100}
                       priority
-                      className="rounded-full min-h-24 max-h-24"
+                      className="h-24 w-24 rounded-full border-2 border-amber-300/30 object-cover shadow-lg shadow-black/20"
                     />
                   ) : (
                     <Image
@@ -212,7 +212,7 @@ const Page = () => {
                       width={96}
                       height={96}
                       priority
-                      className="rounded-full min-h-24 max-h-24"
+                      className="h-24 w-24 rounded-full border-2 border-white/10 object-cover shadow-lg shadow-black/20"
                     />
                   )}
                   <input
@@ -232,16 +232,16 @@ const Page = () => {
 
                 {/* buttons */}
                 <div className="flex flex-col items-start gap-2">
-                  <h3 className="text-sm font-semibold text-white/80">
-                    Change Profile Picture
+                  <h3 className="text-base font-semibold text-white">
+                    Change profile picture
                   </h3>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
                     {!preview && (
                       <button
                         onClick={() => {
                           imageRef.current?.click();
                         }}
-                        className="cursor-pointer bg-yellow-400 px-3 py-[6px] rounded-lg text-sm font-semibold"
+                        className="cursor-pointer rounded-xl bg-amber-300 px-4 py-2 text-sm font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
                       >
                         Change
                       </button>
@@ -252,7 +252,7 @@ const Page = () => {
                         onClick={() => {
                           uploadProfilePicture();
                         }}
-                        className="cursor-pointer bg-black text-white px-3 py-[6px] rounded-lg text-sm font-semibold flex items-center gap-2"
+                        className="flex cursor-pointer items-center gap-2 rounded-xl bg-amber-300 px-4 py-2 text-sm font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
                       >
                         Submit
                         {dpLoading && <IntergalacticSpinner />}
@@ -263,7 +263,7 @@ const Page = () => {
                         onClick={() => {
                           setPreview("");
                         }}
-                        className="cursor-pointer bg-yellow-300 px-3 py-[6px] rounded-lg text-sm font-semibold text-black"
+                        className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white"
                       >
                         Remove
                       </button>
@@ -274,7 +274,7 @@ const Page = () => {
             </div>
 
             {/* change details */}
-            <div className="shadow-md px-6 py-4 rounded-lg bg-neutral-800 sm:min-w-lg sm:max-w-lg w-full">
+            <div className="w-full rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-6 lg:max-w-3xl">
               <form
                 onSubmit={handleSubmit(onsubmit)}
                 className="flex flex-col gap-4"
@@ -284,7 +284,7 @@ const Page = () => {
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Username" />
                     <input
-                      className="w-full p-2 border border-gray-700 rounded-lg outline-none shadow-sm bg-neutral-900 text-sm text-white/80"
+                      className="w-full rounded-xl border border-white/10 bg-black/25 p-3 text-sm text-white/80 outline-none transition-colors focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20"
                       {...register("username")}
                       placeholder="change username"
                       type="text"
@@ -295,7 +295,7 @@ const Page = () => {
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Phone Number" />
                     <input
-                      className="w-full p-2 border border-gray-700 rounded-lg outline-none shadow-sm bg-neutral-900 text-sm text-white/80"
+                      className="w-full rounded-xl border border-white/10 bg-black/25 p-3 text-sm text-white/80 outline-none transition-colors focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20"
                       {...register("phoneNumber")}
                       placeholder="change phone number"
                       type="text"
@@ -308,7 +308,7 @@ const Page = () => {
                   <div className="flex flex-col gap-1 w-full">
                     <Label labelname="Bio" />
                     <textarea
-                      className="w-full p-2 border shadow-sm border-gray-700 rounded-lg outline-none bg-neutral-900 text-sm text-white/80"
+                      className="min-h-32 w-full resize-y rounded-xl border border-white/10 bg-black/25 p-3 text-sm text-white/80 outline-none transition-colors focus:border-amber-300 focus:ring-2 focus:ring-amber-300/20"
                       {...register("about")}
                       placeholder="change bio"
                       rows={5}
@@ -323,7 +323,7 @@ const Page = () => {
                   <motion.button
                     layoutId="submitbuttonofsettings"
                     type="submit"
-                    className="w-fit px-4 py-2 rounded-lg bg-black text-white text-base cursor-pointer flex items-center gap-2"
+                    className="flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-amber-300 px-5 py-2 text-base font-semibold text-black transition-all hover:-translate-y-0.5 hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
                   >
                     Submit
                     {loading && <PlanetSpinner />}
