@@ -1,5 +1,5 @@
 // baseUrl
-const BASE_URL = "http://rentserver.visualcode.site/api";
+const BASE_URL = "https://rentserver.visualcode.site/api";
 
 // service
 // chatpage
