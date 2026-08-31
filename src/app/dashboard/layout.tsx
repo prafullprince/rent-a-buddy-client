@@ -16,9 +16,9 @@ const layout = async ({ children }: { children: any }) => {
   }
 
   return (
-    <div className="flex gap-2 items-stretch min-h-screen w-[90%] lg:w-[82%] mx-auto bg-neutral-900 rounded-xl">
+    <div className="flex min-h-screen w-[90%] flex-col gap-2 rounded-xl bg-neutral-900 mx-auto lg:w-[82%] lg:flex-row lg:items-stretch">
       <Sidebar />
-      <div className="w-full min-h-screen">{children}</div>
+      <div className="w-full min-w-0 min-h-screen">{children}</div>
     </div>
   );
 };
