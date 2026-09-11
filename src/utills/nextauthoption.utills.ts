@@ -1,5 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { SERVER_API_BASE_URL } from "@/service/api";
 
 export const NextAuthOption: NextAuthOptions = {
   providers: [
@@ -19,7 +20,7 @@ export const NextAuthOption: NextAuthOptions = {
       try {
 
         // Call your backend API
-        const response = await fetch("https://rentserver.visualcode.site/api/auth/login", {
+        const response = await fetch(`${SERVER_API_BASE_URL}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user }),
