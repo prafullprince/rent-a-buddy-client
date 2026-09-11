@@ -1,9 +1,18 @@
 import { io } from "socket.io-client";
-import { BASE_URL } from "@/service/api";
+import { PUBLIC_API_BASE_URL } from "@/service/api";
+
+const fallbackSocketUrl = (() => {
+    const apiUrl = new URL(PUBLIC_API_BASE_URL);
+    apiUrl.protocol = apiUrl.protocol === "https:" ? "wss:" : "ws:";
+    apiUrl.pathname = "/";
+    apiUrl.search = "";
+    apiUrl.hash = "";
+    return apiUrl.toString();
+})();
 
 const socket = io(
     process.env.NEXT_PUBLIC_SOCKET_URL ||
-        BASE_URL.replace(/\/api\/?$/, "").replace(/^http/, "ws"),
+        fallbackSocketUrl,
     {
     autoConnect: false,
     reconnection: true,
