@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 
 const ContactForm = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [statusMessage, setStatusMessage] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -13,7 +14,7 @@ const ContactForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Connect to backend/email service
-    alert("Message submitted. We will get back to you soon!");
+    setStatusMessage("Message submitted. We will get back to you soon!");
     setForm({ name: "", email: "", message: "" });
   };
   return (
@@ -29,6 +30,7 @@ const ContactForm = () => {
               Your Name
             </label>
             <input
+              id="name"
               type="text"
               name="name"
               required
@@ -46,6 +48,7 @@ const ContactForm = () => {
               Email Address
             </label>
             <input
+              id="email"
               type="email"
               name="email"
               required
@@ -63,6 +66,7 @@ const ContactForm = () => {
               Message
             </label>
             <textarea
+              id="message"
               name="message"
               rows={5}
               required
@@ -78,6 +82,11 @@ const ContactForm = () => {
           >
             Send Message <ArrowUpRight size={18} />
           </button>
+          {statusMessage && (
+            <p className="text-sm text-emerald-300" role="status">
+              {statusMessage}
+            </p>
+          )}
         </form>
   )
 }
