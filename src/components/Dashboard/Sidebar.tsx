@@ -20,8 +20,8 @@ const Sidebar = () => {
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
-      className={`relative min-h-screen shrink-0 rounded-2xl border border-white/10 bg-[#0d1117] text-gray-100 shadow-xl shadow-black/20 transition-[width] duration-300 ${
-        isOpen ? "w-64" : "w-16 sm:w-20"
+      className={`relative min-h-0 w-full shrink-0 rounded-2xl border border-white/10 bg-[#0d1117] text-gray-100 shadow-xl shadow-black/20 transition-[width] duration-300 lg:min-h-screen ${
+        isOpen ? "lg:w-64" : "lg:w-20"
       }`}
     >
       <div
@@ -42,7 +42,7 @@ const Sidebar = () => {
       </div>
 
       {/* sidebar content box */}
-      <div className="flex w-full flex-col items-start gap-2 px-2 py-4 pt-24 sm:px-3">
+      <div className="flex w-full flex-row items-start gap-2 overflow-x-auto px-2 py-4 pt-16 sm:px-3 lg:flex-col lg:pt-24">
         {dashboardLinks?.map((link: any) => {
           if(link?.type && link?.type !== session?.accountType) return null;
           return (
