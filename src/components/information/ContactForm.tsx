@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 
@@ -83,7 +85,11 @@ const ContactForm = () => {
             Send Message <ArrowUpRight size={18} />
           </button>
           {statusMessage && (
-            <p className="text-sm text-emerald-300" role="status">
+            <p
+              aria-live="polite"
+              className="text-sm text-emerald-300"
+              role="status"
+            >
               {statusMessage}
             </p>
           )}
